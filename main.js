@@ -46,8 +46,8 @@ if(path=="/login"){
 }
 
 if(path=="/reg"){
-    let fields=['login', 'Password']
-    let btn_name= 'Войти'
+    let fields=['first_name', 'second_name', 'login', 'email', 'phone','Password']
+    let btn_name= 'Зарегистрироваться'
     let inputs=form(fields);
     var mainContent = fs.readFileSync(__dirname + '/modules/form/form.ejs', 'utf8');
     var mainRenderized = ejs.render(mainContent, {inputs: inputs, btn_name: btn_name, reg: false});
