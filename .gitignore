@@ -1,7 +1,6 @@
 /dist/
 /ggg/
-/.idea/modules.xml
-/.idea/practikum.iml
-/.idea/vcs.xml
+/.idea/
 /.parcel-cache/
 /node_modules/
+/Readme_old
