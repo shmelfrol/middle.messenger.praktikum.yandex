@@ -1,0 +1,15 @@
+
+    <div class="itemtest">
+        <% contacts.forEach(item=>{%>
+            <a class="userchatfora" href="/chat/<%- item.id%>">
+                <div class="userchat">
+                    <img class="userimg" src="./public/image/user.jpg">
+                    <h5><%- item.user%></h5>
+                    <p><%- item.phone%></p>
+                </div></a>
+        <%})%>
+
+    </div>
+
+
+

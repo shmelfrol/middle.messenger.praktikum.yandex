@@ -1,0 +1,142 @@
+
+
+    <div class="itemtest">
+
+
+
+        <% let chats=[
+            {id: 0, user: "IVAN", lastmessege: "1 какой-то текст"},
+            {id: 1, user: "Petr", lastmessege: "2 какой-то текст"},
+            {id: 2, user: "Sergey", lastmessege: "3 какой-то текст"},
+            {id: 3, user: "vasya", lastmessege: "4 какой-то текст"},
+            {id: 4, user: "Alex", lastmessege: "5 какой-то текст"},
+        ]
+        %>
+
+
+        <% chats.forEach(item=>{%>
+            <a class="userchatfora" href="<%- path%>?id=<%- item.id%>">
+                <div class="userchat<%if(chatId==item.id){%> userchatactive<%}%>">
+                    <img class="userimg" src="/image/user.jpg">
+                    <h5><%- chatId%> <%- item.user%></h5>
+                    <p><%- item.lastmessege%></p>
+                </div></a>
+        <%})%>
+    </div>
+    <div class="itemtest">
+        <div class="testformessage" >
+            <div id="chatbox">
+                <% let messagelist = [
+                    {chatId:0,
+                        messages: [
+                            {idmes:1, userId:0, text:"привет"},
+                            {idmes:2, userId:0, text:"Как дела"},
+                            {idmes:3, userId:2, text:"привет, Все хорошо"},
+                            {idmes:4, userId:2, text:"Как дела с заданием?"},
+                            {idmes:5, userId:0, text:"Что-то, понял, но этого мало"},
+                            {idmes:6, userId:0, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:1,
+                        messages: [
+                            {idmes:1, userId:1, text:"hi"},
+                            {idmes:2, userId:1, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:1, text:"i didn`t do it"},
+                            {idmes:6, userId:1, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:2,
+                        messages: [
+                            {idmes:1, userId:1, text:"hi"},
+                            {idmes:2, userId:1, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:1, text:"i didn`t do it"},
+                            {idmes:6, userId:1, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:3,
+                        messages: [
+                            {idmes:1, userId:3, text:"hi"},
+                            {idmes:2, userId:3, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:3, text:"i didn`t do it"},
+                            {idmes:6, userId:3, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:4,
+                        messages: [
+                            {idmes:1, userId:4, text:"hi"},
+                            {idmes:2, userId:4, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:4, text:"i didn`t do it"},
+                            {idmes:6, userId:4, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:5,
+                        messages: [
+                            {idmes:1, userId:5, text:"hi"},
+                            {idmes:2, userId:5, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:5, text:"i didn`t do it"},
+                            {idmes:6, userId:5, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+                    {chatId:6,
+                        messages: [
+                            {idmes:1, userId:6, text:"hi"},
+                            {idmes:2, userId:6, text:"how are you"},
+                            {idmes:3, userId:2, text:"привет, i have a problem"},
+                            {idmes:4, userId:2, text:"what`s about your homework?"},
+                            {idmes:5, userId:6, text:"i didn`t do it"},
+                            {idmes:6, userId:6, text:"нужны дополнительный список материалов и примеров по теме!"},
+                        ]
+                    },
+
+                ]
+
+
+
+                %>
+                <%if(chatId!='x'){%>
+                <%messagelist[chatId].messages.forEach(item=>{%>
+                <p class="<%if(item.userId==chatId){%>userText<%}else{%>botText<%}%>"><span><%- item.text-%></span></p>
+
+                <%})%>
+                <%}%>
+            </div>
+            <div id="chat-bar-bottom">
+                <p></p>
+            </div>
+
+
+        </div>
+        <div id="chat-bar-bottom">
+            <p></p>
+        </div>
+        <div class="testforbtn">
+            <div class="chat-bar-input-block">
+                <div id="userInput">
+                    <input name="message" id="textInput" class="input-box" type="text" name="msg"
+                           placeholder="Tap 'Enter' to send a message">
+                    <p></p>
+                </div>
+
+                <div class="chat-bar-icons">
+                    <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart"
+                       onclick="heartButton()"></i>
+                    <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send"
+                       onclick="sendButton()"></i>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+    </div>
+

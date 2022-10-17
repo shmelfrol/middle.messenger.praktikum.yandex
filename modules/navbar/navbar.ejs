@@ -1,0 +1,13 @@
+<% let menuitems=[
+    {id: 0, name: "/chat", title: "Чат"},
+    {id: 1, name: "/contacts", title: "Контакты"},
+    {id: 2, name: "/login", title: "Вход"},
+    {id: 3, name: "/settings", title: "Настройки"},
+]
+%>
+
+<div class="mainmenu">
+    <% menuitems.forEach(item=>{%>
+    <div class="<%if (active=== item.name)  { %>active<%}else{%>menuitem<%}%>"><a href="<%- item.name %>"><%- item.title %></a></div>
+    <%})%>
+</div>
