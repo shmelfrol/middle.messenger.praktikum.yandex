@@ -1,5 +1,6 @@
 import {contacts} from "./modules/contacts/contacts";
 import {form} from "./modules/form/form";
+import img from "./public/image/user.jpg";
 
 var ejs = require('ejs');
 var fs = require('fs');
@@ -14,7 +15,7 @@ var htmlRenderized = ejs.render(htmlContent, {active: path});
 
 if(path=="/contacts"){
     var mainContent = fs.readFileSync(__dirname + '/modules/contacts/contacts.ejs', 'utf8');
-    var mainRenderized = ejs.render(mainContent, {contacts: contacts()});
+    var mainRenderized = ejs.render(mainContent, {contacts: contacts(), img:img});
 }
 
 
@@ -49,6 +50,7 @@ if(path=="/reg"){
     let fields=['first_name', 'second_name', 'login', 'email', 'phone','Password']
     let btn_name= 'Зарегистрироваться'
     let inputs=form(fields);
+    console.log(inputs);
     var mainContent = fs.readFileSync(__dirname + '/modules/form/form.ejs', 'utf8');
     var mainRenderized = ejs.render(mainContent, {inputs: inputs, btn_name: btn_name, reg: false});
 }
