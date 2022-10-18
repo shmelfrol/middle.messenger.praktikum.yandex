@@ -1,6 +1,18 @@
-netlify https://celadon-kheer-bdea34.netlify.app/chat?id=4
-commands
-    "serve": "nodemon index.js",
-    "start": "node index.js",
-    "parcelbild": "parcel build",
-    "parcelstart": "parcel --open
+### Проект мессенджера для обучения фронтенду на курсе яндекс практикума. Очень надеюсь что курс придется мне по силам, и полученные знания пойдут мне в пользу.
+
+Применяемые (изучаемые технологии):
+ejs,
+postcss,
+parcel,
+express,
+es6,
+netlify
+
+Проект на стадии разработки. Команды для использования.
+
+- `npm run serve` — запуск expess,
+- `npm run parcelstart` — запуск билда для разработчика,
+- `npm run parcelbild` — сборка стабильной версии.
+
+## **проект залит на netlify**
+- «[Netlify](https://celadon-kheer-bdea34.netlify.app/chat?id=4)».
