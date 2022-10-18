@@ -17,7 +17,7 @@
         <% chats.forEach(item=>{%>
             <a class="userchatfora" href="<%- path%>?id=<%- item.id%>">
                 <div class="userchat<%if(chatId==item.id){%> userchatactive<%}%>">
-                    <img class="userimg" src="/image/user.jpg">
+                    <img class="userimg" src="<%-img%>">
                     <h5><%- chatId%> <%- item.user%></h5>
                     <p><%- item.lastmessege%></p>
                 </div></a>
