@@ -1,0 +1,23 @@
+
+    <div class="itemtest">
+
+        <form action="" method="get" class="form-example">
+            <% inputs.forEach(input=>{%>
+                <div class="form-example">
+                    <label for="<%- input.inputname %>"><%-input.text%></label>
+                    <input type="<%- input.type %>" name="<%- input.inputname %>" id="<%- input.inputname %>" required>
+                </div>
+            <%});%>
+
+            <div class="form-example">
+                <input type="submit" value="<%- btn_name%>">
+            </div>
+
+            <% if(reg===true){%>
+            <div>
+                <a href="/reg">Зарегистрироваться</a>
+            </div>
+          <%}%>
+        </form>
+
+    </div>
