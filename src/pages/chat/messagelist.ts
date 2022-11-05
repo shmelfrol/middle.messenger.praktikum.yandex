@@ -1,4 +1,4 @@
- let messagelist = [
+ let messagelist:Array<object> = [
         {chatId:0,
             messages: [
                 {idmes:1, userId:0, text:"привет"},

@@ -19,12 +19,12 @@ export class Component {
      * @returns {void}
      */
     constructor(tagName = "div", myprops = {}, classofTag="", template='', MyaddEvents=null) {
-        console.log('tagname',tagName)
-        console.log("myprops", myprops)
-        console.log("classofTag", classofTag)
+        //console.log('tagname',tagName)
+        //console.log("myprops", myprops)
+        //console.log("classofTag", classofTag)
         const { children, props } = this._getChildren(myprops);
-        console.log("children", children)
-        console.log("props", props)
+        //console.log("children", children)
+        //console.log("props", props)
         this.children = children;
         this.template=template
         this.MyaddEvents=MyaddEvents
@@ -41,7 +41,7 @@ export class Component {
         this._id = makeUUID();
 //оборачиваем в proxy и возвращает другие но теже пропсы
         this.props = this._makePropsProxy({ ...props, __id: this._id });
-        console.log('this.props',this.props)
+        //console.log('this.props',this.props)
 //задействуем eventbus - функция которая возвращает eventbus, чтобы использовать за конструктором
         this.eventBus = () => eventBus;
 // регистрируем событияb
@@ -66,13 +66,11 @@ export class Component {
         return { children, props };
     }
 
-
-//это надо доделать
     _makePropsProxy(props) {
         // Можно и так передать this
         // Такой способ больше не применяется с приходом ES6+
         const self = this;
-         console.log(props)
+        // console.log(props)
         return new Proxy(props, {
             get(target, prop) {
                 const value = target[prop];
@@ -113,7 +111,7 @@ export class Component {
         this._element = this._createDocumentElement(tagName);
         this._element.className = classofTag;
 
-        console.log('create element', this._element)
+        //console.log('create element', this._element)
         this.eventBus().emit(Component.EVENTS.FLOW_RENDER);
     }
 
@@ -125,19 +123,19 @@ export class Component {
     }
 
     _componentDidMount() {
-        console.log("dispatch2")
+        //console.log("dispatch2")
         this.componentDidMount();
     }
 
 // Может переопределять пользователь, необязательно трогать
     componentDidMount(oldProps) {
-        console.log("dispatch3")
+        //console.log("dispatch3")
      //this._element.innerHTML=this.props.text
 
     }
 
     dispatchComponentDidMount() {
-        console.log("dispatch1")
+        //console.log("dispatch1")
 
         this.eventBus().emit(Component.EVENTS.FLOW_CDM);
 
@@ -146,7 +144,7 @@ export class Component {
     _componentDidUpdate(oldProps, newProps) {
         //ОТВЕТ
         const response = this.componentDidUpdate(oldProps, newProps);
-        console.log('response', response)
+        //console.log('response', response)
         if(response){
             this.eventBus().emit(Component.EVENTS.FLOW_RENDER);
         }
@@ -158,12 +156,12 @@ export class Component {
     }
 
     setProps = nextProps => {
-        console.log('nextProps', nextProps)
+        //console.log('nextProps', nextProps)
         if (!nextProps) {
             return;
         }
         Object.assign(this.props, nextProps);
-        console.log('this.props', this.props)
+        //console.log('this.props', this.props)
         this.eventBus().emit(Component.EVENTS.FLOW_CDU);
 
     };
@@ -173,15 +171,15 @@ export class Component {
     }
 
     _render() {
-        console.log('render')
+        //console.log('render')
         const block = this.render();
-        console.log('block',typeof block)
+        //console.log('block',typeof block)
         // Этот небезопасный метод для упрощения логики
         // Используйте шаблонизатор из npm или напишите свой безопасный
         // Нужно не в строку компилировать (или делать это правильно),
         // либо сразу в DOM-элементы возвращать из compile DOM-ноду
         this._element.innerHTML = ''; // удаляем предыдущее содержимое
-        console.log('elem',typeof this._element)
+        //console.log('elem',typeof this._element)
         this._element.appendChild(block);
         this.AddEvents();
         //this._element.innerHTML = block;
@@ -195,39 +193,39 @@ export class Component {
     }
 
     compile(template, props) {
-        console.log("template", template())
+        //console.log("template", template())
         //копируем пропсы
         const propsAndStubs = { ...props };
         //добавляем в пропсы чилдов со значениями заглушки
         Object.entries(this.children).forEach(([key, child]) => {
             propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`
         });
-         console.log('propsAndStubs', propsAndStubs)
+         //console.log('propsAndStubs', propsAndStubs)
         //создаем элемент с тегом template
         const fragment = this._createDocumentElement('template');
          //вставляем в созданный элемент шаблон с заглушками
         fragment.innerHTML = template(propsAndStubs);
-        console.log('fragment', fragment)
-        console.log('children', this.children)
+        //console.log('fragment', fragment)
+        //console.log('children', this.children)
         Object.values(this.children).forEach(child => {
-            console.log('child.id', child._id)
+          //  console.log('child.id', child._id)
             const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); //[property="value"]
-              console.log('stub', stub)
+            //  console.log('stub', stub)
             stub.replaceWith(child.getContent());
         });
-        console.log('fragment', typeof fragment)
+        //console.log('fragment', typeof fragment)
         return fragment.content;
     }
 
 
 
     show() {
-         console.log('show')
+        // console.log('show')
         this._element.style.display='block';
     }
 
     hide() {
-        console.log('hide')
+        //console.log('hide')
         this._element.style.display='none';
         //this._element.setAttribute("display", "none");
     }

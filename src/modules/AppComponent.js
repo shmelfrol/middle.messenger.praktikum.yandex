@@ -15,7 +15,7 @@ export class AppComponent extends Component {
 
     }
     render() {
-        console.log('template!!!!', this.template)
+       // console.log('template!!!!', this.template)
 
         return this.compile(this.template, this.props);
     }
