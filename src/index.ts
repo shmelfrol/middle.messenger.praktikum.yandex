@@ -11,7 +11,7 @@ import {renderDom} from "./modules/Renderdom";
 import {formPage} from "./pages/forms/forms";
 import {navbar_items} from "./component/navbar/navbar";
 
-
+let str:string
 let path=window.location.pathname;
 
 renderDom('#navbar' ,navbar_items())
