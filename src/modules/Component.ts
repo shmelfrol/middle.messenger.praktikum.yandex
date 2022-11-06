@@ -1,24 +1,32 @@
 import {EventBus} from "./event-bus";
 import {v4 as makeUUID} from 'uuid';
+import {TJsonObject} from "src/type_component";
 
-export class Component {
+export class Component <T extends TJsonObject>{
+    eventBus: EventBus;
+
     static EVENTS = {
         INIT: "init",
         FLOW_CDM: "flow:component-did-mount",
         FLOW_CDU: "flow:component-did-update",
         FLOW_RENDER: "flow:render"
     }
-
-    _element = null;
-    _meta = null;
-    _id = null;
+    readonly props:TJsonObject
+    private _element: ChildNode | null = null;
+    readonly _meta: {  }|null = null;
+    readonly _id:string|null = null;
+    template:string
+    MyaddEvents:Function|null
+    private children:TJsonObject|null
     /** JSDoc
      * @param {string} tagName
-     * @param {Object} props
-     *
+     * @param {Object} myprops
+     *@param {string} classofTag
+     * @param {string} template
+     * @param {Function|null} MyaddEvents
      * @returns {void}
      */
-    constructor(tagName = "div", myprops = {}, classofTag="", template='', MyaddEvents=null) {
+    constructor(tagName:string = "div", myprops:T = {}, classofTag:string="", template:string='', MyaddEvents:Function|null=null) {
         //console.log('tagname',tagName)
         //console.log("myprops", myprops)
         //console.log("classofTag", classofTag)
@@ -50,10 +58,10 @@ export class Component {
         eventBus.emit(Component.EVENTS.INIT);
     }
 
-    _getChildren(myprops) {
+    _getChildren(myprops:T) {
         //console.log('getmyprops',myprops)
-        const children = {};
-        const props = {};
+        const children:TJsonObject = {};
+        const props:TJsonObject= {};
 
         Object.entries(myprops).forEach(([key, value]) => {
             if (value instanceof Component) {
@@ -66,7 +74,7 @@ export class Component {
         return { children, props };
     }
 
-    _makePropsProxy(props) {
+    _makePropsProxy(props:TJsonObject) {
         // Можно и так передать this
         // Такой способ больше не применяется с приходом ES6+
         const self = this;

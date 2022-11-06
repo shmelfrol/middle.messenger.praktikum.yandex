@@ -2,7 +2,7 @@
   "exclude": ["server.js"],
   "compilerOptions": {
     "outDir": "dist",
-
+    "target": "ES2021",
     "declaration": false,
     "module": "ES6",
     "moduleResolution": "Node",
