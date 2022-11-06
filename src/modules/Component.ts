@@ -1,9 +1,11 @@
 import {EventBus} from "./event-bus";
 import {v4 as makeUUID} from 'uuid';
 import {TJsonObject} from "src/type_component";
+import {Props} from "src/type_component";
+import {Children} from "src/type_component";
 
-export class Component <T extends TJsonObject>{
-    eventBus: EventBus;
+export class Component {
+    eventBus: Function;
 
     static EVENTS = {
         INIT: "init",
@@ -11,13 +13,14 @@ export class Component <T extends TJsonObject>{
         FLOW_CDU: "flow:component-did-update",
         FLOW_RENDER: "flow:render"
     }
-    readonly props:TJsonObject
-    private _element: ChildNode | null = null;
+
+    readonly props:Props
+    private _element: HTMLElement|null = null;
     readonly _meta: {  }|null = null;
     readonly _id:string|null = null;
-    template:string
+    template:Function|null
     MyaddEvents:Function|null
-    private children:TJsonObject|null
+    private children:Children
     /** JSDoc
      * @param {string} tagName
      * @param {Object} myprops
@@ -26,12 +29,13 @@ export class Component <T extends TJsonObject>{
      * @param {Function|null} MyaddEvents
      * @returns {void}
      */
-    constructor(tagName:string = "div", myprops:T = {}, classofTag:string="", template:string='', MyaddEvents:Function|null=null) {
+    constructor(tagName:string = "div", myprops:Children = {}, classofTag:string="", template:Function|null=null, MyaddEvents:Function|null=null) {
         //console.log('tagname',tagName)
-        //console.log("myprops", myprops)
+        console.log("myprops", myprops)
         //console.log("classofTag", classofTag)
+
         const { children, props } = this._getChildren(myprops);
-        //console.log("children", children)
+        console.log("children", children)
         //console.log("props", props)
         this.children = children;
         this.template=template
@@ -58,10 +62,10 @@ export class Component <T extends TJsonObject>{
         eventBus.emit(Component.EVENTS.INIT);
     }
 
-    _getChildren(myprops:T) {
+    _getChildren(myprops:Children) {
         //console.log('getmyprops',myprops)
-        const children:TJsonObject = {};
-        const props:TJsonObject= {};
+        const children:Children = {};
+        const props:Props= {};
 
         Object.entries(myprops).forEach(([key, value]) => {
             if (value instanceof Component) {
@@ -74,17 +78,17 @@ export class Component <T extends TJsonObject>{
         return { children, props };
     }
 
-    _makePropsProxy(props:TJsonObject) {
+    _makePropsProxy(props:Props) {
         // Можно и так передать this
         // Такой способ больше не применяется с приходом ES6+
         const self = this;
         // console.log(props)
         return new Proxy(props, {
-            get(target, prop) {
+            get(target, prop:string) {
                 const value = target[prop];
                 return typeof value === "function" ? value.bind(target) : value;
             },
-            set(target, prop, value) {
+            set(target, prop:string, value) {
                 target[prop] = value;
 
                 // Запускаем обновление компоненты
@@ -98,7 +102,7 @@ export class Component <T extends TJsonObject>{
         });
     }
 
-    _registerEvents(eventBus) {
+    _registerEvents(eventBus:EventBus) {
         //регистрируем событие
         //событие инициализации - создание элемента без пропсов
         eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
@@ -117,15 +121,20 @@ export class Component <T extends TJsonObject>{
         const { tagName, classofTag } = this._meta;
         // присваиваем _element созданный элемент
         this._element = this._createDocumentElement(tagName);
+        console.log("type of element!", typeof this._element)
+        console.log("type of element!", this._element)
         this._element.className = classofTag;
 
         //console.log('create element', this._element)
         this.eventBus().emit(Component.EVENTS.FLOW_RENDER);
     }
 
-    _createDocumentElement(tagName) {
+    _createDocumentElement(tagName:string) {
         const element = document.createElement(tagName);
-        element.setAttribute('data-id', this._id);
+        console.log("type Element")
+        if (this._id != null) {
+            element.setAttribute('data-id', this._id);
+        }
         return element;
 
     }
@@ -136,7 +145,7 @@ export class Component <T extends TJsonObject>{
     }
 
 // Может переопределять пользователь, необязательно трогать
-    componentDidMount(oldProps) {
+    componentDidMount() {
         //console.log("dispatch3")
      //this._element.innerHTML=this.props.text
 
@@ -149,7 +158,7 @@ export class Component <T extends TJsonObject>{
 
     }
 
-    _componentDidUpdate(oldProps, newProps) {
+    _componentDidUpdate(oldProps:Props, newProps:Props) {
         //ОТВЕТ
         const response = this.componentDidUpdate(oldProps, newProps);
         //console.log('response', response)
@@ -159,11 +168,11 @@ export class Component <T extends TJsonObject>{
     }
 
 // Может переопределять пользователь, необязательно трогать
-    componentDidUpdate(oldProps, newProps) {
+    componentDidUpdate(oldProps:Props, newProps:Props) {
         return true;
     }
 
-    setProps = nextProps => {
+    setProps = (nextProps: Props) => {
         //console.log('nextProps', nextProps)
         if (!nextProps) {
             return;
@@ -175,7 +184,10 @@ export class Component <T extends TJsonObject>{
     };
 
     get element() {
-        return this._element;
+        if(this._element!==null){
+            return this._element;
+        }
+
     }
 
     _render() {
@@ -200,8 +212,8 @@ export class Component <T extends TJsonObject>{
         return this.element;
     }
 
-    compile(template, props) {
-        //console.log("template", template())
+    compile(template:Function, props:Props) {
+        console.log("template", typeof template)
         //копируем пропсы
         const propsAndStubs = { ...props };
         //добавляем в пропсы чилдов со значениями заглушки

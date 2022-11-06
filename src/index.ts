@@ -13,16 +13,9 @@ import {navbar_items} from "./component/navbar/navbar";
 
 
 let path=window.location.pathname;
-let getparam=window.location.search
-
-let chatId:string=''
-//let active=path
 
 renderDom('#navbar' ,navbar_items())
-if(getparam) {
-    const regex = /\?id=/gm;
-    chatId = getparam.replace(regex, "")
-}
+
     switch (path) {
     case '/contacts':
         renderDom('#main' ,contact_page1())

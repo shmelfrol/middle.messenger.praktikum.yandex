@@ -1,8 +1,8 @@
 import {MyvalidateFields} from "./myvalidate";
 
-export function validform(el, values, event){
+export function validform(el:HTMLDivElement, values:{[key: string]:any}, event:any){
     event.preventDefault()
-    el.querySelectorAll('input').forEach(item=> {
+    el.querySelectorAll('input').forEach((item)=> {
         if(item.type!=='submit'){values[item.name] = item.value}
     })
     let err=null
@@ -20,7 +20,7 @@ export function validform(el, values, event){
     }else{console.log(err)}
 }
 
-export function validEl(item, errordiv){
+export function validEl(item:HTMLInputElement, errordiv:Element){
     let error=MyvalidateFields(item.name, item.value)
     console.log(error)
     if(error!=null){

@@ -7,39 +7,41 @@ import {AppComponent} from "../../modules/AppComponent";
 import {propschat} from "./propschat";
 import chatitemtpl from "../../component/chatitem/chatitem.hbs";
 import chatik_tpl from "./chatik.hbs"
+import {Props} from "src/type_component";
+import {Children} from "src/type_component";
 
-function MyaddEvents(el, props){
+
+function MyaddEvents(el:HTMLDivElement, props:Props){
     console.log("MyaddEvents")
     console.log('myaddev_el', el)
-    el.querySelectorAll('a').forEach(item=> {
-        console.log(props.events.click)
+    el.querySelectorAll('a').forEach((item:any)=> {
+        console.log("Item", item)
         item.addEventListener('click', props.events.click)
     })
 }
 
 
 export function chatik(){
-    const tag='div'
-    const classofTag='itemtest'
+    const tag:string='div'
 //leftblock
-    const chatitem1 =new AppComponent(tag, propschat.chats[0], '', chatitemtpl, MyaddEvents)
-    const chatitem2 =new AppComponent(tag, propschat.chats[1], '', chatitemtpl, MyaddEvents)
+    const chatitem1:AppComponent =new AppComponent(tag, propschat.chats[0], '', chatitemtpl, MyaddEvents)
+    const chatitem2:AppComponent =new AppComponent(tag, propschat.chats[1], '', chatitemtpl, MyaddEvents)
 
-    let leftblockchat_props={chatitem1: chatitem1, chatitem2: chatitem2}
-     const leftblockchat =new AppComponent('div',leftblockchat_props, 'itemtest', leftblockchat_tpl)
+    let leftblockchat_props:Children={chatitem1: chatitem1, chatitem2: chatitem2}
+     const leftblockchat:AppComponent =new AppComponent('div',leftblockchat_props, 'itemtest', leftblockchat_tpl)
 
 //rightblock
-    let chatbox_props={text:"testing test"}
-    const chatbox =new AppComponent('div', chatbox_props, 'testformessage', chatbox_tpl)
+    let chatbox_props:Props={text:"testing test"}
+    const chatbox:AppComponent =new AppComponent('div', chatbox_props, 'testformessage', chatbox_tpl)
 
-    let chatinput_props={text:"Tap 'Enter' to send a message", events:{click: ()=>{alert('click')}}}
-    const chatinput =new AppComponent('div', chatinput_props, 'testforbtn', chatinput_tpl)
+    let chatinput_props:Props={text:"Tap 'Enter' to send a message", events:{click: ()=>{alert('click')}}}
+    const chatinput:AppComponent =new AppComponent('div', chatinput_props, 'testforbtn', chatinput_tpl)
 
-    let chatscroll_props={text:"chatscroll"}
-    const chatscroll =new AppComponent('div', chatscroll_props, 'chat-bar-bottom', chatscroll_tpl)
+    let chatscroll_props:Props={text:"chatscroll"}
+    const chatscroll:AppComponent =new AppComponent('div', chatscroll_props, 'chat-bar-bottom', chatscroll_tpl)
 
-    let rightblockchat_props={chatbox: chatbox, chatscroll: chatscroll, chatinput:chatinput}
-    const rightblockchat =new AppComponent('div',rightblockchat_props, 'itemtest', rightblockchat_tpl)
+    let rightblockchat_props:Children={chatbox: chatbox, chatscroll: chatscroll, chatinput:chatinput}
+    const rightblockchat:AppComponent =new AppComponent('div',rightblockchat_props, 'itemtest', rightblockchat_tpl)
 
     return new AppComponent(
         'div',

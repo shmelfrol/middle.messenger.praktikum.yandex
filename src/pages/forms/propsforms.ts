@@ -1,8 +1,3 @@
-import {MyvalidateFields} from "../../utility/myvalidate";
-
-
-
-
 export const inputs={
     first_name:{inputname:'first_name', text: 'Имя', type: 'text', events:{click: ()=>{console.log("first_name")}}},
     second_name:{inputname:'second_name', text: 'Фамилия', type: 'text', events:{click: ()=>{console.log("first_name")}}},
