@@ -1,6 +1,7 @@
-import {AppComponent} from "../../modules/AppComponent";
-import button_tpl from "./button.hbs"
+import { Props } from 'src/type_component';
+import { AppComponent } from '../../modules/AppComponent';
+import ButtonTpl from './button.hbs';
 
-export function button(button_login_props){
-    return new AppComponent('div', button_login_props, 'form-example', button_tpl)
+export default function button(ButtonLoginProps:Props) {
+  return new AppComponent('div', ButtonLoginProps, 'form-example', ButtonTpl);
 }

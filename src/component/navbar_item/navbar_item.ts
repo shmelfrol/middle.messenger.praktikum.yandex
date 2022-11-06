@@ -1,8 +1,7 @@
-import {AppComponent} from "../../modules/AppComponent";
-import navbar_item_tpl from "./navbar_item.hbs"
+import { Props } from 'src/type_component';
+import { AppComponent } from '../../modules/AppComponent';
+import NavbarItemTpl from './navbar_item.hbs';
 
-
-
-export function navbar_item(props, nav_item_events){
-    return new AppComponent('div', props, '', navbar_item_tpl, nav_item_events)
+export default function NavbarItem(props:Props, NavItemEvents:Function) {
+  return new AppComponent('div', props, '', NavbarItemTpl, NavItemEvents);
 }

@@ -1,7 +1,7 @@
-import {AppComponent} from "../../modules/AppComponent";
-import input_tpl from "./input.hbs"
-import {Props} from "src/type_component";
+import { Props } from 'src/type_component';
+import { AppComponent } from '../../modules/AppComponent';
+import InputTpl from './input.hbs';
 
-export function input(props:Props, Input_events:Function){
-    return new AppComponent('div', props, 'form-example', input_tpl, Input_events)
+export default function input(props:Props, InputEvents:Function) {
+  return new AppComponent('div', props, 'form-example', InputTpl, InputEvents);
 }
