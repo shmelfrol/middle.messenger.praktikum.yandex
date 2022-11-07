@@ -1,11 +1,11 @@
-import express from "express"
-import path from 'path';
-import { fileURLToPath } from 'url';
+express=require("express")
+//import path from 'path';
+//import { fileURLToPath } from 'url';
 //const express = require('express')
 const app=express()
 const PORT = 3000
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+//const __filename = fileURLToPath(import.meta.url);
+//const __dirname = path.dirname(__filename);
 console.log(__dirname)
 
 app.use(express.static('./dist/'))
