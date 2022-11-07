@@ -1,5 +1,3 @@
-import {Props} from "src/type_component";
-
-declare function template(_props: Props): string;
+declare function template(): string;
 
 export default template;

@@ -1,12 +1,15 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:import/recommended",
+        "plugin:import/typescript"
     ],
     "overrides": [
     ],
@@ -16,20 +19,31 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "eslint-plugin-import"
     ],
-    "rules": {"import/extensions": ["error", "ignorePackages", {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never",
-        "mjs": "never"
-    }]
+    "rules": {
+        "import/extensions": "off",
+        "semi": "off",
+        "import/no-unresolved": "off",
+        "eol-last": "off",
+        "max-len": ["error", 150],
+        "prefer-destructuring": "off",
+        "linebreak-style": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "import/prefer-default-export": "off",
+        "class-methods-use-this": "off",
+        "no-underscore-dangle": ["error", {
+            "allowAfterThis": true,
+            "allow": ["_id", "_bar"]
+        }]
+
     },
     "settings": {
         "import/resolver": {
             "node": {
-                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+                "extensions": [".js", ".jsx", ".ts", ".tsx"],
+                "moduleDirectory": ["src"]
             }
         }
     }

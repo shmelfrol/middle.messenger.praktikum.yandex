@@ -3,7 +3,7 @@ import { Props, Children } from 'src/type_component';
 import { EventBus } from './event-bus';
 
 export class Component {
-  eventBus: Function;
+  eventBus: EventBus;
 
   static EVENTS = {
     INIT: 'init',
@@ -20,9 +20,9 @@ export class Component {
 
   readonly _id:string|null = null;
 
-  template:Function|null;
+  template:string|null;
 
-  MyaddEvents:Function|null;
+  MyaddEvents:null;
 
   private children:Children;
 
@@ -34,13 +34,11 @@ export class Component {
      * @param {Function|null} MyaddEvents
      * @returns {void}
      */
-  constructor(tagName = 'div', myprops:Children = {}, classofTag = '', template:Function|null = null, MyaddEvents:Function|null = null) {
+  constructor(tagName = 'div', myprops:Children = {}, classofTag = '', template:string|null = null, MyaddEvents = null) {
     // console.log('tagname',tagName)
-    console.log('myprops', myprops);
     // console.log("classofTag", classofTag)
 
     const { children, props } = this._getChildren(myprops);
-    console.log('children', children);
     // console.log("props", props)
     this.children = children;
     this.template = template;
@@ -60,7 +58,7 @@ export class Component {
     this.props = this._makePropsProxy({ ...props, __id: this._id });
     // console.log('this.props',this.props)
     // задействуем eventbus - ф-ция которая возвращает eventbus, чтобы использовать за конструктором
-    this.eventBus = () => eventBus;
+    this.eventBus = eventBus;
     // регистрируем событияb
     this._registerEvents(eventBus);
     // запускаем события переданные в eventbus
@@ -71,7 +69,6 @@ export class Component {
     // console.log('getmyprops',myprops)
     const children:Children = {};
     const props:Props = {};
-
     Object.entries(myprops).forEach(([key, value]) => {
       if (value instanceof Component) {
         children[key] = value;
@@ -98,7 +95,7 @@ export class Component {
 
         // Запускаем обновление компоненты
         // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
-        self.eventBus().emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -128,17 +125,14 @@ export class Component {
     const { tagName, classofTag } = this._meta;
     // присваиваем _element созданный элемент
     this._element = this._createDocumentElement(tagName);
-    console.log('type of element!', typeof this._element);
-    console.log('type of element!', this._element);
     this._element.className = classofTag;
 
     // console.log('create element', this._element)
-    this.eventBus().emit(Component.EVENTS.FLOW_RENDER);
+    this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
   }
 
   _createDocumentElement(tagName:string) {
     const element = document.createElement(tagName);
-    console.log('type Element');
     if (this._id != null) {
       element.setAttribute('data-id', this._id);
     }
@@ -151,40 +145,33 @@ export class Component {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidMount() {
-    // console.log("dispatch3")
-    // this._element.innerHTML=this.props.text
-
-  }
+  componentDidMount() {}
 
   dispatchComponentDidMount() {
     // console.log("dispatch1")
 
-    this.eventBus().emit(Component.EVENTS.FLOW_CDM);
+    this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate(oldProps:Props, newProps:Props) {
-    // ОТВЕТ
-    const response = this.componentDidUpdate(oldProps, newProps);
-    // console.log('response', response)
+  _componentDidUpdate() {
+    const response = this.componentDidUpdate();
     if (response) {
-      this.eventBus().emit(Component.EVENTS.FLOW_RENDER);
+      this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidUpdate(oldProps:Props, newProps:Props) {
+  componentDidUpdate() {
     return true;
   }
 
   setProps = (nextProps: Props) => {
-    // console.log('nextProps', nextProps)
     if (!nextProps) {
       return;
     }
     Object.assign(this.props, nextProps);
     // console.log('this.props', this.props)
-    this.eventBus().emit(Component.EVENTS.FLOW_CDU);
+    this.eventBus.emit(Component.EVENTS.FLOW_CDU);
   };
 
   get element() {
@@ -196,11 +183,7 @@ export class Component {
   _render():void {
     // console.log('render')
     const block = this.render();
-    // console.log('block',typeof block)
-    // Этот небезопасный метод для упрощения логики
-    // Используйте шаблонизатор из npm или напишите свой безопасный
-    // Нужно не в строку компилировать (или делать это правильно),
-    // либо сразу в DOM-элементы возвращать из compile DOM-ноду
+
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
@@ -211,12 +194,14 @@ export class Component {
   // Может переопределять пользователь, необязательно трогать
   render() {}
 
+  // Может переопределять пользователь, необязательно трогать
+  AddEvents() {}
+
   getContent() {
     return this.element;
   }
 
   compile(template:Function, props:Props) {
-    console.log('template', typeof template);
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки
@@ -243,8 +228,9 @@ export class Component {
   show() {
     // console.log('show')
     // eslint-disable-next-line no-underscore-dangle
-    // @ts-ignore
-    this.getContent().style.display = 'block';
+    if (this.getContent() !== null) {
+      this.getContent().style.display = 'block';
+    }
   }
 
   hide() {

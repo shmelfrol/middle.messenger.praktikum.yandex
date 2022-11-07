@@ -2,3 +2,4 @@ export type TJsonValue = string | number | boolean | null | undefined | TJsonVal
 export type TJsonObject = { [key: string]: TJsonValue }|{};
 export type Props = Record<string, any>
 export type Children = Record<string, Props>
+export function Arrow(){return 5}

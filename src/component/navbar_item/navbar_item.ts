@@ -1,5 +1,5 @@
 import { Props } from 'src/type_component';
-import { AppComponent } from '../../modules/AppComponent';
+import { AppComponent } from 'src/modules/AppComponent';
 import NavbarItemTpl from './navbar_item.hbs';
 
 export default function NavbarItem(props:Props, NavItemEvents:Function) {

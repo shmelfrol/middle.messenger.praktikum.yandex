@@ -1,5 +1,2 @@
-import { Props } from 'src/type_component';
-
-// eslint-disable-next-line no-unused-vars
-declare function template(_props: Props): string;
+declare function template(): string;
 export default template;

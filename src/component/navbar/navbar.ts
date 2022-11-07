@@ -1,6 +1,6 @@
+import { AppComponent } from 'src/modules/AppComponent';
 import NavbarItem from '../navbar_item/navbar_item';
 import NavbarTpl from './navbar.hbs';
-import { AppComponent } from '../../modules/AppComponent';
 
 const menuitems: object = {
   chat: {
