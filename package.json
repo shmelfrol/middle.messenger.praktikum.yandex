@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon ./server/server.js",
-    "start": "node ./server/server.js",
+    "serve": "nodemon ./server.js",
+    "start": "node ./server.js",
     "parcelbild": "parcel build index.html",
     "parcelstart": "parcel index.html --open"
   },
@@ -19,6 +19,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "eslint": "^8.27.0",

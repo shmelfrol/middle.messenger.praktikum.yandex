@@ -16,7 +16,7 @@ export class Component {
 
   private _element: HTMLElement|null = null;
 
-  readonly _meta: { }|null = null;
+  readonly _meta:{ tagName: string; props: Props; classofTag: string; }|null = null;
 
   readonly _id:string|null = null;
 
@@ -81,10 +81,6 @@ export class Component {
   }
 
   _makePropsProxy(props:Props) {
-    // Можно и так передать this
-    // Такой способ больше не применяется с приходом ES6+
-    const self = this;
-    // console.log(props)
     return new Proxy(props, {
       get(target, prop:string) {
         const value = target[prop];
@@ -92,10 +88,7 @@ export class Component {
       },
       set(target, prop:string, value) {
         target[prop] = value;
-
-        // Запускаем обновление компоненты
-        // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
-        self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        this.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -201,7 +194,7 @@ export class Component {
     return this.element;
   }
 
-  compile(template:Function, props:Props) {
+  compile(template:string, props:Props) {
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки
@@ -228,7 +221,7 @@ export class Component {
   show() {
     // console.log('show')
     // eslint-disable-next-line no-underscore-dangle
-    if (this.getContent() !== null) {
+    if (this.getContent() !== undefined) {
       this.getContent().style.display = 'block';
     }
   }
