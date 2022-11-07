@@ -3,7 +3,7 @@
     border: solid black;
     flex-direction: row;
     flex-wrap:nowrap;
-    justify-content: flex-start; /*выравнивание с начала */
+    justify-content: flex-start; /* выравнивание с начала */
     height: 558px;
     margin: 5px;
 }
@@ -23,6 +23,7 @@
     height: 100%;
     overflow: auto;
 }
+
 .testforbtn{
     border: solid yellow;
 }
@@ -34,16 +35,17 @@
     flex-direction: row;
     flex-wrap:nowrap;
     margin: 5px;
-    justify-content: flex-start; /*выравнивание с начала */
+    justify-content: flex-start; /* выравнивание с начала */
 
 
 }
+
 .menuitem{
     text-decoration: none;
-
-    background-color: #dddddd;
+    background-color: #ddd;
     padding: 8px;
 }
+
 .menuitem a{
     text-decoration: none;
     color: black;
