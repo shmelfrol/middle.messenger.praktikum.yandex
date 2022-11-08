@@ -3,8 +3,6 @@
     "transformers": {
       "*.hbs": ["parcel-transformer-hbs"]
     },
-    "validators": {
-        "*.{ts,tsx}": ["@parcel/validator-typescript"]
-      },
+
   "reporters":  ["...", "parcel-reporter-static-files-copy"]
 }
