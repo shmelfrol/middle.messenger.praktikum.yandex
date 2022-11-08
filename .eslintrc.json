@@ -9,7 +9,8 @@
         "plugin:@typescript-eslint/recommended",
         "airbnb",
         "plugin:import/recommended",
-        "plugin:import/typescript"
+        "plugin:import/typescript",
+        "prettier"
     ],
     "overrides": [
     ],
@@ -20,11 +21,13 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "eslint-plugin-import"
+        "eslint-plugin-import",
+        "prettier"
     ],
     "rules": {
         "import/extensions": "off",
         "semi": "off",
+        "prettier/prettier": "error",
         "import/no-unresolved": "off",
         "eol-last": "off",
         "max-len": ["error", 150],

@@ -1,4 +1,5 @@
 type TEvent = string;
+
 export class EventBus {
   listeners: { [key: TEvent]: CallableFunction[] };
 
@@ -20,11 +21,11 @@ export class EventBus {
     }
 
     this.listeners[event] = this.listeners[event].filter(
-      (listener) => listener !== callback,
+      (listener) => listener !== callback
     );
   }
 
-  emit(event: TEvent, ...args:unknown[]) {
+  emit(event: TEvent, ...args: unknown[]) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`);
     }

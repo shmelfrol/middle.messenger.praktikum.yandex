@@ -1,22 +1,22 @@
 // todo: Пока нигде не используется, покрою типами, когда начну пользоваться
 
 const METHODS = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE"
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 function queryStringify(data) {
-  if (typeof data !== 'object') {
-    throw new Error('Data must be object');
+  if (typeof data !== "object") {
+    throw new Error("Data must be object");
   }
   const keys = Object.keys(data);
   return keys.reduce((result, key, index) => {
-    return `${result}${key}=${data[key]}${index < keys.length - 1 ? '&' : ''}`;
-  }, '?');
+    return `${result}${key}=${data[key]}${index < keys.length - 1 ? "&" : ""}`;
+  }, "?");
 }
 
 export class HTTPTransport {
@@ -49,12 +49,12 @@ export class HTTPTransport {
     // @ts-ignore
     const { headers = {}, method, data } = options;
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       if (!method) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // eslint-disable-next-line prefer-promise-reject-errors
-        reject('No method');
+        reject("No method");
         return;
       }
 
@@ -67,7 +67,7 @@ export class HTTPTransport {
         xhr.setRequestHeader(key, headers[key]);
       });
 
-      xhr.onload = function () {
+      xhr.onload = function() {
         resolve(xhr);
       };
 

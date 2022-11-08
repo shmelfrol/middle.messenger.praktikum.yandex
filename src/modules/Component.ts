@@ -12,31 +12,39 @@ export class Component {
     FLOW_RENDER: 'flow:render',
   };
 
-  readonly props:Props;
+  readonly props: Props;
 
-  private _element: HTMLElement|null = null;
+  private _element: HTMLElement | null = null;
 
-  readonly _meta:{ tagName: string; props: Props; classofTag: string; }|null = null;
+  readonly _meta: { tagName: string; props: Props; classofTag: string } | null =
+    null;
 
-  readonly _id:string|null = null;
+  readonly _id: string | null = null;
 
-  template:string|null;
+  template: string | null;
 
-  addEvents:null;
+  addEvents: null;
 
-  removeEvents:null
+  removeEvents: null;
 
-  private children:Children;
+  private children: Children;
 
   /** JSDoc
-     * @param {string} tagName
-     * @param {Object} myprops
-     *@param {string} classofTag
-     * @param {string} template
-     * @param {Function|null} MyaddEvents
-     * @returns {void}
-     */
-  constructor(tagName = 'div', myprops:Children = {}, classofTag = '', template:string|null = null, MyaddEvents = null, myRemoveEvents = null) {
+   * @param {string} tagName
+   * @param {Object} myprops
+   *@param {string} classofTag
+   * @param {string} template
+   * @param {Function|null} MyaddEvents
+   * @returns {void}
+   */
+  constructor(
+    tagName = 'div',
+    myprops: Children = {},
+    classofTag = '',
+    template: string | null = null,
+    MyaddEvents = null,
+    myRemoveEvents = null
+  ) {
     // console.log('tagname',tagName)
     // console.log("classofTag", classofTag)
 
@@ -45,7 +53,7 @@ export class Component {
     this.children = children;
     this.template = template;
     this.addEvents = MyaddEvents;
-    this.removeEvents = myRemoveEvents
+    this.removeEvents = myRemoveEvents;
     // это переменная только для конструктора
     const eventBus = new EventBus();
     // console.log(Component.EVENTS)
@@ -68,10 +76,10 @@ export class Component {
     eventBus.emit(Component.EVENTS.INIT);
   }
 
-  _getChildren(myprops:Children) {
+  _getChildren(myprops: Children) {
     // console.log('getmyprops',myprops)
-    const children:Children = {};
-    const props:Props = {};
+    const children: Children = {};
+    const props: Props = {};
     Object.entries(myprops).forEach(([key, value]) => {
       if (value instanceof Component) {
         children[key] = value;
@@ -83,13 +91,13 @@ export class Component {
     return { children, props };
   }
 
-  _makePropsProxy(props:Props) {
+  _makePropsProxy(props: Props) {
     return new Proxy(props, {
-      get(target, prop) {
+      get(target, prop: string) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
-      set(target, prop, value) {
+      set(target, prop: string, value) {
         target[prop] = value;
         this.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
@@ -100,7 +108,7 @@ export class Component {
     });
   }
 
-  _registerEvents(eventBus:EventBus) {
+  _registerEvents(eventBus: EventBus) {
     // регистрируем событие
     // событие инициализации - создание элемента без пропсов
     eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
@@ -127,7 +135,7 @@ export class Component {
     this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
   }
 
-  _createDocumentElement(tagName:string) {
+  _createDocumentElement(tagName: string) {
     const element = document.createElement(tagName);
     if (this._id != null) {
       element.setAttribute('data-id', this._id);
@@ -181,12 +189,12 @@ export class Component {
     this._element = this._element.cloneNode(true);
   }
 
-  _render():void {
+  _render(): void {
     // console.log('render')
     const block = this.render();
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    this.clone()
+    this.clone();
 
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
@@ -212,7 +220,7 @@ export class Component {
     return this.element;
   }
 
-  compile(template:string, props:Props) {
+  compile(template: string, props: Props) {
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки

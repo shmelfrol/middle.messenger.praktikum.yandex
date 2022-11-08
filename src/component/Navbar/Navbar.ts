@@ -4,24 +4,40 @@ import NavbarTpl from './Navbar.hbs';
 
 const menuitems: object = {
   chat: {
-    id: 0, name: '/chat', path: '/chat', title: 'Чат', active: false,
+    id: 0,
+    name: '/chat',
+    path: '/chat',
+    title: 'Чат',
+    active: false,
   },
   contacts: {
-    id: 1, name: '/contacts', title: 'Контакты', active: false,
+    id: 1,
+    name: '/contacts',
+    title: 'Контакты',
+    active: false,
   },
   login: {
-    id: 2, name: '/login', title: 'Вход', active: false,
+    id: 2,
+    name: '/login',
+    title: 'Вход',
+    active: false,
   },
   settings: {
-    id: 3, name: '/settings', title: 'Настройки', active: false,
+    id: 3,
+    name: '/settings',
+    title: 'Настройки',
+    active: false,
   },
   reg: {
-    id: 3, name: '/reg', title: 'Регистрация', active: false,
+    id: 3,
+    name: '/reg',
+    title: 'Регистрация',
+    active: false,
   },
 };
 
-function MyaddEvents(el, props:object): void {
-  const path:string = window.location.pathname;
+function MyaddEvents(el, props: object): void {
+  const path: string = window.location.pathname;
   if (path === props.name) {
     el.classList.add('active');
   }
@@ -35,7 +51,11 @@ export default function NavbarItems() {
   const reg = NavbarItem(menuitems.reg, MyaddEvents);
   const login = NavbarItem(menuitems.login, MyaddEvents);
   const NavbarProps = {
-    login, reg, chat, contacts, settings,
+    login,
+    reg,
+    chat,
+    contacts,
+    settings,
   };
   const navbar = new AppComponent('ul', NavbarProps, 'mainmenu', NavbarTpl);
   return navbar;
