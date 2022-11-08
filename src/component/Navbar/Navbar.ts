@@ -22,12 +22,9 @@ const menuitems: object = {
 
 function MyaddEvents(el, props:object): void {
   const path:string = window.location.pathname;
-  el.querySelectorAll('.menuitem').forEach((item:any) => {
-    if (path === props.name) {
-      // props.active=true
-      item.classList.add('active');
-    }
-  });
+  if (path === props.name) {
+    el.classList.add('active');
+  }
   // console.log('myaddev_el', props.name)
 }
 
@@ -40,6 +37,6 @@ export default function NavbarItems() {
   const NavbarProps = {
     login, reg, chat, contacts, settings,
   };
-  const navbar = new AppComponent('div', NavbarProps, 'mainmenu', NavbarTpl);
+  const navbar = new AppComponent('ul', NavbarProps, 'mainmenu', NavbarTpl);
   return navbar;
 }
