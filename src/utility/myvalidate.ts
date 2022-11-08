@@ -1,5 +1,8 @@
-export const MyvalidateFields = (fieldName: string, value: string): null | string => {
-  console.log('FIELD PROPERTY ', fieldName, value)
+export const MyvalidateFields = (
+  fieldName: string,
+  value: string
+): null | string => {
+  console.log('FIELD PROPERTY ', fieldName, value);
   let error: null | string = null;
   switch (fieldName) {
     case 'login':
@@ -12,12 +15,17 @@ export const MyvalidateFields = (fieldName: string, value: string): null | strin
     case 'oldPassword':
     case 'newPassword':
     case 'Password': {
-      if (!/^(.){8,40}$/.test(value) || !/[A-ZА-Я]/.test(value) || !/[\d]/.test(value)) {
+      if (
+        !/^(.){8,40}$/.test(value) ||
+        !/[A-ZА-Я]/.test(value) ||
+        !/[\d]/.test(value)
+      ) {
         // от 8 до 40 символов, обязательно хотя бы одна заглавная буква и цифра
         error = 'Некорректный пароль';
       }
       break;
     }
+    case 'display_name':
     case 'first_name':
     case 'second_name': {
       if (!/^[A-ZА-Я][a-zа-я-]+$/.test(value)) {
