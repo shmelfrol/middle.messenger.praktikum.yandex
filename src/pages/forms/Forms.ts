@@ -9,15 +9,6 @@ import { validform, validEl } from '../../utility/valid';
 import button from '../../component/Button/Button';
 import input from '../../component/Input/Input';
 
-function InputEvents(el:HTMLDivElement) {
-  const errordiv = el.querySelector('#errormessage');
-  if (errordiv) {
-    el.querySelectorAll('input').forEach((item) => {
-      item.addEventListener('blur', () => { validEl(item, errordiv); });
-    });
-  }
-}
-
 function FormLoginEvents(el:HTMLDivElement) {
   const values = {};
   el.querySelectorAll('input[type="submit"]').forEach((item) => {
@@ -35,52 +26,52 @@ function FormProps(LoginFields:string[]) {
     // eslint-disable-next-line default-case
     switch (LoginField) {
       case 'login': {
-        const login:AppComponent = input(inputs.login, InputEvents);
+        const login:AppComponent = input(inputs.login);
         props[LoginField] = login;
         break;
       }
       case 'Password': {
-        const Password:AppComponent = input(inputs.Password, InputEvents);
+        const Password:AppComponent = input(inputs.Password);
         props[LoginField] = Password;
         break;
       }
       case 'first_name': {
-        const FirstName:AppComponent = input(inputs.first_name, InputEvents);
+        const FirstName:AppComponent = input(inputs.first_name);
         props[LoginField] = FirstName;
         break;
       }
       case 'second_name': {
-        const SecondName:AppComponent = input(inputs.second_name, InputEvents);
+        const SecondName:AppComponent = input(inputs.second_name);
         props[LoginField] = SecondName;
         break;
       }
       case 'display_name': {
-        const DisplayName:AppComponent = input(inputs.display_name, InputEvents);
+        const DisplayName:AppComponent = input(inputs.display_name);
         props[LoginField] = DisplayName;
         break;
       }
       case 'email': {
-        const email:AppComponent = input(inputs.email, InputEvents);
+        const email:AppComponent = input(inputs.email);
         props[LoginField] = email;
         break;
       }
       case 'phone': {
-        const phone:AppComponent = input(inputs.phone, InputEvents);
+        const phone:AppComponent = input(inputs.phone);
         props[LoginField] = phone;
         break;
       }
       case 'oldPassword': {
-        const oldPassword:AppComponent = input(inputs.oldPassword, InputEvents);
+        const oldPassword:AppComponent = input(inputs.oldPassword);
         props[LoginField] = oldPassword;
         break;
       }
       case 'newPassword': {
-        const newPassword:AppComponent = input(inputs.newPassword, InputEvents);
+        const newPassword:AppComponent = input(inputs.newPassword);
         props[LoginField] = newPassword;
         break;
       }
       case 'avatar': {
-        const avatar:AppComponent = input(inputs.avatar, InputEvents);
+        const avatar:AppComponent = input(inputs.avatar);
         props[LoginField] = avatar;
         break;
       }
@@ -96,6 +87,7 @@ function FormProps(LoginFields:string[]) {
 const LoginFields = ['login', 'Password', 'button_login'];
 const RegFields = ['first_name', 'second_name', 'display_name', 'email', 'phone', 'login', 'Password', 'button_login'];
 const SettingsFields = ['first_name', 'second_name', 'display_name', 'email', 'phone', 'login', 'oldPassword', 'newPassword', 'avatar', 'button_login'];
+
 export default function formPage(path:string) {
   let props:Children = {};
   let tpl:any;

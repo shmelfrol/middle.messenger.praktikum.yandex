@@ -22,7 +22,9 @@ export class Component {
 
   template:string|null;
 
-  MyaddEvents:null;
+  addEvents:null;
+
+  removeEvents:null
 
   private children:Children;
 
@@ -34,7 +36,7 @@ export class Component {
      * @param {Function|null} MyaddEvents
      * @returns {void}
      */
-  constructor(tagName = 'div', myprops:Children = {}, classofTag = '', template:string|null = null, MyaddEvents = null) {
+  constructor(tagName = 'div', myprops:Children = {}, classofTag = '', template:string|null = null, MyaddEvents = null, myRemoveEvents = null) {
     // console.log('tagname',tagName)
     // console.log("classofTag", classofTag)
 
@@ -42,7 +44,8 @@ export class Component {
     // console.log("props", props)
     this.children = children;
     this.template = template;
-    this.MyaddEvents = MyaddEvents;
+    this.addEvents = MyaddEvents;
+    this.removeEvents = myRemoveEvents
     // это переменная только для конструктора
     const eventBus = new EventBus();
     // console.log(Component.EVENTS)
@@ -173,9 +176,17 @@ export class Component {
     }
   }
 
+  // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
+  clone() {
+    this._element = this._element.cloneNode(true);
+  }
+
   _render():void {
     // console.log('render')
     const block = this.render();
+    // this.RemoveEvents()
+    // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
+    this.clone()
 
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
@@ -188,7 +199,14 @@ export class Component {
   render() {}
 
   // Может переопределять пользователь, необязательно трогать
-  AddEvents() {}
+  AddEvents() {
+    if (this.addEvents) {
+      this.addEvents(this.getContent(), this.props);
+    }
+  }
+
+  // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
+  RemoveEvents() {}
 
   getContent() {
     return this.element;

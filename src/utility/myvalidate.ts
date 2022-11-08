@@ -3,9 +3,7 @@ export const MyvalidateFields = (fieldName: string, value: string): null | strin
   let error: null | string = null;
   switch (fieldName) {
     case 'login':
-      console.log('switchlogin')
       if (!/^[a-zA-Z-_\d]{3,20}$/.test(value) || /^\d+$/.test(value)) {
-        console.log('switchlogin')
         // от 3 до 20 символов, латиница, может содержать цифры, но не состоять из них,
         // без пробелов, без спецсимволов (допустимы дефис и нижнее подчёркивание)
         error = 'Некорректный логин';
