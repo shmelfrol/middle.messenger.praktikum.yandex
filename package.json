@@ -2,7 +2,7 @@
   "name": "mystep2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+
   "scripts": {
     "serve": "nodemon ./server.js",
     "start": "node ./server.js",
@@ -39,6 +39,13 @@
   },
   "alias": {
     "src": "./src"
+  },
+  "targets": {
+    "modern": {
+      "engines": {
+        "browsers": ">= 50%"
+      }
+    }
   },
   "engines": {
     "node": ">=12"
