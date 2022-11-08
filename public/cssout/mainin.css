@@ -1,6 +1,8 @@
+@import url("vars.css");
+
 .testmain {
     display: inline-flex; /* or inline-flex */
-    border: solid black;
+    border: solid var(--black);
     flex-direction: row;
     flex-wrap:nowrap;
     justify-content: flex-start; /* выравнивание с начала */
@@ -12,26 +14,26 @@
     display: flex;
     flex-direction: column;
     margin: 5px;
-    border: solid red;
+    border: solid var(--red);
     width: 375px;
     overflow: auto;
 
 }
 
 .testformessage{
-    border: solid green;
+    border: solid var(--red);
     height: 100%;
     overflow: auto;
 }
 
 .testforbtn{
-    border: solid yellow;
+    border: solid var(--yellow);
 }
 
 
 .mainmenu {
     display: inline-flex; /* or inline-flex */
-    border: solid black;
+    border: solid var(--black);
     flex-direction: row;
     flex-wrap:nowrap;
     margin: 5px;
@@ -42,24 +44,24 @@
 
 .menuitem{
     text-decoration: none;
-    background-color: #ddd;
+    background-color: var(--menubackgrong);
     padding: 8px;
 }
 
 .menuitem a{
     text-decoration: none;
-    color: black;
+    color: var(--black);
 }
 
 .active {
-    background-color: black;
+    background-color: var(--black);
     color: aliceblue;
     padding: 8px;
 }
 
 .active a {
     text-decoration: none;
-    color: aliceblue;
+    color: var(--textcoloractive);
 }
 
 .error {

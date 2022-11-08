@@ -1,13 +1,13 @@
 import { Children } from '../../type_component';
-import { inputs } from './propsforms';
+import { inputs } from './propsForms';
 import { AppComponent } from '../../modules/AppComponent';
-import FormLoginTpl from './form_login.hbs';
-import FormRegTpl from './form_reg.hbs';
-import FormSettingsTpl from './form_settings.hbs';
-import PageFormTpl from './page_form.hbs';
+import FormLoginTpl from './FormLogin.hbs';
+import FormRegTpl from './FormReg.hbs';
+import FormSettingsTpl from './FormSettings.hbs';
+import PageFormTpl from './PageForm.hbs';
 import { validform, validEl } from '../../utility/valid';
-import button from '../../component/button/button';
-import input from '../../component/input/input';
+import button from '../../component/Button/Button';
+import input from '../../component/Input/Input';
 
 function InputEvents(el:HTMLDivElement) {
   const errordiv = el.querySelector('#errormessage');

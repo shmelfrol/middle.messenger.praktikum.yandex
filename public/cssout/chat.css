@@ -1,7 +1,8 @@
+@import url("vars.css");
 
 .full-chat-block {
     width: 350px;
-    background: white;
+    background: var(--white);
     text-align: center;
     overflow: auto;
     scrollbar-width: none;
@@ -35,7 +36,7 @@
 
 
 .botText {
-    color: #000;
+    color: var(--bottextcolor);
     font-family: Helvetica, serif;
     font-weight: normal;
     font-size: 16px;
@@ -45,7 +46,7 @@
 .botText span {
     line-height: 1.5em;
     display: inline-block;
-    background: #e0e0e0;
+    background: var(--botmesbgcolor);
     padding: 10px;
     border-radius: 8px;
     border-bottom-left-radius: 2px;
@@ -55,7 +56,7 @@
 }
 
 .userText {
-    color: white;
+    color: var(--white);
     font-family: Helvetica, serif;
     font-size: 16px;
     font-weight: normal;
@@ -66,7 +67,7 @@
 .userText span {
     line-height: 1.5em;
     display: inline-block;
-    background: #5ca6fa;
+    background: var(--usermesbgcolor);
     padding: 10px;
     border-radius: 8px;
     border-bottom-right-radius: 2px;
@@ -108,7 +109,7 @@
 }
 
 .userchatactive {
-    color: aliceblue;
+    color: var(--textcoloractive);
     background: black;
 
 }

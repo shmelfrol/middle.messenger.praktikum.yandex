@@ -1,13 +1,13 @@
-import { Props, Children } from '../../type_component';
-import LeftBlockChatTpl from '../../component/leftblockchat/leftblock.hbs';
-import RightBlockChatTpl from '../../component/rightblockchat/rightblockchat.hbs';
-import ChatBoxTpl from '../../component/chatbox/chatbox.hbs';
-import ChatInputTpl from '../../component/chatinput/chatinput.hbs';
-import ChatScrollTpl from '../../component/chatscroll/chatscrol.hbs';
-import { AppComponent } from '../../modules/AppComponent';
-import { propschat } from './propschat';
-import ChatItemTpl from '../../component/chatitem/chatitem.hbs';
-import ChatTpl from './chatik.hbs';
+import { AppComponent } from 'src/modules/AppComponent';
+import { Props, Children } from 'src/type_component';
+import LeftBlockChatTpl from '../../component/LeftBlockChat/LeftBlockChat.hbs';
+import RightBlockChatTpl from '../../component/RightBlockChat/RightBlockChat.hbs';
+import ChatBoxTpl from '../../component/ChatBox/ChatBox.hbs';
+import ChatInputTpl from '../../component/ChatInput/ChatInput.hbs';
+import ChatScrollTpl from '../../component/ChatScroll/ChatScroll.hbs';
+import { propsChat } from './PropsChat';
+import ChatItemTpl from '../../component/ChatItem/ChatItem.hbs';
+import ChatTpl from './Chat.hbs';
 
 function MyaddEvents(el:HTMLDivElement, props:Props) {
   el.querySelectorAll('a').forEach((item:any) => {
@@ -15,11 +15,11 @@ function MyaddEvents(el:HTMLDivElement, props:Props) {
   });
 }
 
-export default function chatik() {
+export default function Chat() {
   const tag = 'div';
   // leftblock
-  const chatitem1:AppComponent = new AppComponent(tag, propschat.chats[0], '', ChatItemTpl, MyaddEvents);
-  const chatitem2:AppComponent = new AppComponent(tag, propschat.chats[1], '', ChatItemTpl, MyaddEvents);
+  const chatitem1:AppComponent = new AppComponent(tag, propsChat.chats[0], '', ChatItemTpl, MyaddEvents);
+  const chatitem2:AppComponent = new AppComponent(tag, propsChat.chats[1], '', ChatItemTpl, MyaddEvents);
 
   const LeftBlockChatProps:Children = { chatitem1, chatitem2 };
   const leftblockchat:AppComponent = new AppComponent('div', LeftBlockChatProps, 'itemtest', LeftBlockChatTpl);

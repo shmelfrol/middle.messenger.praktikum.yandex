@@ -1,6 +1,6 @@
 import { v4 as makeUUID } from 'uuid';
 import { Props, Children } from 'src/type_component';
-import { EventBus } from './event-bus';
+import { EventBus } from './EventBus';
 
 export class Component {
   eventBus: EventBus;
@@ -82,11 +82,11 @@ export class Component {
 
   _makePropsProxy(props:Props) {
     return new Proxy(props, {
-      get(target, prop:string) {
+      get(target, prop) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
-      set(target, prop:string, value) {
+      set(target, prop, value) {
         target[prop] = value;
         this.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;

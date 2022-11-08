@@ -4,31 +4,31 @@ import '../public/cssout/chat.css';
 import '../public/cssout/btn.css';
 import '../public/cssout/form.css';
 
-import chatik from './pages/chat/chatpage';
-import ContactPage from './pages/contacts/contact_page';
-import { renderDom } from './modules/Renderdom';
-import formPage from './pages/forms/forms';
-import NavbarItems from './component/navbar/navbar';
+import Chat from './pages/chat/ChatPage';
+import ContactPage from './pages/contacts/ContactPage';
+import RenderDom from './modules/RenderDom';
+import formPage from './pages/forms/Forms';
+import NavbarItems from './component/Navbar/Navbar';
 
 const path = window.location.pathname;
 
-renderDom('#navbar', NavbarItems());
+RenderDom('#navbar', NavbarItems());
 
 switch (path) {
   case '/contacts':
-    renderDom('#main', ContactPage());
+    RenderDom('#main', ContactPage());
     break;
   case '/chat':
-    renderDom('#main', chatik());
+    RenderDom('#main', Chat());
     break;
   case '/login':
-    renderDom('#main', formPage(path));
+    RenderDom('#main', formPage(path));
     break;
   case '/reg':
-    renderDom('#main', formPage(path));
+    RenderDom('#main', formPage(path));
     break;
   case '/settings':
-    renderDom('#main', formPage(path));
+    RenderDom('#main', formPage(path));
     break;
   default:
     NotFoundPage();

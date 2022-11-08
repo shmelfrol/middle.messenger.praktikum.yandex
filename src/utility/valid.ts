@@ -9,7 +9,7 @@ export function validform(el:HTMLDivElement, values:{[key: string]:any}, event:a
   for (const key in values) {
     const error = MyvalidateFields(key, values[key]);
     if (error !== null) { err = error; }
-    if (key == 'newPassword') {
+    if (key === 'newPassword') {
       if (values[key] !== values.oldPassword) {
         err = 'старый и новый пароли не совпадают';
       }
