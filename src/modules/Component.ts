@@ -208,9 +208,13 @@ export class Component {
 
   // Может переопределять пользователь, необязательно трогать
   AddEvents() {
-    if (this.addEvents) {
-      this.addEvents(this.getContent(), this.props);
+    if (this.props.events) {
+      this.props.events(this.getContent(), this.props);
     }
+
+    /* if (this.addEvents) {
+      this.addEvents(this.getContent(), this.props);
+    } */
   }
 
   // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь

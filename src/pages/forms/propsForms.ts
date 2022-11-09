@@ -1,6 +1,7 @@
 import { validEl } from 'src/utility/valid';
 
 function InputEvents(el: HTMLDivElement) {
+  console.log('from props');
   const errordiv = el.querySelector('#errormessage');
   if (errordiv) {
     const inputs = el.querySelectorAll('input');
@@ -36,66 +37,42 @@ export const inputs = {
     inputname: 'login',
     text: 'Логин',
     type: 'text',
-    events: { click: () => InputEvents },
+    events: InputEvents,
   },
   email: {
     inputname: 'email',
     text: 'Email',
     type: 'email',
-    events: {
-      click: () => {
-        console.log('first_name');
-      },
-    },
+    events: InputEvents,
   },
   phone: {
     inputname: 'phone',
     text: 'Тел',
     type: 'text',
-    events: {
-      click: () => {
-        console.log('first_name');
-      },
-    },
+    events: InputEvents,
   },
   oldPassword: {
     inputname: 'oldPassword',
     text: 'oldPassword',
     type: 'password',
-    events: {
-      click: () => {
-        console.log('oldpass');
-      },
-    },
+    events: InputEvents,
   },
   newPassword: {
     inputname: 'newPassword',
     text: 'newPassword',
     type: 'password',
-    events: {
-      click: () => {
-        console.log('newpass');
-      },
-    },
+    events: InputEvents,
   },
   Password: {
     inputname: 'Password',
     text: 'пароль',
     type: 'password',
-    events: {
-      click: () => {
-        console.log('first_name');
-      },
-    },
+    events: InputEvents,
   },
   avatar: {
     inputname: 'avatar',
     text: 'Фото',
     type: 'file',
-    events: {
-      click: () => {
-        console.log('first_name');
-      },
-    },
+    events: InputEvents,
   },
 };
