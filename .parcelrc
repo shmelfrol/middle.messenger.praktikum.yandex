@@ -3,6 +3,5 @@
     "transformers": {
       "*.hbs": ["parcel-transformer-hbs"]
     },
-
   "reporters":  ["...", "parcel-reporter-static-files-copy"]
 }

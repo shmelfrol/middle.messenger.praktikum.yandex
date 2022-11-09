@@ -17,7 +17,7 @@ ts
 - `npm run parcelbild` — сборка стабильной версии.
 
 ## **проект залит на netlify**
-- «[Netlify](https://celadon-kheer-bdea34.netlify.app/chat?id=4)».
+- «[Netlify](https://636a9115e0a5941e2541e87d--zingy-conkies-3ce667.netlify.app/chat)».
 на втором спринте добавил компонентный подход, создан класс Component, шина событий EventBus  
 каждая компонента как функция и экземпляр класса
 реализованна возможность добавления событий для компонент

@@ -98,8 +98,11 @@ export class Component {
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop: string, value) {
+        console.log('target', target);
+        console.log('prop', prop);
+        console.log('value', value);
         target[prop] = value;
-        this.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        // eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -144,7 +147,7 @@ export class Component {
   }
 
   _componentDidMount() {
-    // console.log("dispatch2")
+    console.log('dispatch2');
     this.componentDidMount();
   }
 
@@ -152,8 +155,6 @@ export class Component {
   componentDidMount() {}
 
   dispatchComponentDidMount() {
-    // console.log("dispatch1")
-
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
@@ -190,12 +191,11 @@ export class Component {
   }
 
   _render(): void {
-    // console.log('render')
+    // передаем fragment в block
     const block = this.render();
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
     this.clone();
-
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
@@ -208,9 +208,13 @@ export class Component {
 
   // Может переопределять пользователь, необязательно трогать
   AddEvents() {
-    if (this.addEvents) {
-      this.addEvents(this.getContent(), this.props);
+    if (this.props.events) {
+      this.props.events(this.getContent(), this.props);
     }
+
+    /* if (this.addEvents) {
+      this.addEvents(this.getContent(), this.props);
+    } */
   }
 
   // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
@@ -232,8 +236,6 @@ export class Component {
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
-    // console.log('fragment', fragment)
-    // console.log('children', this.children)
     Object.values(this.children).forEach((child) => {
       //  console.log('child.id', child._id)
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]

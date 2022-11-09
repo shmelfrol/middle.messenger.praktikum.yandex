@@ -14,6 +14,7 @@ export class AppComponent extends Component {
     super(tag, myprops, classofTag, template, MyaddEvents);
   }
 
+  // скорее всего эта функция не нужна
   RemoveEvents() {
     if (this.removeEvents) {
       this.removeEvents(this.getContent());
