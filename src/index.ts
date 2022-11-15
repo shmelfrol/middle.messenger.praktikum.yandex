@@ -9,10 +9,17 @@ import ContactPage from './pages/contacts/ContactPage';
 import RenderDom from './modules/RenderDom';
 import formPage from './pages/forms/Forms';
 import NavbarItems from './component/Navbar/Navbar';
+import {Router} from "src/modules/MainRouter";
 
 const path = window.location.pathname;
 
 RenderDom('#navbar', NavbarItems());
+
+const router = new Router(".app");
+router
+    .use("/contactss", ContactPage)
+    .start()
+
 
 switch (path) {
   case '/contacts':

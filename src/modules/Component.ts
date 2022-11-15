@@ -20,7 +20,7 @@ export class Component {
     null;
 
   readonly _id: string | null = null;
-
+  isMounted:boolean=false
   template: string | null;
 
   addEvents: null;
@@ -149,12 +149,18 @@ export class Component {
   _componentDidMount() {
     console.log('dispatch2');
     this.componentDidMount();
+    Object.values(this.children).forEach(child => {
+      child.dispatchComponentDidMount();
+    });
+
   }
 
   // Может переопределять пользователь, необязательно трогать
   componentDidMount() {}
 
   dispatchComponentDidMount() {
+    console.log('dispatch1')
+    this.isMounted = true;
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
@@ -195,10 +201,11 @@ export class Component {
     const block = this.render();
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    this.clone();
+    //this.clone();
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
+
     this.AddEvents();
     // this._element.innerHTML = block;
   }
@@ -247,7 +254,7 @@ export class Component {
   }
 
   show() {
-    // console.log('show')
+     console.log('show!!!!!!!!!!!');
     // eslint-disable-next-line no-underscore-dangle
     if (this.getContent() !== undefined) {
       this.getContent().style.display = 'block';
