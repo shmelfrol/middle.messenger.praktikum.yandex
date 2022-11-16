@@ -1,13 +1,13 @@
 import { Children } from '../../type_component';
-import { inputs } from './propsForms';
+import {formsdata} from './propsForms';
 import { AppComponent } from '../../modules/AppComponent';
 import FormLoginTpl from './FormLogin.hbs';
 import FormRegTpl from './FormReg.hbs';
 import FormSettingsTpl from './FormSettings.hbs';
 import PageFormTpl from './PageForm.hbs';
 import { validform, validEl } from '../../utility/valid';
-import button from '../../component/Button/Button';
-import input from '../../component/Input/Input';
+import { FormFields} from "src/pages/forms/FormFields";
+import {Component} from "src/modules/Component";
 
 function FormLoginEvents(el: HTMLDivElement) {
   const values = {};
@@ -21,118 +21,82 @@ function FormLoginEvents(el: HTMLDivElement) {
 // создаем кнопку
 const ButtonLoginProps = { btn_name: 'Войти' };
 
-function FormProps(LoginFields: string[]) {
-  const props: Children = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const LoginField of LoginFields) {
-    // eslint-disable-next-line default-case
-    switch (LoginField) {
-      case 'login': {
-        const login: AppComponent = input(inputs.login);
-        props[LoginField] = login;
-        break;
-      }
-      case 'Password': {
-        const Password: AppComponent = input(inputs.Password);
-        props[LoginField] = Password;
-        break;
-      }
-      case 'first_name': {
-        const FirstName: AppComponent = input(inputs.first_name);
-        props[LoginField] = FirstName;
-        break;
-      }
-      case 'second_name': {
-        const SecondName: AppComponent = input(inputs.second_name);
-        props[LoginField] = SecondName;
-        break;
-      }
-      case 'display_name': {
-        const DisplayName: AppComponent = input(inputs.display_name);
-        props[LoginField] = DisplayName;
-        break;
-      }
-      case 'email': {
-        const email: AppComponent = input(inputs.email);
-        props[LoginField] = email;
-        break;
-      }
-      case 'phone': {
-        const phone: AppComponent = input(inputs.phone);
-        props[LoginField] = phone;
-        break;
-      }
-      case 'oldPassword': {
-        const oldPassword: AppComponent = input(inputs.oldPassword);
-        props[LoginField] = oldPassword;
-        break;
-      }
-      case 'newPassword': {
-        const newPassword: AppComponent = input(inputs.newPassword);
-        props[LoginField] = newPassword;
-        break;
-      }
-      case 'avatar': {
-        const avatar: AppComponent = input(inputs.avatar);
-        props[LoginField] = avatar;
-        break;
-      }
-      case 'button_login': {
-        const ButtonLogin: AppComponent = button(ButtonLoginProps);
-        props[LoginField] = ButtonLogin;
-        break;
-      }
-    }
-  }
-  return props;
-}
-const LoginFields = ['login', 'Password', 'button_login'];
-const RegFields = [
-  'first_name',
-  'second_name',
-  'display_name',
-  'email',
-  'phone',
-  'login',
-  'Password',
-  'button_login',
-];
-const SettingsFields = [
-  'first_name',
-  'second_name',
-  'display_name',
-  'email',
-  'phone',
-  'login',
-  'oldPassword',
-  'newPassword',
-  'avatar',
-  'button_login',
-];
 
-export default function formPage(path: string) {
-  let props: Children = {};
+
+
+
+
+
+
+/*export default function formPage(props) {
+  console.log("forppage_props!!!!", props)
+  let components  = {};
   let tpl: any;
+  let path = window.location.pathname
   // eslint-disable-next-line default-case
   switch (path) {
     case '/login': {
-      props = FormProps(LoginFields);
+      components = FormFields(LoginFields, props);
       tpl = FormLoginTpl;
       break;
     }
     case '/reg': {
-      props = FormProps(RegFields);
+      components = FormFields(RegFields, props);
       tpl = FormRegTpl;
       break;
     }
     case '/settings': {
-      props = FormProps(SettingsFields);
+      components = FormFields(SettingsFields, props);
       tpl = FormSettingsTpl;
       break;
     }
   }
-  props = { ...props, events: FormLoginEvents };
-  const form = new AppComponent('form', props, 'form-example', tpl);
-  const page = new AppComponent('div', { form }, 'testmain', PageFormTpl);
-  return page;
+  //components = { ...components, events: FormLoginEvents };
+  //const form = new AppComponent('form', props, 'form-example', tpl);
+  //const page = new AppComponent('div', { form }, 'testmain', PageFormTpl);
+  return components;
+}*/
+
+
+export class Form extends Component {
+  constructor(
+      tag: string,
+      myprops: Children,
+      classofTag: string,
+      template: string,
+      MyaddEvents = null,
+  ) {
+    console.log("Myprop!!!!!!!!!!!!!!!s",myprops)
+    let children=FormFields(myprops)
+    myprops={...myprops, ...children }
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!",myprops)
+    super(tag, myprops, classofTag, template, MyaddEvents);
+  }
+
+  render() {
+    if (this.template !== null) {
+      return this.compile(this.template, this.children);
+    }
+  }
+}
+
+export function FormPage(){
+  let tpl='';
+  let path = window.location.pathname;
+  switch (path) {
+    case '/login': {
+      tpl = FormLoginTpl;
+      break;
+    }
+    case '/reg': {
+      tpl = FormRegTpl;
+      break;
+    }
+    case '/settings': {
+      tpl = FormSettingsTpl;
+      break;
+    }
+  }
+
+  return new Form('div', formsdata , 'testmain', tpl)
 }

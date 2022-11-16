@@ -199,6 +199,7 @@ export class Component {
   _render(): void {
     // передаем fragment в block
     const block = this.render();
+
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
     //this.clone();
@@ -233,6 +234,7 @@ export class Component {
 
   compile(template: string, props: Props) {
 
+    //console.log("template", template(props))
     // копируем пропсы
     const propsAndStubs = { ...props };
 
@@ -245,11 +247,11 @@ export class Component {
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
-
+    console.log("DGHGH",fragment.content )
     Object.values(this.children).forEach((child) => {
       //  console.log('child.id', child._id)
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-
+      console.log("STUB!!!!!",stub)
 
       stub.replaceWith(child.getContent());
     });

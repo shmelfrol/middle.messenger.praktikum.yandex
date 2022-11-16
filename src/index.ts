@@ -7,21 +7,29 @@ import '../public/cssout/form.css';
 import Chat from './pages/chat/ChatPage';
 import ContactPage from './pages/contacts/ContactPage';
 import RenderDom from './modules/RenderDom';
-import formPage from './pages/forms/Forms';
+
 import NavbarItems from './component/Navbar/Navbar';
 import {Router} from "src/modules/MainRouter";
 
+import {FormFields} from "src/pages/forms/FormFields";
 
 import {getContactPage} from "src/pages/ContactPage/ContactPage";
+
+import {formsdata} from "src/pages/forms/propsForms";
+import {FormPage} from "src/pages/forms/Forms";
 
 const path = window.location.pathname;
 
 RenderDom('#navbar', NavbarItems());
 
-const router = new Router(".app");
+//console.log("formsdata", formsdata)
+//console.log("Fields!!!",FormFields(formsdata))
+
+RenderDom('#main', FormPage());
+/*const router = new Router(".app");
 router
     .use("/contactList", getContactPage)
-    .start()
+    .start()*/
 
 
 switch (path) {
@@ -31,16 +39,16 @@ switch (path) {
   case '/chat':
     RenderDom('#main', Chat());
     break;
-  case '/login':
+  case '/loginnn':
     RenderDom('#main', formPage(path));
     break;
-  case '/reg':
+  case '/regg':
     RenderDom('#main', formPage(path));
     break;
-  case '/settings':
+  case '/settingss':
     RenderDom('#main', formPage(path));
     break;
   default:
-    NotFoundPage();
+    //NotFoundPage();
     break;
 }
