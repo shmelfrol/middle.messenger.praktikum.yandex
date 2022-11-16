@@ -1,5 +1,5 @@
 import { Children } from 'src/type_component';
-import { Component } from './Component';
+import {Component} from "src/modules/Component";
 
 export class ContactClass extends Component {
     constructor(
@@ -9,9 +9,6 @@ export class ContactClass extends Component {
         template: string,
         MyaddEvents = null,
     ) {
-        myprops.
-
-        // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template, MyaddEvents);
     }
 

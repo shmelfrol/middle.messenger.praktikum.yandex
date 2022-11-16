@@ -44,13 +44,13 @@ class Route {
             this._block=this._blockClass()
             console.log("block!!!!!",this._block)
             RenderDom(this._props.rootQuery, this._block);
-            console.log("this_BLOCK!!!!!",this._block.children.contact1.setProps({
+            /*console.log("this_BLOCK!!!!!",this._block.children.contact1.setProps({
                 "id": 0,
                 "user": "IVAN!!!!!!!!!!!!!!!",
                 "phone": "+7 909 909 90",
                 "img": "http://localhost:1234/user.f87d7cd3.jpg?1668527621199",
                 "__id": "e8054d37-55da-4185-bde5-68431e61d0b6"
-            }))
+            }))*/
             return;
         }
 

@@ -27,7 +27,7 @@ export class Component {
 
   removeEvents: null;
 
-  private children: Children;
+  children: Children;
 
   /** JSDoc
    * @param {string} tagName
@@ -49,8 +49,9 @@ export class Component {
     // console.log("classofTag", classofTag)
 
     const { children, props } = this._getChildren(myprops);
-    // console.log("props", props)
+     console.log("props", myprops)
     this.children = children;
+    console.log("children_main_constructor", this.children)
     this.template = template;
     this.addEvents = MyaddEvents;
     this.removeEvents = myRemoveEvents;
@@ -147,7 +148,7 @@ export class Component {
   }
 
   _componentDidMount() {
-    console.log('dispatch2');
+
     this.componentDidMount();
     Object.values(this.children).forEach(child => {
       child.dispatchComponentDidMount();
@@ -159,7 +160,6 @@ export class Component {
   componentDidMount() {}
 
   dispatchComponentDidMount() {
-    console.log('dispatch1')
     this.isMounted = true;
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
@@ -232,25 +232,30 @@ export class Component {
   }
 
   compile(template: string, props: Props) {
+
     // копируем пропсы
     const propsAndStubs = { ...props };
+
     // добавляем в пропсы чилдов со значениями заглушки
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
     });
-    // console.log('propsAndStubs', propsAndStubs)
+
     // создаем элемент с тегом template
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
+
     Object.values(this.children).forEach((child) => {
       //  console.log('child.id', child._id)
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-      //  console.log('stub', stub)
+
+
       stub.replaceWith(child.getContent());
     });
-    // console.log('fragment', typeof fragment)
+
     return fragment.content;
+
   }
 
   show() {

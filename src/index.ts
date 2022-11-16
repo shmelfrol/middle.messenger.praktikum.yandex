@@ -11,13 +11,16 @@ import formPage from './pages/forms/Forms';
 import NavbarItems from './component/Navbar/Navbar';
 import {Router} from "src/modules/MainRouter";
 
+
+import {getContactPage} from "src/pages/ContactPage/ContactPage";
+
 const path = window.location.pathname;
 
 RenderDom('#navbar', NavbarItems());
 
 const router = new Router(".app");
 router
-    .use("/contactss", ContactPage)
+    .use("/contactList", getContactPage)
     .start()
 
 

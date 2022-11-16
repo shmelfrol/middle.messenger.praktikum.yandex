@@ -1,7 +1,8 @@
 import { Children } from 'src/type_component';
-import { Component } from './Component';
+import {Component} from "src/modules/Component";
 
-export class ContactsClass extends Component {
+
+export class Contacts extends Component {
     constructor(
         tag: string,
         myprops: Children,
@@ -9,17 +10,15 @@ export class ContactsClass extends Component {
         template: string,
         MyaddEvents = null,
     ) {
-
- this.children=
-
-
-        // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template, MyaddEvents);
     }
 
     render() {
         if (this.template !== null) {
+            console.log("EVENTS", this.props.events)
             return this.compile(this.template, this.props);
         }
     }
 }
+
+
