@@ -1,7 +1,7 @@
-import {validEl} from 'src/utility/valid';
+import {validEl, validform} from 'src/utility/valid';
 
 function InputEvents(el: HTMLDivElement) {
-    console.log('from props');
+   // console.log('from props');
     const errordiv = el.querySelector('#errormessage');
     if (errordiv) {
         const inputs = el.querySelectorAll('input');
@@ -14,6 +14,16 @@ function InputEvents(el: HTMLDivElement) {
         }
     }
 }
+
+function FormLoginEvents(el: HTMLDivElement) {
+    const values = {};
+    el.querySelectorAll('input[type="submit"]').forEach((item) => {
+        item.addEventListener('click', (event) => {
+            validform(el, values, event);
+        });
+    });
+}
+
 
 export const formsdata = {
     inputs: {
@@ -82,7 +92,8 @@ export const formsdata = {
         btnLogin: {btn_name: "LogIn"},
         btnReg: {btn_name: "SignIn"},
         btnSettings: {btn_name: "Save"}
-    }
+    },
+    events:FormLoginEvents
 };
 
 

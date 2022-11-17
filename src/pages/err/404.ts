@@ -1,10 +1,8 @@
 import tpl from './404.hbs';
+import {AppComponent} from "src/modules/AppComponent";
 
-export default function ():void {
-  const context: object = { title: 'Внимание ошибка: ' };
-  const root = document.getElementById('main');
-  if (root !== null) {
-    root.innerHTML = tpl(context);
-  }
+export default function () {
+  const context = { title: 'Внимание ошибка: ' };
+  return new AppComponent("div", context, "testmain", tpl)
   // document.getElementById('main').innerHTML = tpl(context)
 }

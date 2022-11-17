@@ -9,4 +9,4 @@ const obj: StringIndexed = {
     key6: {a: 1},
     key7: {b: {d: 2}},
 };
-console.log("key",obj.key3)
+//console.log("key",obj.key3)

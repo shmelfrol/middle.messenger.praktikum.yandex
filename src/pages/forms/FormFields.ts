@@ -1,7 +1,7 @@
 import {Children} from "src/type_component";
 import input from "src/component/Input/Input";
 import button from "src/component/Button/Button";
-import {formfields} from "src/pages/forms/propsForms";
+import {formfields} from "src/Storage/propsForms";
 
 export function FormFields(props) {
     const components: Children = {};

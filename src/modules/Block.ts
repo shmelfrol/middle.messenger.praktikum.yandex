@@ -166,7 +166,7 @@ router
 
 
 // Через секунду контент изменится сам, достаточно дёрнуть переход
-setTimeout(() => {
+/*setTimeout(() => {
     router.go("/users");
 }, 1000);
 
@@ -179,6 +179,6 @@ setTimeout(() => {
 
 setTimeout(() => {
     router.forward();
-}, 5000);
+}, 5000);*/
 
 

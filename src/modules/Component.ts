@@ -49,9 +49,7 @@ export class Component {
     // console.log("classofTag", classofTag)
 
     const { children, props } = this._getChildren(myprops);
-     console.log("props", myprops)
     this.children = children;
-    console.log("children_main_constructor", this.children)
     this.template = template;
     this.addEvents = MyaddEvents;
     this.removeEvents = myRemoveEvents;
@@ -68,7 +66,7 @@ export class Component {
     this._id = makeUUID();
     // оборачиваем в proxy и возвращает другие но теже пропсы
     this.props = this._makePropsProxy({ ...props, __id: this._id });
-    // console.log('this.props',this.props)
+
     // задействуем eventbus - ф-ция которая возвращает eventbus, чтобы использовать за конструктором
     this.eventBus = eventBus;
     // регистрируем событияb
@@ -99,9 +97,7 @@ export class Component {
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop: string, value) {
-        console.log('target', target);
-        console.log('prop', prop);
-        console.log('value', value);
+
         target[prop] = value;
         // eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
@@ -247,12 +243,10 @@ export class Component {
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
-    console.log("DGHGH",fragment.content )
+
     Object.values(this.children).forEach((child) => {
       //  console.log('child.id', child._id)
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-      console.log("STUB!!!!!",stub)
-
       stub.replaceWith(child.getContent());
     });
 
@@ -264,14 +258,16 @@ export class Component {
      console.log('show!!!!!!!!!!!');
     // eslint-disable-next-line no-underscore-dangle
     if (this.getContent() !== undefined) {
-      this.getContent().style.display = 'block';
+      this.getContent().style.display = '';
+      //this.getContent().hidden=false
     }
   }
 
   hide() {
-    // console.log('hide')
+     console.log('hide')
     // @ts-ignore
+    //this.getContent().hidden=true
+     //this._element.setAttribute("display", "none");
     this.getContent().style.display = 'none';
-    // this._element.setAttribute("display", "none");
   }
 }

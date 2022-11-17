@@ -14,7 +14,7 @@ function render(query, block) {
 class Route {
     constructor(pathname, block, props) {
         this._pathname = pathname;
-       this._blockClass = block;
+        this._blockClass = block;
 
         this._block = null;
         this._props = props;
@@ -40,17 +40,10 @@ class Route {
     render() {
 
         if (!this._block) {
-            console.log("blockClass!!!",this._blockClass)
-            this._block=this._blockClass()
-            console.log("block!!!!!",this._block)
+            // console.log("blockClass!!!",this._blockClass)
+            this._block = this._blockClass()
+            //console.log("block!!!!!",this._block)
             RenderDom(this._props.rootQuery, this._block);
-            /*console.log("this_BLOCK!!!!!",this._block.children.contact1.setProps({
-                "id": 0,
-                "user": "IVAN!!!!!!!!!!!!!!!",
-                "phone": "+7 909 909 90",
-                "img": "http://localhost:1234/user.f87d7cd3.jpg?1668527621199",
-                "__id": "e8054d37-55da-4185-bde5-68431e61d0b6"
-            }))*/
             return;
         }
 
@@ -79,32 +72,29 @@ export class Router {
     }
 
     start() {
-        window.addEventListener("popstate", ()=>{
-            let pathname=window.location.pathname
-            this._onRoute(pathname)
-        })
-        let pathname=window.location.pathname
-        this._onRoute(pathname)
+            window.onpopstate = event => {
+            this._onRoute(window.location.pathname);
+
+        };
+        this._onRoute(window.location.pathname);
 
     }
 
     _onRoute(pathname) {
-        console.log("pathname", pathname)
-        //console.log(window.location.pathname)
-        const route = this.getRoute(pathname);
-        console.log("route",route)
-        if (route) {
-            if(this._currentRoute!==null){
-                //console.log("if__curr", this._currentRoute )
+        let route = this.getRoute(pathname);
+        if (route === undefined) {
+            route = this.getRoute("/404");
+        }
 
+
+        if (route) {
+            if (this._currentRoute) {
                 this._currentRoute.leave();
             }
 
         }
-
         this._currentRoute = route;
-        route.render(route, pathname);
-
+        route.render();
     }
 
     go(pathname) {
