@@ -27,64 +27,68 @@ export function FormFields(props) {
 
 
     for (const LoginField of Fields) {
+        const regex = /^btn/gm;
+        if(LoginField.match(regex)===null){
+            components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null});
+        }else {
+            components[LoginField]  = button({...props.forChildrens[LoginField]});
+        }
+
         // eslint-disable-next-line default-case
-        switch (LoginField) {
+       /* switch (LoginField) {
             case 'login': {
-                const login = input(props.inputs.login);
-                components[LoginField] = login;
+                components[LoginField] = input({...props.forChildrens.login, value:(props.currentUser)?props.currentUser.login:null});
                 break;
             }
             case 'Password': {
-                const Password = input(props.inputs.Password);
-                components[LoginField] = Password;
+                components[LoginField] = input({...props.forChildrens.Password, value:(props.currentUser)?props.currentUser.password:null});;
                 break;
             }
-            case 'first_name': {
-                const FirstName = input(props.inputs.first_name);
-                components[LoginField] = FirstName;
+            case 'firstName': {
+                components[LoginField] = input({...props.forChildrens.firstName, value:(props.currentUser)?props.currentUser.firstName:null});
                 break;
             }
             case 'second_name': {
-                const SecondName = input(props.inputs.second_name);
-                components[LoginField] = SecondName;
+                components[LoginField] = input({...props.forChildrens.secondName, value:(props.currentUser)?props.currentUser.secondName:null});
                 break;
             }
-            case 'display_name': {
-                const DisplayName = input(props.inputs.display_name);
-                components[LoginField] = DisplayName;
+            case 'displayName': {
+                components[LoginField] = input({...props.forChildrens.displayName, value:(props.currentUser)?props.currentUser.displayName:null});
                 break;
             }
             case 'email': {
-                const email = input(props.inputs.email);
-                components[LoginField] = email;
+                components[LoginField] = input({...props.forChildrens.email, value:(props.currentUser)?props.currentUser.email:null});
                 break;
             }
             case 'phone': {
-                const phone = input(props.inputs.phone);
-                components[LoginField] = phone;
+                components[LoginField] = input({...props.forChildrens.phone, value:(props.currentUser)?props.currentUser.phone:null});
                 break;
             }
             case 'oldPassword': {
-                const oldPassword= input(props.inputs.oldPassword);
-                components[LoginField] = oldPassword;
+                components[LoginField] = input({...props.forChildrens.oldPassword});
                 break;
             }
             case 'newPassword': {
-                const newPassword= input(props.inputs.newPassword);
-                components[LoginField] = newPassword;
+                components[LoginField] = input({...props.forChildrens.newPassword});
                 break;
             }
             case 'avatar': {
-                const avatar= input(props.inputs.avatar);
-                components[LoginField] = avatar;
+                components[LoginField] = input({...props.forChildrens.avatar, value:(props.currentUser)?props.currentUser.avatar:null});
                 break;
             }
-            case 'button_login': {
-                const ButtonLogin = button(props.buttons.btnLogin);
-                components[LoginField] = ButtonLogin;
+            case 'btnLogin': {
+                components[LoginField]  = button({...props.forChildrens.btnLogin});
                 break;
             }
-        }
+            case 'btnReg': {
+                components[LoginField] = button({...props.forChildrens.btnReg});
+                break;
+            }
+            case 'btnSettings': {
+                components[LoginField] = button({...props.forChildrens.btnSettings});
+                break;
+            }
+        }*/
     }
     return components;
 }

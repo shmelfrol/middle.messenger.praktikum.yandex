@@ -76,6 +76,7 @@ export class Router {
             this._onRoute(window.location.pathname);
 
         };
+            console.log("start")
         this._onRoute(window.location.pathname);
 
     }
@@ -114,3 +115,5 @@ export class Router {
         return this.routes.find(route => route.match(pathname));
     }
 }
+
+export const router = new Router(".app");

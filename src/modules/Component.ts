@@ -91,6 +91,7 @@ export class Component {
   }
 
   _makePropsProxy(props: Props) {
+    const self = this;
     return new Proxy(props, {
       get(target, prop: string) {
         const value = target[prop];
@@ -99,7 +100,8 @@ export class Component {
       set(target, prop: string, value) {
 
         target[prop] = value;
-        // eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        console.log(self);
+        self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -161,6 +163,7 @@ export class Component {
   }
 
   _componentDidUpdate() {
+    console.log("didUPdate")
     const response = this.componentDidUpdate();
     if (response) {
       this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
@@ -173,12 +176,12 @@ export class Component {
   }
 
   setProps = (nextProps: Props) => {
-    if (!nextProps) {
+       if (!nextProps) {
       return;
     }
     Object.assign(this.props, nextProps);
-    // console.log('this.props', this.props)
-    this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+     //console.log('this.props', this.props)
+    //this.eventBus.emit(Component.EVENTS.FLOW_CDU);
   };
 
   get element() {

@@ -15,7 +15,6 @@ export class NavbarItems extends Component {
 
     render() {
         if (this.template !== null) {
-            console.log("EVENTS", this.props.events)
             return this.compile(this.template, this.props);
         }
     }

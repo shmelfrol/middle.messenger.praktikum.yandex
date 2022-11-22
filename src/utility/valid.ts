@@ -1,8 +1,7 @@
 import { MyvalidateFields } from './myvalidate';
 
 export function validform(el:HTMLDivElement, values:{[key: string]:any}, event:any) {
-  console.log("VALID!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-  event.preventDefault();
+    event.preventDefault();
   el.querySelectorAll('input').forEach((item) => {
     if (item.type !== 'submit') { values[item.name] = item.value; }
   });
@@ -17,8 +16,10 @@ export function validform(el:HTMLDivElement, values:{[key: string]:any}, event:a
     }
   }
   if (err == null) {
-    console.log(values);
-  } else { console.log(err); }
+    console.log(values)
+    return values
+  } else {
+    throw new Error(err)}
 }
 
 export function validEl(item:HTMLInputElement, errordiv:Element) {

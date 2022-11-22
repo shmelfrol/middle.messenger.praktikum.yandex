@@ -8,7 +8,7 @@ import { validform} from '../../utility/valid';
 import { FormFields} from "src/pages/forms/FormFields";
 import {Component} from "src/modules/Component";
 
-
+import {FormLoginEvents} from "src/events/authEvents";
 
 
 export class Form extends Component {
@@ -20,6 +20,7 @@ export class Form extends Component {
       MyaddEvents = null,
   ) {
     let children=FormFields(myprops)
+    myprops.events=FormLoginEvents
     myprops={...myprops, ...children }
     super(tag, myprops, classofTag, template, MyaddEvents);
     //console.log("_____________________",this.props)
@@ -37,6 +38,7 @@ export function FormPage(){
   let path = window.location.pathname;
   switch (path) {
     case '/login': {
+
       tpl = FormLoginTpl;
       break;
     }
@@ -45,6 +47,9 @@ export function FormPage(){
       break;
     }
     case '/settings': {
+
+
+
       tpl = FormSettingsTpl;
       break;
     }

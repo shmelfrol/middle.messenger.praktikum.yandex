@@ -1,124 +1,154 @@
-import {validEl, validform} from 'src/utility/valid';
-
-function InputEvents(el: HTMLDivElement) {
-   // console.log('from props');
-    const errordiv = el.querySelector('#errormessage');
-    if (errordiv) {
-        const inputs = el.querySelectorAll('input');
-        if (inputs) {
-            inputs.forEach((item) => {
-                item.addEventListener('blur', () => {
-                    validEl(item, errordiv);
-                });
-            });
-        }
-    }
-}
-
-function FormLoginEvents(el: HTMLDivElement) {
-    const values = {};
-    el.querySelectorAll('input[type="submit"]').forEach((item) => {
-        item.addEventListener('click', (event) => {
-            validform(el, values, event);
-        });
-    });
-}
-
-
 export const formsdata = {
-    inputs: {
-        first_name: {
+    forChildrens: {
+        firstName: {
             inputname: 'first_name',
             text: 'Имя',
-            type: 'text',
-            events: InputEvents,
+            type: 'text'
         },
-        second_name: {
+        secondName: {
             inputname: 'second_name',
             text: 'Фамилия',
-            type: 'text',
-            events: InputEvents,
+            type: 'text'
         },
-        display_name: {
+        displayName: {
             inputname: 'display_name',
             text: 'Отображаемое имя',
-            type: 'text',
-            events: InputEvents,
+            type: 'text'
         },
         login: {
             inputname: 'login',
             text: 'Логин',
-            type: 'text',
-            events: InputEvents,
+            type: 'text'
         },
         email: {
             inputname: 'email',
             text: 'Email',
-            type: 'email',
-            events: InputEvents,
+            type: 'email'
         },
         phone: {
             inputname: 'phone',
             text: 'Тел',
-            type: 'text',
-            events: InputEvents,
+            type: 'text'
         },
         oldPassword: {
             inputname: 'oldPassword',
             text: 'oldPassword',
-            type: 'password',
-            events: InputEvents,
+            type: 'password'
         },
         newPassword: {
             inputname: 'newPassword',
             text: 'newPassword',
-            type: 'password',
-            events: InputEvents,
+            type: 'password'
         },
         Password: {
-            inputname: 'Password',
+            inputname: 'password',
             text: 'пароль',
-            type: 'password',
-            events: InputEvents,
+            type: 'password'
         },
         avatar: {
             inputname: 'avatar',
             text: 'Фото',
-            type: 'file',
-            events: InputEvents,
+            type: 'file'
         },
-    },
-    buttons: {
-        btnLogin: {btn_name: "LogIn"},
-        btnReg: {btn_name: "SignIn"},
+        btnLogin: {btn_name: "SignIn"},
+        btnReg: {btn_name: "SignUp"},
         btnSettings: {btn_name: "Save"}
-    },
-    events:FormLoginEvents
+    }
 };
 
 
+export const settingsdata = {
+    forChildrens: {
+        firstName: {
+            inputname: 'first_name',
+            text: 'Имя',
+            type: 'text'
+        },
+        secondName: {
+            inputname: 'second_name',
+            text: 'Фамилия',
+            type: 'text'
+        },
+        displayName: {
+            inputname: 'display_name',
+            text: 'Отображаемое имя',
+            type: 'text'
+        },
+        login: {
+            inputname: 'login',
+            text: 'Логин',
+            type: 'text'
+        },
+        email: {
+            inputname: 'email',
+            text: 'Email',
+            type: 'email'
+        },
+        phone: {
+            inputname: 'phone',
+            text: 'Тел',
+            type: 'text'
+        },
+        oldPassword: {
+            inputname: 'oldPassword',
+            text: 'oldPassword',
+            type: 'password'
+        },
+        newPassword: {
+            inputname: 'newPassword',
+            text: 'newPassword',
+            type: 'password'
+        },
+        Password: {
+            inputname: 'password',
+            text: 'пароль',
+            type: 'password'
+
+        },
+        avatar: {
+            inputname: 'avatar',
+            text: 'Фото',
+            type: 'file'
+        },
+        btnLogin: {btn_name: "SignIn"},
+        btnReg: {btn_name: "SignUp"},
+        btnSettings: {btn_name: "Save"}
+    },
+   /* currentUser:{
+    "id": null,
+    "firstName": "Barabashkinad",
+    "secondName": "Barabashkin",
+    "displayName": "Barabashkin",
+    "login": "Barabashkindfdf",
+    "email": "Barabashkin@mail.ru",
+    "phone": "89099999999",
+    "avatar": null
+}*/
+};
+
+
+
 export const formfields = {
-    LoginFields: ['login', 'Password', 'button_login'],
+    LoginFields: ['login', 'Password', 'btnLogin'],
     RegFields: [
-        'first_name',
-        'second_name',
-        'display_name',
+        'firstName',
+        'secondName',
         'email',
         'phone',
         'login',
         'Password',
-        'button_login',
+        'btnReg',
     ],
     SettingsFields: [
-        'first_name',
-        'second_name',
-        'display_name',
+        'firstName',
+        'secondName',
+        'displayName',
         'email',
         'phone',
         'login',
         'oldPassword',
         'newPassword',
         'avatar',
-        'button_login',
+        'btnSettings',
     ]
 }
