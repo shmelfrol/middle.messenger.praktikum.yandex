@@ -1,13 +1,17 @@
 import {Children} from 'src/type_component';
 import {Component} from "src/modules/Component";
-import {Contacts} from "src/component/Contacts/Contacts";
-import {props_contacts} from "src/Storage/PropsForContacts";
-import ContactsTpl from "src/component/Contacts/Contacts.hbs";
-import ChatPageTPl from "./ContactPageTpl.hbs"
+import {Chatlist} from "src/component/ChatList/Chatlist";
+import {propsChat} from "src/pages/chat/PropsChat";
+import ChatListTpl from "src/component/ChatList/Chatlist.hbs"
+import {MessageList} from "src/component/MessageList/MessageList";
+import MessageListTPL from "src/component/MessageList/MessageList.hbs"
+import ChatsPageTpl from "./ChatsPageTpl.hbs"
+import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
 
-export class ContactsPage extends Component {
+
+export class ChatsPage extends Component {
     constructor(
         tag: string,
         myprops: Children,
@@ -15,9 +19,9 @@ export class ContactsPage extends Component {
         template: string,
         MyaddEvents = null,
     ) {
-        //myprops.contacts = myprops.contacts.map((contact)=>new ContactClass('div', contact, 'form-example', ContactTpl));
-        myprops.contactlist = new Contacts("div", myprops, "itemtest", ContactsTpl)
 
+        myprops.chatlist = new Chatlist("div", myprops.chats, "itemtest", ChatListTpl)
+        myprops.messagelist = new MessageList("div", myprops.chats, "itemtest", MessageListTPL)
         // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template, MyaddEvents);
 
@@ -25,20 +29,17 @@ export class ContactsPage extends Component {
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps(store.getState());
         });
+       console.log("dfjh")
+        ChatsCtr.getChatiks()
 
 
     }
-
-
-
     componentDidUpdate(){
         Object.entries(this.children).forEach(([key, child]) => {
             this.children[key].setProps(this.props)
         });
         return true
     }
-
-
     render() {
         if (this.template !== null) {
             return this.compile(this.template, this.children);
@@ -46,6 +47,7 @@ export class ContactsPage extends Component {
     }
 }
 
-export function getContactPage(){
-    return new ContactsPage("div", props_contacts, "testmain", ChatPageTPl)
+export function getChatsPage() {
+
+    return new ChatsPage("div", propsChat, "testmain", ChatsPageTpl)
 }

@@ -1,12 +1,19 @@
+<input class="search" id="search" type="text">
 {{#each contacts}}
-   <div class="form-example">
        <div class="userchat">
-           <a class="userchatfora">
-               <img class="userimg" src="{{this.img}}">
-               <h5>{{this.user}}</h5>
-               <p>{{this.phone}}</p>
-           </a>
+           <div style="float: left">
+               <img class="userimg" src="{{this.avatar}}">
+           </div>
+           <div class="userinfo" style="float: left" id="{{this.id}}">
+               <br><b>{{this.id}} {{this.login}} </b>
+               <br>{{this.phone}}
+               <br>{{this.firstName}}
+           </div>
+           <div style="float: right; text-align: right; padding: 5px">
+               <button id="{{this.id}}" login="{{this.login}}">написать</button>
+           </div>
+           </div>
+
        </div>
-   </div>
 {{/each}}
 

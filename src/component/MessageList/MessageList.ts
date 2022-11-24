@@ -1,15 +1,17 @@
-import { Children } from 'src/type_component';
 import {Component} from "src/modules/Component";
+import {Children} from "src/type_component";
 
-export class ContactClass extends Component {
+
+
+
+export class MessageList extends Component {
     constructor(
         tag: string,
         myprops: Children,
         classofTag: string,
         template: string,
-        MyaddEvents = null,
     ) {
-        super(tag, myprops, classofTag, template, MyaddEvents);
+        super(tag, myprops, classofTag, template);
     }
 
     render() {

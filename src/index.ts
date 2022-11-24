@@ -13,7 +13,8 @@ import {SettingsPage} from "src/pages/SettingsPage/SettingsPage";
 
 const path = window.location.pathname;
 import {Menu} from "./component/Navbar/Navbar";
-
+import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
+import {ChatsCtr} from "src/Controllers/ChatsController";
 
 console.log("first")
 RenderDom('#navbar', Menu());
@@ -29,7 +30,7 @@ router
     .use("/reg", FormPage)
     .use("/settings", SettingsPage)
     .use("/404", NotFoundPage)
-    .use("/chat", Chat);
+    .use("/chat",getChatsPage);
 router.start();
 
 console.log("localStorage", localStorage)
@@ -56,6 +57,8 @@ const data = {
     }
 }
 
+
+//setInterval(() => ChatsCtr.getChatiks(), 5000);
 
 // Через секунду контент изменится сам, достаточно дёрнуть переход
 /*

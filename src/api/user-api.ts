@@ -4,8 +4,8 @@ import {http} from "src/modules/HttpTransport";
 
 class Api {
     search(data: { login: string }) {
-        return http
-            .post('/search', {
+                return http
+            .post('/user/search', {
                 data,
             })
             .then((res) => {

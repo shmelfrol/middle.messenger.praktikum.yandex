@@ -22,11 +22,6 @@ export class Component {
   readonly _id: string | null = null;
   isMounted:boolean=false
   template: string | null;
-
-  addEvents: null;
-
-  removeEvents: null;
-
   children: Children;
 
   /** JSDoc
@@ -34,7 +29,6 @@ export class Component {
    * @param {Object} myprops
    *@param {string} classofTag
    * @param {string} template
-   * @param {Function|null} MyaddEvents
    * @returns {void}
    */
   constructor(
@@ -42,17 +36,14 @@ export class Component {
     myprops: Children = {},
     classofTag = '',
     template: string | null = null,
-    MyaddEvents = null,
-    myRemoveEvents = null
   ) {
     // console.log('tagname',tagName)
     // console.log("classofTag", classofTag)
 
     const { children, props } = this._getChildren(myprops);
+
     this.children = children;
     this.template = template;
-    this.addEvents = MyaddEvents;
-    this.removeEvents = myRemoveEvents;
     // это переменная только для конструктора
     const eventBus = new EventBus();
     // console.log(Component.EVENTS)
@@ -98,9 +89,7 @@ export class Component {
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop: string, value) {
-
         target[prop] = value;
-        console.log(self);
         self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
@@ -176,6 +165,8 @@ export class Component {
   }
 
   setProps = (nextProps: Props) => {
+    console.log("props", this.props)
+    console.log("nextProps", nextProps)
        if (!nextProps) {
       return;
     }
@@ -218,10 +209,6 @@ export class Component {
     if (this.props.events) {
       this.props.events(this.getContent(), this.props);
     }
-
-    /* if (this.addEvents) {
-      this.addEvents(this.getContent(), this.props);
-    } */
   }
 
   // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
@@ -233,10 +220,9 @@ export class Component {
 
   compile(template: string, props: Props) {
 
-    //console.log("template", template(props))
+
     // копируем пропсы
     const propsAndStubs = { ...props };
-
     // добавляем в пропсы чилдов со значениями заглушки
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
@@ -259,7 +245,6 @@ export class Component {
 
   show() {
      console.log('show!!!!!!!!!!!');
-    // eslint-disable-next-line no-underscore-dangle
     if (this.getContent() !== undefined) {
       this.getContent().style.display = '';
       //this.getContent().hidden=false

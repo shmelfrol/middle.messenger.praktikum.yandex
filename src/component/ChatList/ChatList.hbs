@@ -1,9 +1,15 @@
+<p>{{ActiveChat}}</p>
 {{#each chats}}
-<div class="userchat">
-    <a class="userchatfora{{#if active}} userchatactive{{/if}}">
-    <img class="userimg" src="{{img}}">
-    <h5>{{user}} {{id}}</h5>
-    <p>{{lastmessege}}</p>
-</a>
+<div class="userchat" id="{{this.id}}">
+    <div style="float: left">
+        <img class="userimg" src="{{this.avatar}}">
+    </div>
+    <div class="userinfo" style="float: left" id="{{this.id}}">
+        <br><b>{{this.id}} {{this.title}} </b>
+        <br>Непрочитаные: {{this.unreadCount}}
+    </div>
+    <div style="float: right; text-align: right; padding: 5px">
+        <button id="{{this.id}}" >Удалить</button>
+    </div>
 </div>
 {{/each}}

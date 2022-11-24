@@ -9,6 +9,9 @@ const INITIAL_STATE = {
   currentUser: null,
   chatsData: {},
   chatFilter: '',
+  contacts: [],
+  chats:[],
+  ActiveChat: null
 };
 
 export class Store extends EventBus {
