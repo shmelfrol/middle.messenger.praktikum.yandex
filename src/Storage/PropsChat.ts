@@ -1,5 +1,5 @@
 import { Props } from 'src/type_component';
-import avatar from '../../../public/image/user.jpg';
+import avatar from '../../public/image/user.jpg';
 
 function Click(el: HTMLDivElement, props: Props) {
   el.querySelectorAll('a').forEach((item: any) => {

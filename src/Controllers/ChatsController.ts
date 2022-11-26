@@ -8,16 +8,16 @@ import {Chatlist} from "src/component/ChatList/Chatlist";
 
 
 const PRIVATE_CHAT_NAME="ftyujty"
-const WS_URL=""
+const WS_URL="ws"
 
 class ChatController {
   async getChats(): Promise {
     const authorizedUser = await AuthCtr.getUser();
 
     return ChatsApi.getChats({ limit: Number.MAX_SAFE_INTEGER }).then(async (chats) => {
-      const getUsersFromChatsPromises: Promise<{ chatId: number; users }>[] = [];
+      const getUsersFromChatsPromises= [];
       chats.forEach((chat) => {
-        const cachedChatData = store.getState().chatsData?.[chat.id];
+        const cachedChatData = store.getState().chats?.[chat.id];
         if (!cachedChatData) {
           getUsersFromChatsPromises.push(this.getChatUsers(chat.id));
         }
@@ -74,10 +74,11 @@ class ChatController {
 
   getChatiks(){
      //AuthCtr.getUser();
-    return ChatsApi.getChats({ limit: Number.MAX_SAFE_INTEGER }).then(async (chats) => {
+    return ChatsApi.getChats({ limit: Number.MAX_SAFE_INTEGER })
+        .then(async (chats) => {
+      console.log("chatsDATa", chats)
       if(chats.length!==0){
         store.set('chats', chats);
-        console.log("store cats", store)
       }
 
     })
@@ -110,11 +111,10 @@ class ChatController {
 
   }
   create(login, id){
-    AuthCtr.getUser().then((user)=>{
-      ChatsApi.createChat({ title: login }).then(({ id: chatId })=>{
-        console.log(chatId)
-        this.addUsersToChat({ users: [id, user.id], chatId: chatId })
-
+    return AuthCtr.getUser().then((user)=>{
+      return ChatsApi.createChat({ title: login }).then(({ id: chatId })=>{
+         this.addUsersToChat({ users: [id, user.id], chatId: chatId })
+        return chatId
       })
     })
 
@@ -146,7 +146,8 @@ class ChatController {
       //получаем из коллбэков  колбэки
       const { onOpen, onClose, onMessage } = callbacks;
       this.token(chatId).then((token) => {
-        const socket = new WebSocket(`${WS_URL}/chats/${userId}/${chatId}/${token}`);
+        ///ws/chats/<USER_ID>/<CHAT_ID>/<TOKEN_VALUE>
+        const socket = new WebSocket(`wss://ya-praktikum.tech/ws/chats/${userId}/${chatId}/${token}`);
        //вызывает коллбэк OnOpen, когда событие onopen
         socket.onopen = () => {
           if (onOpen) {

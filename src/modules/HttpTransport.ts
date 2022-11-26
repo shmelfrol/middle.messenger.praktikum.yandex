@@ -35,7 +35,7 @@ export class HTTPTransport {
   ): Promise<XMLHttpRequest> => {
     const { headers = {}, method, data, timeout = 500 } = options;
     const dataIsFile = data instanceof File;
-
+     console.log("dataisFILE", dataIsFile)
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 

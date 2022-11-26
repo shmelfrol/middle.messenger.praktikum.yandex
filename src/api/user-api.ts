@@ -59,7 +59,7 @@ class Api {
 
     changeAvatar(file: File) {
         return http
-            .put('/profile/avatar', {
+            .put('/user/profile/avatar', {
                 data: file,
             })
             .then((res) => {

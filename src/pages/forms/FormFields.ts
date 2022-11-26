@@ -29,7 +29,7 @@ export function FormFields(props) {
     for (const LoginField of Fields) {
         const regex = /^btn/gm;
         if(LoginField.match(regex)===null){
-            components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null});
+            components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null, events:props.events});
         }else {
             components[LoginField]  = button({...props.forChildrens[LoginField]});
         }

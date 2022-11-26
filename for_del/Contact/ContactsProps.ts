@@ -1,5 +1,5 @@
 import { validEl } from 'src/utility/valid';
-import myimg from '../../../public/image/user.jpg';
+import myimg from '../../public/image/user.jpg';
 
 function ContactClick(el) {
   el.addEventListener('click', () => {

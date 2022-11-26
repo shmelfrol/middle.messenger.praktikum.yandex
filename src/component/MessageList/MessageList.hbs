@@ -1,7 +1,10 @@
 
     <div data-id="6096fa2f-c074-4f20-8147-0ec6c6de6604" class="testformessage">
         <div id="chatbox">
-            <p  class="userText"><span>testing test</span></p>
+            {{#each messages}}
+                <p  class="userText"><span>{{this.content}}</span></p>
+            {{/each}}
+
             <p  class="botText"><span>testing test</span></p>
             <!-- this div for messages-->
         </div>

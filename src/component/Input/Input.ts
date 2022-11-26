@@ -9,15 +9,16 @@ export class InPut extends Component {
       myprops: Children,
       classofTag: string,
       template: string,
-      MyaddEvents = null,
   ) {
-    myprops.events=InputEvents
-    super(tag, myprops, classofTag, template, MyaddEvents);
+    super(tag, myprops, classofTag, template);
   }
+
+  /*AddEvents() {
+    InputEvents(this.getContent(), this.props)
+  }*/
 
   render() {
     if (this.template !== null) {
-
       return this.compile(this.template, this.props);
     }
   }

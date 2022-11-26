@@ -3,7 +3,7 @@ import '../public/cssout/mainin.css';
 import '../public/cssout/chat.css';
 import '../public/cssout/btn.css';
 import '../public/cssout/form.css';
-import Chat from './pages/chat/ChatPage';
+import Chat from '../for_del/chat/ChatPage';
 import RenderDom from './modules/RenderDom';
 
 import {router} from "src/modules/MainRouter";

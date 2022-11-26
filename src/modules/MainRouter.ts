@@ -1,4 +1,5 @@
 import RenderDom from "src/modules/RenderDom";
+import {store} from "src/Storage/store";
 
 function isEqual(lhs, rhs) {
     return lhs === rhs;
@@ -40,9 +41,7 @@ class Route {
     render() {
 
         if (!this._block) {
-            // console.log("blockClass!!!",this._blockClass)
             this._block = this._blockClass()
-            //console.log("block!!!!!",this._block)
             RenderDom(this._props.rootQuery, this._block);
             return;
         }
@@ -56,12 +55,10 @@ export class Router {
         if (Router.__instance) {
             return Router.__instance;
         }
-
         this.routes = [];
         this.history = window.history;
         this._currentRoute = null;
         this._rootQuery = rootQuery;
-
         Router.__instance = this;
     }
 
@@ -73,7 +70,9 @@ export class Router {
 
     start() {
             window.onpopstate = event => {
-            this._onRoute(window.location.pathname);
+             let pathName=window.location.pathname
+            this._onRoute(pathName);
+             store.set("activePath", pathName);
 
         };
             console.log("start")
@@ -101,6 +100,7 @@ export class Router {
     go(pathname) {
         history.pushState({}, '', pathname)
         this._onRoute(pathname)
+        store.set("activePath", pathname)
     }
 
     back() {

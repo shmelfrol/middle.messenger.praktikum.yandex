@@ -1,10 +1,12 @@
 import {navitems} from "src/Storage/propsNavbar";
 import {Component} from "src/modules/Component";
 import {Children} from "src/type_component";
-import {Menuevents} from "src/events/NavbarEvents";
+import {Menuevents, ActiveItemMenu} from "src/events/NavbarEvents";
 import {NavbarItems} from "src/component/NavBarItems/NavbarItems";
 import MenuTPL from "./Menu.hbs"
 import NavbarItemsTpl from "src/component/NavBarItems/NavbarItems.hbs"
+import {store} from "src/Storage/store";
+import {EVENTS} from "src/const/constsStore";
 
 
 
@@ -20,16 +22,31 @@ export class Navbar extends Component {
       myprops: Children,
       classofTag: string,
       template: string,
-      MyaddEvents = null,
   ) {
 
     myprops.NavbarItems=new NavbarItems('ul', myprops, 'mainmenu', NavbarItemsTpl)
-    myprops.events=Menuevents
-    super(tag, myprops, classofTag, template, MyaddEvents);
+    //myprops.events=Menuevents
+    super(tag, myprops, classofTag, template);
+    store.on(EVENTS.UPDATEPATH, () => {
+      // пдписываемся на обновление компонента, передав данные из хранилища
+      this.setProps({activePath:store.getState().activePath});
+    });
+
+  }
+
+  AddEvents() {
+    console.log("ftyftyjtyjty")
+    Menuevents(this.getContent(), this.props)
+  }
+
+  componentDidMount() {
+    ActiveItemMenu(this.getContent(), this.props)
   }
 
   render() {
     if (this.template !== null) {
+      console.log("RENDER!!!!!!!!!!!!!!!!!!!")
+      ActiveItemMenu(this.getContent(), this.props)
       return this.compile(this.template, this.children);
     }
   }

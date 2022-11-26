@@ -1,7 +1,7 @@
 import {Children} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import {Chatlist} from "src/component/ChatList/Chatlist";
-import {propsChat} from "src/pages/chat/PropsChat";
+import {propsChat} from "src/Storage/PropsChat";
 import ChatListTpl from "src/component/ChatList/Chatlist.hbs"
 import {MessageList} from "src/component/MessageList/MessageList";
 import MessageListTPL from "src/component/MessageList/MessageList.hbs"
@@ -29,7 +29,7 @@ export class ChatsPage extends Component {
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps(store.getState());
         });
-       console.log("dfjh")
+
         ChatsCtr.getChatiks()
 
 
@@ -45,6 +45,16 @@ export class ChatsPage extends Component {
             return this.compile(this.template, this.children);
         }
     }
+
+    show(){
+        if (this.getContent() !== undefined) {
+            this.getContent().style.display = '';
+            //this.getContent().hidden=false
+        }
+        console.log("show - get chatiks_________________________________________________________________________________________")
+        //ChatsCtr.getChatiks()
+    }
+
 }
 
 export function getChatsPage() {

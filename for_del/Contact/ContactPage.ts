@@ -1,5 +1,5 @@
 import { AppComponent } from 'src/modules/AppComponent';
-import contact from '../../component/Contact/Contact';
+import contact from './/Contact';
 import { ContactsProps } from './ContactsProps';
 import ContactPageTpl from './ContactPage.hbs';
 

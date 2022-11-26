@@ -11,7 +11,8 @@ const INITIAL_STATE = {
   chatFilter: '',
   contacts: [],
   chats:[],
-  ActiveChat: null
+  ActiveChat: null,
+  activePath: null
 };
 
 export class Store extends EventBus {
@@ -23,7 +24,6 @@ export class Store extends EventBus {
     const cachedStore = localStorage.getItem(STORE_ITEM);
 
     this.state = cachedStore ? JSON.parse(cachedStore) : INITIAL_STATE;
-    console.log("storage_construcor!!!!", this.state)
   }
 
   public getState() {
@@ -41,7 +41,13 @@ export class Store extends EventBus {
     localStorage.setItem(STORE_ITEM, JSON.stringify(this.getState()));
     //эмитим - вызываем в ивентбасе событие update - get.state
     //this.emit(Store.EVENTS.UPDATE, this.getState());
-    this.emit(EVENTS.UPDATE);
+    if(path==="activePath"){
+      this.emit(EVENTS.UPDATEPATH);
+    }else{
+      this.emit(EVENTS.UPDATE);
+    }
+
+
   }
 }
 

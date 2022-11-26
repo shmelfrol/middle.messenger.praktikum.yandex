@@ -32,7 +32,6 @@ class ChatApi {
   }
 
   createChat(data: { title: string }) {
-      console.log(data)
     return http.post('/chats', { data }).then((res): { id: number } => JSON.parse(res.response));
   }
 
@@ -56,7 +55,7 @@ class ChatApi {
   }
 
   token(chatId: number) {
-    return http.post(`/token/${chatId}`).then(
+    return http.post(`/chats/token/${chatId}`).then(
       (
         res
       ): {

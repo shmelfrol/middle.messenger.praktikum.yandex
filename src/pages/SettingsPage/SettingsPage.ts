@@ -1,7 +1,7 @@
 import {Component} from "src/modules/Component";
 import {Children} from "src/type_component";
 import {FormFields} from "src/pages/forms/FormFields";
-import {FormSettingsEvents} from "src/events/authEvents";
+import {EventForButtonSettings, EventForInput, FormSettingsEvents} from "src/events/authEvents";
 import {settingsdata} from "src/Storage/propsForms";
 import FormSettingsTpl from "src/pages/SettingsPage/SettingsPage.hbs";
 import {AuthCtr} from "src/Controllers/AuthController";
@@ -16,12 +16,16 @@ export class Settings extends Component {
         template: string,
         MyaddEvents = null,
     ) {
-        let children=FormFields(myprops)
-        myprops.events=FormSettingsEvents
+        let children = FormFields({
+            ...myprops, events: {
+                focusout: EventForInput
+            }
+        })
         myprops={...myprops, ...children }
+        myprops.events={click:EventForButtonSettings}
         super(tag, myprops, classofTag, template, MyaddEvents);
 
-         debugger
+         //debugger
         console.log("setting", store.getState())
         store.on(EVENTS.UPDATE, () => {
             // пдписываемся на обновление компонента, передав данные из хранилища
@@ -31,6 +35,10 @@ export class Settings extends Component {
         AuthCtr.getUser()
         console.log("props after getuser", this.props)
     }
+
+    /*AddEvents() {
+        FormSettingsEvents(this.getContent(), this.props)
+    }*/
 
     componentDidUpdate(){
 

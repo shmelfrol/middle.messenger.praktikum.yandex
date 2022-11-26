@@ -1,6 +1,7 @@
 import { v4 as makeUUID } from 'uuid';
 import { Props, Children } from 'src/type_component';
 import { EventBus } from './EventBus';
+import {AuthCtr} from "src/Controllers/AuthController";
 
 export class Component {
   eventBus: EventBus;
@@ -20,7 +21,8 @@ export class Component {
     null;
 
   readonly _id: string | null = null;
-  isMounted:boolean=false
+  isMounted:boolean=false;
+  isShow:boolean=false;
   template: string | null;
   children: Children;
 
@@ -71,11 +73,21 @@ export class Component {
     const children: Children = {};
     const props: Props = {};
     Object.entries(myprops).forEach(([key, value]) => {
-      if (value instanceof Component) {
-        children[key] = value;
-      } else {
-        props[key] = value;
+      if(Array.isArray(value)){
+          if(value[0] instanceof Component){
+            children[key] = value;
+        }else{
+            props[key] = value;
+          }
+
+      }else{
+        if (value instanceof Component) {
+          children[key] = value;
+        } else {
+          props[key] = value;
+        }
       }
+
     });
 
     return { children, props };
@@ -90,7 +102,7 @@ export class Component {
       },
       set(target, prop: string, value) {
         target[prop] = value;
-        self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        //self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -148,11 +160,11 @@ export class Component {
 
   dispatchComponentDidMount() {
     this.isMounted = true;
+    this.isShow=true
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
   _componentDidUpdate() {
-    console.log("didUPdate")
     const response = this.componentDidUpdate();
     if (response) {
       this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
@@ -165,14 +177,13 @@ export class Component {
   }
 
   setProps = (nextProps: Props) => {
-    console.log("props", this.props)
-    console.log("nextProps", nextProps)
-       if (!nextProps) {
+
+       if (!nextProps && !this.isShow) {
       return;
     }
     Object.assign(this.props, nextProps);
-     //console.log('this.props', this.props)
-    //this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+
+    this.eventBus.emit(Component.EVENTS.FLOW_CDU);
   };
 
   get element() {
@@ -192,12 +203,15 @@ export class Component {
 
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    //this.clone();
+
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
 
-    this.AddEvents();
+    if(!this.isMounted){
+      this.AddEvents();
+    }
+
     // this._element.innerHTML = block;
   }
 
@@ -206,9 +220,16 @@ export class Component {
 
   // Может переопределять пользователь, необязательно трогать
   AddEvents() {
-    if (this.props.events) {
+    const {events = {}} = this.props;
+
+    Object.keys(events).forEach(eventName => {
+      this._element.addEventListener(eventName, events[eventName].bind(eventName, this._element));
+    });
+
+
+    /*if (this.props.events) {
       this.props.events(this.getContent(), this.props);
-    }
+    }*/
   }
 
   // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
@@ -220,23 +241,43 @@ export class Component {
 
   compile(template: string, props: Props) {
 
-
+     //console.log("CHILDREN!!!!!!!!!!!!!!!!!!!!!!", this.children)
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки
     Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
+      if(Array.isArray(child)){
+        propsAndStubs[key]=[]
+        for (let i=0; i<child.length; i++){
+          propsAndStubs[key][i]=`<div data-id="${child[i]._id}">заглушка1</div>`;
+        }
+      }else{
+        propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
+      }
     });
-
+  // console.log("PROPSSTUB", propsAndStubs)
     // создаем элемент с тегом template
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
-
+   // console.log("fragment", fragment)
     Object.values(this.children).forEach((child) => {
-      //  console.log('child.id', child._id)
-      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-      stub.replaceWith(child.getContent());
+        //console.log('child', child)
+      if(Array.isArray(child)){
+       // console.log("thisArray",child)
+        for (let a=0; a<child.length; a++){
+         // console.log("child[a]",child[a]._id)
+          let zaglushka = fragment.content.querySelector(`[data-id="${child[a]._id}"]`);
+         // console.log("zaglushka", zaglushka)
+          zaglushka.replaceWith(child[a].getContent());
+        }
+      }else{
+        const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
+        stub.replaceWith(child.getContent());
+      }
+
+
+
     });
 
     return fragment.content;
@@ -244,7 +285,10 @@ export class Component {
   }
 
   show() {
-     console.log('show!!!!!!!!!!!');
+
+    console.log("show from component")
+    this.isShow=true
+    //AuthCtr.getUser()
     if (this.getContent() !== undefined) {
       this.getContent().style.display = '';
       //this.getContent().hidden=false
@@ -252,10 +296,7 @@ export class Component {
   }
 
   hide() {
-     console.log('hide')
-    // @ts-ignore
-    //this.getContent().hidden=true
-     //this._element.setAttribute("display", "none");
+    this.isShow=false
     this.getContent().style.display = 'none';
   }
 }

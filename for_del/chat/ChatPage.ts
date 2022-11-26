@@ -1,12 +1,12 @@
 import { AppComponent } from 'src/modules/AppComponent';
 import { Props, Children } from 'src/type_component';
-import LeftBlockChatTpl from '../../component/LeftBlockChat/LeftBlockChat.hbs';
-import RightBlockChatTpl from '../../component/RightBlockChat/RightBlockChat.hbs';
-import ChatBoxTpl from '../../component/ChatBox/ChatBox.hbs';
-import ChatInputTpl from '../../component/ChatInput/ChatInput.hbs';
-import ChatScrollTpl from '../../component/ChatScroll/ChatScroll.hbs';
-import { propsChat } from './PropsChat';
-import ChatItemTpl from '../../component/ChatItem/ChatItem.hbs';
+import LeftBlockChatTpl from '../LeftBlockChat/LeftBlockChat.hbs';
+import RightBlockChatTpl from '../RightBlockChat/RightBlockChat.hbs';
+import ChatBoxTpl from 'src/../ChatBox/chatbox.hbs';
+import ChatInputTpl from 'src/../ChatInput/ChatInput.hbs';
+import ChatScrollTpl from 'src/../ChatScroll/ChatScroll.hbs';
+import { propsChat } from 'src/Storage/PropsChat';
+import ChatItemTpl from 'src/component/ChatItem/ChatItem.hbs';
 import ChatTpl from './Chat.hbs';
 
 export default function Chat() {

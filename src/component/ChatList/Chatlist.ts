@@ -2,6 +2,7 @@ import { Children } from 'src/type_component';
 import {Component} from "src/modules/Component";
 
 import {ChatsCtr} from "src/Controllers/ChatsController";
+import {InputEvents} from "src/events/authEvents";
 
 
 
@@ -11,21 +12,14 @@ function ChatClick(el, props) {
         btns.forEach((button)=>{
             button.addEventListener('click', function(e) {
                 let id=button.getAttribute("id");
-                console.log("id:", id)
                 ChatsCtr.delete(id)
-
             });
         })
-
-
     }
 
    let chats=el.querySelectorAll(".userchat")
     if(chats){
         chats.forEach((chat)=>{
-            console.log("propsACtive!!!!!!!!!!!!!!!!!", props.ActiveChat)
-
-
             let ChatId=chat.getAttribute("id")
             if(ChatId===props.ActiveChat){
                 chat.classList.add("userchatactive")
@@ -55,14 +49,12 @@ export class Chatlist extends Component {
         classofTag: string,
         template: string,
     ) {
-
-        myprops.events=ChatClick
         super(tag, myprops, classofTag, template);
-
-
-
     }
 
+    AddEvents() {
+        ChatClick(this.getContent(), this.props)
+    }
     render() {
         if (this.template !== null) {
             return this.compile(this.template, this.props);

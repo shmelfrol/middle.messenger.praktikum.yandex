@@ -10,7 +10,7 @@ class AuthController {
     }
 
     signIn(data) {
-        debugger
+       // debugger
         console.log("LOGIN", store.getState())
         return authapi.signIn(data).then((res) => {
             if (res === "OK") {
@@ -26,13 +26,9 @@ class AuthController {
     logout() {
         //debugger
         //удаляем запись о пользователе из localsstorage
-        console.log("store1", store.getState())
         localStorage.removeItem(STORE_ITEM);
-        console.log("localstorage after logout!!!", localStorage)
-        console.log("store2", store.getState())
         return authapi.logout().then(() => {
-            //перезагружаем страничку чтобы начать занаво
-            console.log("Reload Page")
+            //перезагружаем страничку чтобы начать занаво И ОБНУЛИТЬ STORE
             router.go("/login")
             window.location.reload();
         });

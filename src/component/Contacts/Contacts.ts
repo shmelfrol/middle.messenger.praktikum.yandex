@@ -16,22 +16,24 @@ function ContactClick(el) {
              }
          });
      }
-     if(btn!==null){
+     if(btn){
          btn.forEach((button)=>{
              button.addEventListener('click', function(e) {
                 let login=button.getAttribute("login");
                 console.log("login:", login)
                  let id=button.getAttribute("id");
-                 ChatsCtr.create(login, id)
+                 ChatsCtr.create(login, id).then((res)=>{
+                    console.log("res", res)
+                 })
+                 //router.go
                  //debugger
              });
          })
      }
-
-
-
-
 }
+
+
+
 
 export class Contacts extends Component {
     constructor(
@@ -39,11 +41,15 @@ export class Contacts extends Component {
         myprops: Children,
         classofTag: string,
         template: string,
-        MyaddEvents = null,
     ) {
-        myprops.events=ContactClick
-        super(tag, myprops, classofTag, template, MyaddEvents);
+
+        super(tag, myprops, classofTag, template);
     }
+
+    AddEvents() {
+        ContactClick(this.getContent(), this.props)
+    }
+
 
     render() {
         if (this.template !== null) {
