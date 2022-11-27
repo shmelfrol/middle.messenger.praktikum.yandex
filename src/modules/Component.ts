@@ -2,6 +2,7 @@ import { v4 as makeUUID } from 'uuid';
 import { Props, Children } from 'src/type_component';
 import { EventBus } from './EventBus';
 import {AuthCtr} from "src/Controllers/AuthController";
+import {isEqual} from "src/utility/isEqual";
 
 export class Component {
   eventBus: EventBus;
@@ -150,7 +151,16 @@ export class Component {
 
     this.componentDidMount();
     Object.values(this.children).forEach(child => {
-      child.dispatchComponentDidMount();
+      if(Array.isArray(child)){
+        for(let i=0; i<child.length; i++){
+          child[i].dispatchComponentDidMount();
+        }
+      }else{
+        child.dispatchComponentDidMount();
+      }
+
+
+
     });
 
   }
@@ -181,9 +191,17 @@ export class Component {
        if (!nextProps && !this.isShow) {
       return;
     }
-    Object.assign(this.props, nextProps);
 
-    this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+    let iseq=isEqual(this.props,nextProps)
+    console.log("isEQUAL", iseq)
+       if(!iseq){
+         Object.assign(this.props, nextProps);
+         this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+       }
+
+
+
+
   };
 
   get element() {
@@ -207,14 +225,17 @@ export class Component {
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
-
+    this.VisualEffects()
     if(!this.isMounted){
       this.AddEvents();
     }
 
     // this._element.innerHTML = block;
   }
+// Может переопределять пользователь, необязательно трогать
+  VisualEffects(){
 
+  }
   // Может переопределять пользователь, необязательно трогать
   render() {}
 

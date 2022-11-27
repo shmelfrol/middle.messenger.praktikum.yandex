@@ -37,9 +37,9 @@ class AuthController {
     async getUser() {
         //помещаем в currentUser из state
         //debugger
-        console.log("GetUser store", store)
+       // console.log("GetUser store", store)
         const currentUser = store.getState().currentUser;
-        console.log("get_currentUser", currentUser)
+        //console.log("get_currentUser", currentUser)
         if (currentUser?.id) {
             return currentUser;
         }

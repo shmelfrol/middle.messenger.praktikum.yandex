@@ -11,7 +11,7 @@ import {Contact} from "src/component/Contact/Contact";
 import button from "src/component/Button/Button";
 import input, {InPut} from "src/component/Input/Input";
 import InputTpl from "src/component/Input/Input.hbs";
-import {ContactsSearch} from "src/events/ContactsEvents";
+import {AddChat, ContactsSearch} from "src/events/ContactsEvents";
 
 
 export class ContactsPage extends Component {
@@ -27,7 +27,7 @@ export class ContactsPage extends Component {
                 keydown: ContactsSearch
             }
         }, 'form-example', InputTpl);
-        myprops.newContacts = myprops.contacts.map((contact) => new Contact('div', {...contact, events:{click:()=>{console.log("CONTACT")}}}, 'userchat', ContactTpl));
+        myprops.newContacts = myprops.contacts.map((contact) => new Contact('div', {...contact, events:{click:AddChat}}, 'userchat', ContactTpl));
         console.log("myprops.newContacts", myprops)
 
 
@@ -42,6 +42,7 @@ export class ContactsPage extends Component {
         super(tag, myprops, classofTag, template);
         console.log("PROPS!!!!!!!!!!!!!!!!!!!!!!", this.props)
         store.on(EVENTS.UPDATE, () => {
+            console.log(store.getState())
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps({contacts:store.getState().contacts});
         });
@@ -51,9 +52,20 @@ export class ContactsPage extends Component {
 
 
     componentDidUpdate() {
-        Object.entries(this.children).forEach(([key, child]) => {
-            this.children[key].setProps(this.props)
-        });
+        this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {...contact, events:{click:AddChat}}, 'userchat', ContactTpl));
+
+
+
+        /*Object.entries(this.children).forEach(([key, child]) => {
+            if(Array.isArray(child)){
+                for (let i=0; i<child.length; i++){
+                    this.children[key][i].setProps(this.props.)
+                }
+            }else {
+                this.children[key].setProps(this.props)
+            }
+
+        });*/
         return true
     }
 

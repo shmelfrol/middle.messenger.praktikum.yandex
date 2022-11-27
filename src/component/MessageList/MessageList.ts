@@ -45,7 +45,7 @@ export class MessageList extends Component {
         this.onSendBtnClick = this.onSendBtnClick.bind(this);
         this.onScrollMessage = this.onScrollMessage.bind(this);
         this.resetDataWhenChatChanged = this.resetDataWhenChatChanged.bind(this);
-        this._socket
+
 
     }
 

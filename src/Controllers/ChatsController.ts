@@ -117,8 +117,6 @@ class ChatController {
         return chatId
       })
     })
-
-
   }
 
  delete(chatId){

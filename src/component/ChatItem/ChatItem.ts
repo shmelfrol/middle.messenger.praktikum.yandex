@@ -7,7 +7,7 @@ import {Component} from "src/modules/Component";
 
 
 
-export class Contact extends Component {
+export class ChatItem extends Component {
     constructor(
         tag: string,
         myprops: Children,
@@ -16,12 +16,8 @@ export class Contact extends Component {
     ) {
 
         super(tag, myprops, classofTag, template);
-
     }
-
-
-
-
+    
     render() {
         if (this.template !== null) {
             return this.compile(this.template, this.props);

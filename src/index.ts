@@ -15,6 +15,7 @@ const path = window.location.pathname;
 import {Menu} from "./component/Navbar/Navbar";
 import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
 import {ChatsCtr} from "src/Controllers/ChatsController";
+import {isEqual} from "src/utility/isEqual";
 
 console.log("first")
 RenderDom('#navbar', Menu());
@@ -33,7 +34,11 @@ router
     .use("/chat",getChatsPage);
 router.start();
 
-console.log("localStorage", localStorage)
+const a = {a: 1, b:{a:{c:4}}, h:8};
+const b = {a: 1, b:{a:{c:5}}, h:8};
+let one=isEqual(a, b);
+
+let two=isEqual({ foo: NaN }, { foo: NaN });
 
 //authapi.getUser()
 //AuthCtr.getUser()

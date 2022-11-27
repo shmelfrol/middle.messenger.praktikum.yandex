@@ -1,26 +1,15 @@
-import { Children } from 'src/type_component';
+import {Children} from 'src/type_component';
 import {Component} from "src/modules/Component";
 
-
-
-
-
-
-
-export class Contact extends Component {
+export class Message extends Component {
     constructor(
         tag: string,
         myprops: Children,
         classofTag: string,
         template: string,
     ) {
-
         super(tag, myprops, classofTag, template);
-
     }
-
-
-
 
     render() {
         if (this.template !== null) {
@@ -28,5 +17,4 @@ export class Contact extends Component {
         }
     }
 }
-
 
