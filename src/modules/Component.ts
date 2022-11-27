@@ -174,34 +174,32 @@ export class Component {
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate() {
-    const response = this.componentDidUpdate();
+  _componentDidUpdate(oldProps) {
+    const response = this.componentDidUpdate(oldProps);
     if (response) {
       this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidUpdate() {
+  componentDidUpdate(oldProps) {
     return true;
   }
 
   setProps = (nextProps: Props) => {
-
        if (!nextProps && !this.isShow) {
       return;
     }
-
-    let iseq=isEqual(this.props,nextProps)
+    // получаем json представление старых пропсов
+    let oldPropsJSON = JSON.stringify(this.props);
+    // сохраняем старые пропсы
+    let oldProps = JSON.parse(oldPropsJSON);
+    Object.assign(this.props, nextProps);
+    let iseq=isEqual(this.props,oldProps)
     console.log("isEQUAL", iseq)
        if(!iseq){
-         Object.assign(this.props, nextProps);
-         this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+         this.eventBus.emit(Component.EVENTS.FLOW_CDU, oldProps);
        }
-
-
-
-
   };
 
   get element() {

@@ -59,9 +59,20 @@ export class ChatsPage extends Component {
         // ViewActiveChat(this.getContent(), this.props)
     }
 
-    componentDidUpdate() {
-        if(this.props.ActiveChat && !this._socket){
-            this.openSocket()
+
+    resetDataWhenChatChanged(){
+        console.log("close socket")
+        this._socket?.close(SOCKET_WAS_CLOSED_CODE, 'Был открыт другой чат');
+    }
+
+    componentDidUpdate(oldProps) {
+        console.log("oldProps", oldProps)
+        if(this.props.ActiveChat){
+            if (this.props.ActiveChat !== oldProps.ActiveChat) {
+
+                this.resetDataWhenChatChanged();
+                this.openSocket();
+            }
         }
         if (this.props.chats && this.props.chats.length !== 0) {
             this.children.chatList = this.props.chats.map((chat) => new ChatItem('div', {
@@ -127,7 +138,7 @@ export class ChatsPage extends Component {
 
     }
     onScrollMessage(){}
-    resetDataWhenChatChanged(){}
+
 
     onSocketOpened(socket: WebSocket) {
         this._socket = socket;
@@ -143,6 +154,7 @@ export class ChatsPage extends Component {
         if (!this.props.ActiveChat) {
             return;
         }
+        console.log("open socket")
         ChatsCtr.createSocket(
             { chatId: this.props.ActiveChat },
             {
