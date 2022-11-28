@@ -3,34 +3,34 @@ import '../public/cssout/mainin.css';
 import '../public/cssout/chat.css';
 import '../public/cssout/btn.css';
 import '../public/cssout/form.css';
-
-import Chat from './pages/chat/ChatPage';
-import ContactPage from './pages/contacts/ContactPage';
 import RenderDom from './modules/RenderDom';
-import formPage from './pages/forms/Forms';
-import NavbarItems from './component/Navbar/Navbar';
 
-const path = window.location.pathname;
+import {router} from "src/modules/MainRouter";
+import {getContactPage} from "src/pages/ContactPage/ContactPage";
+import {FormPage} from "src/pages/forms/Forms";
+import {SettingsPage} from "src/pages/SettingsPage/SettingsPage";
+import {Menu} from "./component/Navbar/Navbar";
+import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
+import {store} from "src/Storage/store";
 
-RenderDom('#navbar', NavbarItems());
 
-switch (path) {
-  case '/contacts':
-    RenderDom('#main', ContactPage());
-    break;
-  case '/chat':
-    RenderDom('#main', Chat());
-    break;
-  case '/login':
-    RenderDom('#main', formPage(path));
-    break;
-  case '/reg':
-    RenderDom('#main', formPage(path));
-    break;
-  case '/settings':
-    RenderDom('#main', formPage(path));
-    break;
-  default:
-    NotFoundPage();
-    break;
-}
+console.log("first")
+console.log("store", store.getState())
+
+
+RenderDom('#navbar', Menu());
+
+
+
+router
+    .use("/contacts", getContactPage)
+    .use("/login", FormPage)
+    .use("/reg", FormPage)
+    .use("/settings", SettingsPage)
+    .use("/404", NotFoundPage)
+    .use("/chat",getChatsPage);
+router.start();
+
+
+
+

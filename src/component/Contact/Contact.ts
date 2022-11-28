@@ -1,8 +1,32 @@
-import { Props } from 'src/type_component';
-import ContactTpl from './Contact.hbs';
-import { AppComponent } from '../../modules/AppComponent';
+import { Children } from 'src/type_component';
+import {Component} from "src/modules/Component";
 
-export default function contact(props: Props) {
-  return new AppComponent('div', props, 'form-example', ContactTpl);
-};
+
+
+
+
+
+
+export class Contact extends Component {
+    constructor(
+        tag: string,
+        myprops: Children,
+        classofTag: string,
+        template: string,
+    ) {
+
+        super(tag, myprops, classofTag, template);
+
+    }
+
+
+
+
+    render() {
+        if (this.template !== null) {
+            return this.compile(this.template, this.props);
+        }
+    }
+}
+
 

@@ -76,9 +76,7 @@
     animation: floatup .5s forwards
 }
 
-.userchatfora {
-    text-decoration: none;
-}
+
 
 .userimg {
     float:left;
@@ -96,6 +94,7 @@
 }
 
 .userchat {
+    display: inline;
     border: solid black;
     margin: 5px;
     height: 50px;
@@ -112,4 +111,16 @@
     color: var(--textcoloractive);
     background: black;
 
+}
+.search {
+    margin: 5px;
+}
+
+.inline {
+    display: inline-block;
+    border: solid;
+}
+
+.userinfo{
+    font-size: 8pt;
 }

@@ -1,6 +1,8 @@
 import { v4 as makeUUID } from 'uuid';
 import { Props, Children } from 'src/type_component';
 import { EventBus } from './EventBus';
+import {AuthCtr} from "src/Controllers/AuthController";
+import {isEqual} from "src/utility/isEqual";
 
 export class Component {
   eventBus: EventBus;
@@ -20,21 +22,16 @@ export class Component {
     null;
 
   readonly _id: string | null = null;
-
+  isMounted:boolean=false;
+  isShow:boolean=false;
   template: string | null;
-
-  addEvents: null;
-
-  removeEvents: null;
-
-  private children: Children;
+  children: Children;
 
   /** JSDoc
    * @param {string} tagName
    * @param {Object} myprops
    *@param {string} classofTag
    * @param {string} template
-   * @param {Function|null} MyaddEvents
    * @returns {void}
    */
   constructor(
@@ -42,18 +39,14 @@ export class Component {
     myprops: Children = {},
     classofTag = '',
     template: string | null = null,
-    MyaddEvents = null,
-    myRemoveEvents = null
   ) {
     // console.log('tagname',tagName)
     // console.log("classofTag", classofTag)
 
     const { children, props } = this._getChildren(myprops);
-    // console.log("props", props)
+
     this.children = children;
     this.template = template;
-    this.addEvents = MyaddEvents;
-    this.removeEvents = myRemoveEvents;
     // это переменная только для конструктора
     const eventBus = new EventBus();
     // console.log(Component.EVENTS)
@@ -67,7 +60,7 @@ export class Component {
     this._id = makeUUID();
     // оборачиваем в proxy и возвращает другие но теже пропсы
     this.props = this._makePropsProxy({ ...props, __id: this._id });
-    // console.log('this.props',this.props)
+
     // задействуем eventbus - ф-ция которая возвращает eventbus, чтобы использовать за конструктором
     this.eventBus = eventBus;
     // регистрируем событияb
@@ -81,28 +74,36 @@ export class Component {
     const children: Children = {};
     const props: Props = {};
     Object.entries(myprops).forEach(([key, value]) => {
-      if (value instanceof Component) {
-        children[key] = value;
-      } else {
-        props[key] = value;
+      if(Array.isArray(value)){
+          if(value[0] instanceof Component){
+            children[key] = value;
+        }else{
+            props[key] = value;
+          }
+
+      }else{
+        if (value instanceof Component) {
+          children[key] = value;
+        } else {
+          props[key] = value;
+        }
       }
+
     });
 
     return { children, props };
   }
 
   _makePropsProxy(props: Props) {
+    const self = this;
     return new Proxy(props, {
       get(target, prop: string) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop: string, value) {
-        console.log('target', target);
-        console.log('prop', prop);
-        console.log('value', value);
         target[prop] = value;
-        // eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
+        //self.eventBus.emit(Component.EVENTS.FLOW_CDU, { ...target }, target);
         return true;
       },
       deleteProperty() {
@@ -147,36 +148,58 @@ export class Component {
   }
 
   _componentDidMount() {
-    console.log('dispatch2');
+
     this.componentDidMount();
+    Object.values(this.children).forEach(child => {
+      if(Array.isArray(child)){
+        for(let i=0; i<child.length; i++){
+          child[i].dispatchComponentDidMount();
+        }
+      }else{
+        child.dispatchComponentDidMount();
+      }
+
+
+
+    });
+
   }
 
   // Может переопределять пользователь, необязательно трогать
   componentDidMount() {}
 
   dispatchComponentDidMount() {
+    this.isMounted = true;
+    this.isShow=true
     this.eventBus.emit(Component.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate() {
-    const response = this.componentDidUpdate();
+  _componentDidUpdate(oldProps) {
+    const response = this.componentDidUpdate(oldProps);
     if (response) {
       this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidUpdate() {
+  componentDidUpdate(oldProps) {
     return true;
   }
 
   setProps = (nextProps: Props) => {
-    if (!nextProps) {
+       if (!nextProps && !this.isShow) {
       return;
     }
+    // получаем json представление старых пропсов
+    let oldPropsJSON = JSON.stringify(this.props);
+    // сохраняем старые пропсы
+    let oldProps = JSON.parse(oldPropsJSON);
     Object.assign(this.props, nextProps);
-    // console.log('this.props', this.props)
-    this.eventBus.emit(Component.EVENTS.FLOW_CDU);
+    let iseq=isEqual(this.props,oldProps)
+    console.log("isEQUAL", iseq)
+       if(!iseq){
+         this.eventBus.emit(Component.EVENTS.FLOW_CDU, oldProps);
+       }
   };
 
   get element() {
@@ -193,28 +216,39 @@ export class Component {
   _render(): void {
     // передаем fragment в block
     const block = this.render();
+
     // this.RemoveEvents()
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    this.clone();
+
     this._element.innerHTML = ''; // удаляем предыдущее содержимое
     // console.log('elem',typeof this._element)
     this._element.appendChild(block);
-    this.AddEvents();
+    this.VisualEffects()
+    if(!this.isMounted){
+      this.AddEvents();
+    }
+
     // this._element.innerHTML = block;
   }
+// Может переопределять пользователь, необязательно трогать
+  VisualEffects(){
 
+  }
   // Может переопределять пользователь, необязательно трогать
   render() {}
 
   // Может переопределять пользователь, необязательно трогать
   AddEvents() {
-    if (this.props.events) {
-      this.props.events(this.getContent(), this.props);
-    }
+    const {events = {}} = this.props;
 
-    /* if (this.addEvents) {
-      this.addEvents(this.getContent(), this.props);
-    } */
+    Object.keys(events).forEach(eventName => {
+      this._element.addEventListener(eventName, events[eventName].bind(eventName, this));
+    });
+
+
+    /*if (this.props.events) {
+      this.props.events(this.getContent(), this.props);
+    }*/
   }
 
   // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
@@ -225,39 +259,63 @@ export class Component {
   }
 
   compile(template: string, props: Props) {
+
+     //console.log("CHILDREN!!!!!!!!!!!!!!!!!!!!!!", this.children)
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки
     Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
+      if(Array.isArray(child)){
+        propsAndStubs[key]=[]
+        for (let i=0; i<child.length; i++){
+          propsAndStubs[key][i]=`<div data-id="${child[i]._id}">заглушка1</div>`;
+        }
+      }else{
+        propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
+      }
     });
-    // console.log('propsAndStubs', propsAndStubs)
+  // console.log("PROPSSTUB", propsAndStubs)
     // создаем элемент с тегом template
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
     fragment.innerHTML = template(propsAndStubs);
+   // console.log("fragment", fragment)
     Object.values(this.children).forEach((child) => {
-      //  console.log('child.id', child._id)
-      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-      //  console.log('stub', stub)
-      stub.replaceWith(child.getContent());
+        //console.log('child', child)
+      if(Array.isArray(child)){
+       // console.log("thisArray",child)
+        for (let a=0; a<child.length; a++){
+         // console.log("child[a]",child[a]._id)
+          let zaglushka = fragment.content.querySelector(`[data-id="${child[a]._id}"]`);
+         // console.log("zaglushka", zaglushka)
+          zaglushka.replaceWith(child[a].getContent());
+        }
+      }else{
+        const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
+        stub.replaceWith(child.getContent());
+      }
+
+
+
     });
-    // console.log('fragment', typeof fragment)
+
     return fragment.content;
+
   }
 
   show() {
-    // console.log('show')
-    // eslint-disable-next-line no-underscore-dangle
+
+    console.log("show from component")
+    this.isShow=true
+    //AuthCtr.getUser()
     if (this.getContent() !== undefined) {
-      this.getContent().style.display = 'block';
+      this.getContent().style.display = '';
+      //this.getContent().hidden=false
     }
   }
 
   hide() {
-    // console.log('hide')
-    // @ts-ignore
+    this.isShow=false
     this.getContent().style.display = 'none';
-    // this._element.setAttribute("display", "none");
   }
 }

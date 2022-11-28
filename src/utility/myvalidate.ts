@@ -2,7 +2,7 @@ export const MyvalidateFields = (
   fieldName: string,
   value: string
 ): null | string => {
-  console.log('FIELD PROPERTY ', fieldName, value);
+  //console.log('FIELD PROPERTY ', fieldName, value);
   let error: null | string = null;
   switch (fieldName) {
     case 'login':
@@ -14,7 +14,7 @@ export const MyvalidateFields = (
       break;
     case 'oldPassword':
     case 'newPassword':
-    case 'Password': {
+    case 'password': {
       if (
         !/^(.){8,40}$/.test(value) ||
         !/[A-ZА-Я]/.test(value) ||
