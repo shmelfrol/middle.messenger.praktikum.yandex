@@ -1,6 +1,5 @@
 import {Children, Props} from 'src/type_component';
 import {Component} from "src/modules/Component";
-import {props_contacts} from "src/Storage/PropsForContacts";
 import ContactTpl from "src/component/Contact/Contact.hbs";
 import ChatPageTPl from "./ContactPageTpl.hbs"
 import {store} from "src/Storage/store";

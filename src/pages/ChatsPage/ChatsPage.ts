@@ -80,7 +80,7 @@ export class ChatsPage extends Component {
         if (this.props.chats && this.props.chats.length !== 0) {
             this.children.chatList = this.props.chats.map((chat) => new ChatItem('div', {
                 ...chat,
-                events: {click: ChatClick}
+                events: {click: ChatClick.bind(this)}
             }, 'userchat', ChatTpl));
         }
         if(this.props.messages && this.props.chats.length !== 0){
@@ -133,13 +133,7 @@ export class ChatsPage extends Component {
                 type: "message",
                 isFromMe: true
             }
-
-            console.log("thismes", this.props.messages)
-
             let newArrMes={messages:[...this.props.messages, oneMes]}
-
-
-            console.log("newArrMes", newArrMes)
             this.setProps(newArrMes)
         }
 

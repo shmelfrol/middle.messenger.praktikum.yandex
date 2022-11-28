@@ -1,18 +1,22 @@
 import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 
+const SOCKET_WAS_CLOSED_CODE = 1000;
+const SOCKET_CONNECTION_BREAK_CODE = 1006;
+
 
 export function ChatClick(Component, e){
     let target= e.target.tagName
 
     if(target==="BUTTON"){
         e.preventDefault()
-
         console.log("BUTTON DEL")
         let idChat=e.target.getAttribute("id")
 
         ChatsCtr.delete(idChat)
-        Component.ActiveChat=''
+        Component._socket?.close(SOCKET_WAS_CLOSED_CODE, 'Был открыт другой чат');
+        Component.setProps({ActiveChat:"", messages:[]})
+        ChatsCtr.getChatiks()
     }
     if(target==="DIV"){
         console.log("THISSSSSSSSS",Component)
