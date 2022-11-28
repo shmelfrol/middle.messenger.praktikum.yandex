@@ -242,7 +242,7 @@ export class Component {
     const {events = {}} = this.props;
 
     Object.keys(events).forEach(eventName => {
-      this._element.addEventListener(eventName, events[eventName].bind(eventName, this._element));
+      this._element.addEventListener(eventName, events[eventName].bind(eventName, this));
     });
 
 

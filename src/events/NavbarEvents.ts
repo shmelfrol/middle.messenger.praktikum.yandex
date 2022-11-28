@@ -6,13 +6,11 @@ export function Menuevents(el, props) {
     //debugger
     let items = el.querySelectorAll('li')
     let path = window.location.pathname
-    console.log("pathhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", path)
     if(items){
         items.forEach((item) => {
             item.addEventListener('click', (event) => {
                 let href = item.getAttribute("href")
                 if (href !== "/logout") {
-                    console.log("goto" + Math.random())
                     router.go(href)
                 } else {
                     AuthCtr.logout()
@@ -30,8 +28,6 @@ export function ActiveItemMenu(el, props){
     //debugger
     let items = el.querySelectorAll('li')
     let path = window.location.pathname
-    console.log("pathhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", path)
-    console.log("ITEMS", items)
     if(items) {
         items.forEach((li) => {
             let classes = li.classList

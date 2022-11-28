@@ -8,9 +8,10 @@ import ChatInputTpl from "src/component/ChatInput/ChatInput.hbs";
 import ChatTpl from "src/component/ChatItem/ChatItem.hbs";
 import MessageTpl from "src/component/Message/Message.hbs";
 import {ChatItem} from "src/component/ChatItem/ChatItem";
-import {ChatClick, ViewActiveChat} from "src/events/ChatsEvents";
+import {ChatClick, ChatScroll, ViewActiveChat} from "src/events/ChatsEvents";
 import {ChatInput} from "src/component/ChatInput/ChatInput";
 import {Message} from "src/component/Message/Message";
+import {AuthCtr} from "src/Controllers/AuthController";
 
 
 
@@ -47,11 +48,13 @@ export class ChatsPage extends Component {
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps(store.getState());
         });
+        AuthCtr.getUser()
 
     }
 
     VisualEffects() {
         ViewActiveChat(this.getContent(), this.props)
+        ChatScroll(this.getContent(), this.props)
     }
 
     componentDidMount() {
@@ -113,7 +116,35 @@ export class ChatsPage extends Component {
     onSocketMessage(response){
         console.log("Active_chat", this.props.ActiveChat)
         console.log("MESSAGES", response)
-        this.setProps({messages:response})
+        if(Array.isArray(response)){
+            let newMesages=response.reverse()
+
+            this.setProps({messages:newMesages})
+        }else{
+            console.log("MESSAGES", response)
+            let oneMes=
+            {
+                isRead: true,
+                chatId: 3541,
+                time: response.time,
+                content: response.content,
+                id: response.id,
+                userId: response.userId,
+                type: "message",
+                isFromMe: true
+            }
+
+            console.log("thismes", this.props.messages)
+
+            let newArrMes={messages:[...this.props.messages, oneMes]}
+
+
+            console.log("newArrMes", newArrMes)
+            this.setProps(newArrMes)
+        }
+
+
+
         console.log("propsafter_sETpROPS_MESSAGES", this.props)
     }
     onSocketClosed({ code }: { code: number }) {

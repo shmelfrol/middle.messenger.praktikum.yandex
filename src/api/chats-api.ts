@@ -4,7 +4,6 @@ class ChatApi {
   getChats(data?: { offset?: number; limit?: number; title?: string }) {
     return http.get('/chats', { data }).then((res) => {
       const responseData = JSON.parse(res.response);
-      console.log(res.response)
       return responseData.map((chat) => {
         const lastMessage = chat.last_message;
         return {

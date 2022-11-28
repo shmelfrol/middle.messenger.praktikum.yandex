@@ -4,7 +4,8 @@ import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 import {router} from "src/modules/MainRouter";
 
-export function ContactsSearch(el, e) {
+export function ContactsSearch(Component, e) {
+    let el=Component.getContent()
     let tag = e.target.tagName
     if (tag === "INPUT") {
 

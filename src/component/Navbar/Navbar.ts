@@ -35,7 +35,6 @@ export class Navbar extends Component {
   }
 
   AddEvents() {
-    console.log("ftyftyjtyjty")
     Menuevents(this.getContent(), this.props)
   }
 
@@ -45,7 +44,6 @@ export class Navbar extends Component {
 
   render() {
     if (this.template !== null) {
-      console.log("RENDER!!!!!!!!!!!!!!!!!!!")
       ActiveItemMenu(this.getContent(), this.props)
       return this.compile(this.template, this.children);
     }

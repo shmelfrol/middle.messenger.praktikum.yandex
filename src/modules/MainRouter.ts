@@ -1,5 +1,6 @@
 import RenderDom from "src/modules/RenderDom";
 import {store} from "src/Storage/store";
+import {AuthCtr} from "src/Controllers/AuthController";
 
 function isEqual(lhs, rhs) {
     return lhs === rhs;
@@ -81,6 +82,7 @@ export class Router {
     }
 
     _onRoute(pathname) {
+        AuthCtr.getUser()
         let route = this.getRoute(pathname);
         if (route === undefined) {
             route = this.getRoute("/404");

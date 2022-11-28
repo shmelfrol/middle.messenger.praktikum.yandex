@@ -26,7 +26,7 @@ export class Settings extends Component {
         super(tag, myprops, classofTag, template, MyaddEvents);
 
          //debugger
-        console.log("setting", store.getState())
+        console.log("setting!!!!!!!!!!!!", store.getState())
         store.on(EVENTS.UPDATE, () => {
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps(store.getState());

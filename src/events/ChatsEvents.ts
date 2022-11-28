@@ -2,17 +2,20 @@ import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 
 
-export function ChatClick(el, e){
+export function ChatClick(Component, e){
     let target= e.target.tagName
 
     if(target==="BUTTON"){
         e.preventDefault()
+
         console.log("BUTTON DEL")
         let idChat=e.target.getAttribute("id")
 
         ChatsCtr.delete(idChat)
+        Component.ActiveChat=''
     }
     if(target==="DIV"){
+        console.log("THISSSSSSSSS",Component)
         console.log(e.target)
         let ChatId=e.target.querySelector("span").getAttribute("id")
         store.set("ActiveChat", ChatId)
@@ -33,6 +36,16 @@ export function ViewActiveChat(el, props){
                 chat.classList.remove("userchatactive")
             }
         })
+    }
+}
+
+
+export function ChatScroll(el, props){
+    if(props.ActiveChat){
+
+       let Scroll= el.querySelector(".chat-bar-bottom")
+        console.log("Scroll", Scroll)
+        Scroll.scrollIntoView(true)
     }
 }
 

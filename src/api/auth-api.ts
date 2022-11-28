@@ -6,8 +6,8 @@ import {http} from "src/modules/HttpTransport";
 class AuthApi {
   signUp(data) {
     const requestData = {
-      first_name: data.firstName,
-      second_name: data.secondName,
+      first_name: data.first_name,
+      second_name: data.second_name,
       login: data.login,
       email: data.email,
       password: data.password,
