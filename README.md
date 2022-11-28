@@ -17,7 +17,7 @@ ts
 - `npm run parcelbild` — сборка стабильной версии.
 
 ## **проект залит на netlify**
-- «[Netlify](https://636a9115e0a5941e2541e87d--zingy-conkies-3ce667.netlify.app/chat)».
+- «[Netlify](https://zingy-conkies-3ce667.netlify.app/login)».
 на 3 спринте переписана несколько раз функциональность компонентного подхода
 Созданы контроллеры, подключен API и WebSocket
 Внедрен роутер - Приложение в итоге стало немного напоминать SPA
