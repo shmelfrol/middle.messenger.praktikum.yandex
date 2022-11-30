@@ -4,11 +4,11 @@ import {store} from "src/Storage/store";
 class UserController {
   search(login: string) {
         return UserApi.search({ login }).then((res)=>{
-          console.log("res", res)
+          //console.log("res", res)
           if(res.length!==0){
-            store.set('contacts', res);
+           // store.set('contacts', res);
           }
-
+           return res
 
         });
   }

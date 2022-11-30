@@ -2,26 +2,18 @@ import {router} from "src/modules/MainRouter";
 import {logout} from "src/utility/authrequest";
 import {AuthCtr} from "src/Controllers/AuthController";
 
-export function Menuevents(el, props) {
-    //debugger
-    let items = el.querySelectorAll('li')
-    let path = window.location.pathname
-    if(items){
-        items.forEach((item) => {
-            item.addEventListener('click', (event) => {
-                let href = item.getAttribute("href")
-                if (href !== "/logout") {
-                    router.go(href)
-                } else {
-                    AuthCtr.logout()
-                }
-            });
-        });
+
+
+
+export function ClickMenuItem(Component, e){
+    let el=Component.getContent()
+    let href = el.getAttribute("href")
+    if (href !== "/logout") {
+        router.go(href)
+    } else {
+        AuthCtr.logout()
     }
-
-
 }
-
 
 
 export function ActiveItemMenu(el, props){
@@ -45,11 +37,3 @@ export function ActiveItemMenu(el, props){
 }
 
 
-/*
-export function MyaddEvents(el, props: object): void {
-    const path: string = window.location.pathname;
-    if (path === props.name) {
-        el.classList.add('active');
-    }
-    // console.log('myaddev_el', props.name)
-}*/

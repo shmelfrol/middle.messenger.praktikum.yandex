@@ -45,12 +45,12 @@ export function FormPage() {
     let tpl = '';
     let path = window.location.pathname;
     switch (path) {
-        case '/login': {
+        case '/': {
 
             tpl = FormLoginTpl;
             break;
         }
-        case '/reg': {
+        case '/sign-up': {
             tpl = FormRegTpl;
             break;
         }

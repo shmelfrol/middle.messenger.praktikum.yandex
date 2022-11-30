@@ -31,7 +31,6 @@ class AuthApi {
   }
 
   getUser() {
-    console.log("getUser in authapi")
     return http.get('/auth/user').then((res) => {
       const responseData = JSON.parse(res.response);
 

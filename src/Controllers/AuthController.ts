@@ -6,7 +6,7 @@ import {STORE_ITEM} from "src/Storage/store";
 // TODO: для всех запросов во всех контроллерах добавить catch c обработкой ошибок
 class AuthController {
     signUp(data) {
-        return authapi.signUp(data);
+        return authapi.signUp(data).then(res=>res);
     }
 
     signIn(data) {
@@ -21,15 +21,10 @@ class AuthController {
         //localStorage.removeItem(STORE_ITEM);
 
         return authapi.logout().then((res) => {
-            console.log("RESSSSSSSSSS", res)
+
             if(res=="OK"){
                 localStorage.removeItem(STORE_ITEM);
             }
-            console.log("localStorage!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", localStorage)
-
-
-            //перезагружаем страничку чтобы начать занаво И ОБНУЛИТЬ STORE
-            //router.go("/login")
             window.location.reload();
         });
     }

@@ -9,16 +9,20 @@ export function FormFields(props) {
     let path = window.location.pathname
     // eslint-disable-next-line default-case
     switch (path) {
-        case '/login': {
+        case '/': {
             Fields = formfields.LoginFields;
             break;
         }
-        case '/reg': {
+        case '/sign-up': {
             Fields = formfields.RegFields;
             break;
         }
         case '/settings': {
             Fields = formfields.SettingsFields;
+            break;
+        }
+        case '/messenger': {
+            Fields = formfields.ChatFields;
             break;
         }
     }
@@ -33,62 +37,7 @@ export function FormFields(props) {
         }else {
             components[LoginField]  = button({...props.forChildrens[LoginField]});
         }
-
-        // eslint-disable-next-line default-case
-       /* switch (LoginField) {
-            case 'login': {
-                components[LoginField] = input({...props.forChildrens.login, value:(props.currentUser)?props.currentUser.login:null});
-                break;
-            }
-            case 'Password': {
-                components[LoginField] = input({...props.forChildrens.Password, value:(props.currentUser)?props.currentUser.password:null});;
-                break;
-            }
-            case 'firstName': {
-                components[LoginField] = input({...props.forChildrens.firstName, value:(props.currentUser)?props.currentUser.firstName:null});
-                break;
-            }
-            case 'second_name': {
-                components[LoginField] = input({...props.forChildrens.secondName, value:(props.currentUser)?props.currentUser.secondName:null});
-                break;
-            }
-            case 'displayName': {
-                components[LoginField] = input({...props.forChildrens.displayName, value:(props.currentUser)?props.currentUser.displayName:null});
-                break;
-            }
-            case 'email': {
-                components[LoginField] = input({...props.forChildrens.email, value:(props.currentUser)?props.currentUser.email:null});
-                break;
-            }
-            case 'phone': {
-                components[LoginField] = input({...props.forChildrens.phone, value:(props.currentUser)?props.currentUser.phone:null});
-                break;
-            }
-            case 'oldPassword': {
-                components[LoginField] = input({...props.forChildrens.oldPassword});
-                break;
-            }
-            case 'newPassword': {
-                components[LoginField] = input({...props.forChildrens.newPassword});
-                break;
-            }
-            case 'avatar': {
-                components[LoginField] = input({...props.forChildrens.avatar, value:(props.currentUser)?props.currentUser.avatar:null});
-                break;
-            }
-            case 'btnLogin': {
-                components[LoginField]  = button({...props.forChildrens.btnLogin});
-                break;
-            }
-            case 'btnReg': {
-                components[LoginField] = button({...props.forChildrens.btnReg});
-                break;
-            }
-            case 'btnSettings': {
-                components[LoginField] = button({...props.forChildrens.btnSettings});
-                break;
-            }
-        }*/
     }
+    console.log("FIELDS", components)
     return components;
 }

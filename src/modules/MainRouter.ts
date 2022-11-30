@@ -82,7 +82,12 @@ export class Router {
     }
 
     _onRoute(pathname) {
-        AuthCtr.getUser()
+        if(pathname!=="/sign-up" && pathname!=="/"){
+            AuthCtr.getUser()
+        }
+        store.set("activePath", pathname)
+
+
         let route = this.getRoute(pathname);
         if (route === undefined) {
             route = this.getRoute("/404");
@@ -102,7 +107,7 @@ export class Router {
     go(pathname) {
         history.pushState({}, '', pathname)
         this._onRoute(pathname)
-        store.set("activePath", pathname)
+
     }
 
     back() {
