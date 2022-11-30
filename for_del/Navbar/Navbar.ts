@@ -11,11 +11,6 @@ import {EVENTS} from "src/const/constsStore";
 
 
 
-
-
-
-
-
 export class Navbar extends Component {
   constructor(
       tag: string,
@@ -34,9 +29,9 @@ export class Navbar extends Component {
 
   }
 
-  AddEvents() {
+  /*AddEvents() {
     Menuevents(this.getContent(), this.props)
-  }
+  }*/
 
   componentDidMount() {
     ActiveItemMenu(this.getContent(), this.props)

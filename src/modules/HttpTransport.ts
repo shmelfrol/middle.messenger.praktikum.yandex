@@ -35,7 +35,6 @@ export class HTTPTransport {
   ): Promise<XMLHttpRequest> => {
     const { headers = {}, method, data, timeout = 500 } = options;
     const dataIsFile = data instanceof File;
-     console.log("dataisFILE", dataIsFile)
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -53,9 +52,9 @@ export class HTTPTransport {
       xhr.withCredentials = true;
      // emit function if onload
       xhr.onload = () => {
-        if (xhr.status === 401 && window.location.pathname !== '/login') {
+        if (xhr.status === 401 && window.location.pathname !== '/') {
           //if response 401 (Unauthorized) go to auth page
-          router.go('/login');
+          router.go('/');
         } else if (xhr.status >= 400) {
           try {
             reject(JSON.parse(xhr.response));

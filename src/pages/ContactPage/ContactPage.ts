@@ -25,7 +25,6 @@ export class ContactsPage extends Component {
             }
         }, 'form-example', InputTpl);
         myprops.newContacts = myprops.contacts.map((contact) => new Contact('div', {...contact, events:{click:AddChat}}, 'userchat', ContactTpl));
-        console.log("myprops.newContacts", myprops)
 
         // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
@@ -42,18 +41,6 @@ export class ContactsPage extends Component {
     componentDidUpdate() {
         this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {...contact, events:{click:AddChat}}, 'userchat', ContactTpl));
 
-
-
-        /*Object.entries(this.children).forEach(([key, child]) => {
-            if(Array.isArray(child)){
-                for (let i=0; i<child.length; i++){
-                    this.children[key][i].setProps(this.props.)
-                }
-            }else {
-                this.children[key].setProps(this.props)
-            }
-
-        });*/
         return true
     }
 

@@ -150,5 +150,19 @@ export const formfields = {
         'newPassword',
         'avatar',
         'btnSettings',
+    ],
+    ChatFields:[
+        'chatName',
+        "btnCreateChat"
     ]
+}
+
+export const createChatData={
+    chatName: {
+        inputname: 'chatName',
+        text: 'chatName',
+        type: 'text'
+    },
+    btnCreateChat: {btn_name: "Create Chat"},
+
 }

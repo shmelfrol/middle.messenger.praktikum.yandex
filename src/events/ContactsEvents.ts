@@ -4,35 +4,59 @@ import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 import {router} from "src/modules/MainRouter";
 
-export function ContactsSearch(Component, e) {
-    let el=Component.getContent()
+export function ContactsSearch(Component, Contact, e) {
+    let el = Contact.getContent()
     let tag = e.target.tagName
     if (tag === "INPUT") {
-
         if (e.keyCode === 13) {
             let searchInput = el.querySelector("input")
-            console.log(searchInput.value)
-            UserCtr.search(searchInput.value)
+            UserCtr.search(searchInput.value).then(res => {
+                console.log("SEARCHED USERS", res)
+                Component.setProps({contacts: res})
+            })
             ///searchinput.value='';
         }
     }
 
 }
 
-export function AddChat(el, e) {
+export function addUsersToChat(Component, Contact, e) {
+    let ActiveChat = Component.props.ActiveChat
+    let el = Component.getContent()
     let tag = e.target.tagName
     if (tag === "BUTTON") {
-
         e.preventDefault()
-        let userId=e.target.getAttribute("id")
-        let loginUser=e.target.getAttribute("login")
-
-            ChatsCtr.create(loginUser,  userId).then(res=> {
-                store.set("ActiveChat", res)
-                router.go("/chat")
+        let userId = e.target.getAttribute("id")
+        let userarr = Component.getIdsChatUsers()
+        if (userarr.indexOf(Number(userId)) === -1) {
+            ChatsCtr.addUsersToChat({users: [userId], chatId: ActiveChat}).then(res => {
+                //console.log("ADDD USER", res)
+                ChatsCtr.getChatUsers(ActiveChat).then(res => {
+                    Component.setProps({chatUsers: res.users})
+                })
             })
+        }
 
-
-        console.log("Button")
     }
 }
+
+
+export function delUsersFromChat(Component, Contact, e) {
+    let ActiveChat = Component.props.ActiveChat
+    let el = Component.getContent()
+    let tag = e.target.tagName
+    if (tag === "BUTTON") {
+        e.preventDefault()
+        let userId = e.target.getAttribute("id")
+        ChatsCtr.delUsersFromChat({users: [userId], chatId: ActiveChat}).then((res) => {
+            if (res === "OK") {
+                ChatsCtr.getChatUsers(ActiveChat).then(res => {
+                    console.log(res)
+                    Component.setProps({chatUsers: res.users})
+                })
+            }
+        })
+
+    }
+}
+

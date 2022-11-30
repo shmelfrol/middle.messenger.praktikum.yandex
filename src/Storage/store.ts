@@ -41,11 +41,14 @@ export class Store extends EventBus {
     localStorage.setItem(STORE_ITEM, JSON.stringify(this.getState()));
     //эмитим - вызываем в ивентбасе событие update - get.state
     //this.emit(Store.EVENTS.UPDATE, this.getState());
-    if(path==="activePath"){
-      this.emit(EVENTS.UPDATEPATH);
-    }else{
-      this.emit(EVENTS.UPDATE);
+    if(path==="currentUser"){
+
     }
+    if(path==="activePath"){
+      //this.emit(EVENTS.UPDATEPATH);
+    }
+      this.emit(EVENTS.UPDATE);
+
 
 
   }

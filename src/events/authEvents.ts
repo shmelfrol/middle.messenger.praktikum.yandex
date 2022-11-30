@@ -6,7 +6,7 @@ import {UserCtr} from "src/Controllers/UserController";
 import {router} from "src/modules/MainRouter";
 
 export function EventForInput(Component, e) {
-    let el=Component.getContent()
+    let el = Component.getContent()
     console.log("INPUT", el)
     const errordiv = el.querySelector('#errormessage');
     const input = el.querySelector('input')
@@ -15,7 +15,7 @@ export function EventForInput(Component, e) {
 }
 
 export function EventForButton(Component, e) {
-    let el=Component.getContent()
+    let el = Component.getContent()
     let target = e.target.getAttribute("type")
     if (target == "submit") {
         e.preventDefault()
@@ -37,19 +37,34 @@ export function EventForButton(Component, e) {
         }
         if (err === null) {
             let path = window.location.pathname
-            if (path === "/login") {
-
+            if (path === "/") {
                 AuthCtr.signIn(data).then(res => {
                     if (res == "OK") {
-                        router.go("/chat")
+                        router.go("/messenger")
                     }
                 }).catch((res) => {
-                    divErr.textContent += res.reason
+                    if (typeof res === 'object') {
+                        if (res?.reason) {
+                            divErr.textContent += res.reason
+                        }
+                        if (res?.type) {
+                            divErr.textContent += res.type
+                        }
+
+                    } else {
+                        divErr.textContent += res
+                    }
+
                 })
             }
-            if (path === "/reg") {
+            if (path === "/sign-up") {
                 console.log("DATA", data)
-                AuthCtr.signUp(data).then().catch((res) => {
+                AuthCtr.signUp(data).then(res => {
+                    console.log("RES", res)
+                    if (res?.id) {
+                        router.go("/messenger")
+                    }
+                }).catch((res) => {
                     divErr.textContent += res.reason
                 })
                 //authreg(data)
@@ -61,7 +76,7 @@ export function EventForButton(Component, e) {
 }
 
 export function EventForButtonSettings(Component, e) {
-    let el=Component.getContent()
+    let el = Component.getContent()
     let type = e.target.getAttribute("type")
     console.log("TARGET", e.target.getAttribute("type"))
 
@@ -72,7 +87,6 @@ export function EventForButtonSettings(Component, e) {
         let divErr = el.querySelector("#err");
         try {
             data = validform(el);
-            console.log("data in EVENTs", data)
         } catch (e) {
             console.log(e)
             err = e
@@ -83,7 +97,6 @@ export function EventForButtonSettings(Component, e) {
             }
             if (data.hasOwnProperty("avatar")) {
                 let file = el.querySelector("input[type=file]").files[0];
-                console.log("MYFILE", file.files)
                 UserCtr.changeAvatar(file)
             }
 

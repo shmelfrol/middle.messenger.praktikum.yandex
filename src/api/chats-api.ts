@@ -35,7 +35,7 @@ class ChatApi {
   }
 
   getChatUsers(data: { id: number; offset?: number; limit?: number; name?: string; email?: string }) {
-    return http.get(`/${data.id}/users`, { data }).then((res) => {
+    return http.get(`/chats/${data.id}/users`, { data }).then((res) => {
       const responseData= JSON.parse(res.response);
 
       return responseData.map(

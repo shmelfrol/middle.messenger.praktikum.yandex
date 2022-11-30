@@ -9,26 +9,26 @@ import {router} from "src/modules/MainRouter";
 import {getContactPage} from "src/pages/ContactPage/ContactPage";
 import {FormPage} from "src/pages/forms/Forms";
 import {SettingsPage} from "src/pages/SettingsPage/SettingsPage";
-import {Menu} from "./component/Navbar/Navbar";
+
 import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
 import {store} from "src/Storage/store";
-
+import {MainMenu} from "src/component/Menu/Menu";
 
 console.log("first")
 console.log("store", store.getState())
 
 
-RenderDom('#navbar', Menu());
+/*RenderDom('#navbar', Menu());*/
+RenderDom('#navbar', MainMenu());
 
 
 
 router
-    .use("/contacts", getContactPage)
-    .use("/login", FormPage)
-    .use("/reg", FormPage)
+    .use("/", FormPage)
+    .use("/sign-up", FormPage)
     .use("/settings", SettingsPage)
     .use("/404", NotFoundPage)
-    .use("/chat",getChatsPage);
+    .use("/messenger",getChatsPage);
 router.start();
 
 

@@ -39,6 +39,8 @@ export class Component {
     myprops: Children = {},
     classofTag = '',
     template: string | null = null,
+    id="",
+    attribute={}
   ) {
     // console.log('tagname',tagName)
     // console.log("classofTag", classofTag)
@@ -55,6 +57,8 @@ export class Component {
       tagName,
       props,
       classofTag,
+      id,
+      attribute
     };
     // Генерируем уникальный UUID V4
     this._id = makeUUID();
@@ -130,10 +134,21 @@ export class Component {
 
   _createResources() {
     // тоже самое что  tagName=this._meta.tagName
-    const { tagName, classofTag } = this._meta;
+    const { tagName, classofTag, id, attribute } = this._meta;
     // присваиваем _element созданный элемент
     this._element = this._createDocumentElement(tagName);
     this._element.className = classofTag;
+    if(id){
+      this._element.setAttribute('id', id);
+    }
+    if(Object.keys(attribute).length !== 0){
+      //console.log("attribute", attribute)
+      Object.entries(attribute).forEach(([key, value])=>{
+        this._element.setAttribute(key, value);
+      })
+
+    }
+
 
     // console.log('create element', this._element)
     this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
@@ -260,7 +275,8 @@ export class Component {
 
   compile(template: string, props: Props) {
 
-     //console.log("CHILDREN!!!!!!!!!!!!!!!!!!!!!!", this.children)
+   //  console.log("CHILDREN!!!!!!!!!!!!!!!!!!!!!!", this.children)
+    //console.log("tisprops", props)
     // копируем пропсы
     const propsAndStubs = { ...props };
     // добавляем в пропсы чилдов со значениями заглушки
@@ -274,7 +290,7 @@ export class Component {
         propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
       }
     });
-  // console.log("PROPSSTUB", propsAndStubs)
+   //console.log("PROPSSTUB", propsAndStubs)
     // создаем элемент с тегом template
     const fragment = this._createDocumentElement('template');
     // вставляем в созданный элемент шаблон с заглушками
