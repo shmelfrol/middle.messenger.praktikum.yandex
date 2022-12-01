@@ -20,69 +20,82 @@ export class ChatContacts extends Component {
         classofTag: string,
         template: string,
     ) {
-       console.log("ChatCotactsProps", myprops)
-
-
-
-
-
-
-        // передаю в родительский класс пропсы и тег
+                // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
         store.on(EVENTS.UPDATE, () => {
-            console.log("STOREEEEEEEEEEEEEEEEEEE",store.getState())
             //{contacts:store.getState().contacts, ActiveChat: store.getState().ActiveChat}
             // пдписываемся на обновление компонента, передав данные из хранилища
-            this.setProps({contacts:store.getState().contacts, ActiveChat: store.getState().ActiveChat});
+            this.setProps({contacts: store.getState().contacts, ActiveChat: store.getState().ActiveChat});
         });
 
 
     }
 
-    getIdsChatUsers(){
-        let idsChatUsers=[]
-        if(this.props.chatUsers){
+    getIdsChatUsers() {
+        let idsChatUsers = []
+        if (this.props.chatUsers) {
 
-            for(let i=0; i<this.props.chatUsers.length; i++){
-                idsChatUsers[i]=this.props.chatUsers[i].id
+            for (let i = 0; i < this.props.chatUsers.length; i++) {
+                idsChatUsers[i] = this.props.chatUsers[i].id
             }
         }
         return idsChatUsers
     }
 
     componentDidUpdate(oldProps) {
-        console.log("_________________________________________________________________________________", oldProps)
-        if(this.props.ActiveChat !== oldProps.ActiveChat){
-            ChatsCtr.getChatUsers(this.props.ActiveChat).then(res=>{
-                console.log("CHATUSERS", res)
-                this.setProps({chatUsers:res.users})
+        if (this.props.ActiveChat !== oldProps.ActiveChat) {
+            ChatsCtr.getChatUsers(this.props.ActiveChat).then(res => {
+                this.setProps({chatUsers: res.users})
             })
         }
 
 
-        this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {
-            ...contact,
+        this.children.newContacts = this.props.contacts.map((contact) => {
+            let correctUserData = this.CorrectUserData(contact)
+            return new Contact('div', {
+            ...correctUserData,
             events: {click: addUsersToChat.bind(this, this)}
-        }, 'userchat', ContactTpl));
+        }, 'userchat', ContactTpl)});
 
         return true
     }
 
 
+    CorrectUserData(user){
+        let correctUserData = {}
+        Object.keys(user).forEach((key) => {
+            if (key === "avatar") {
+                if (user.avatar === null) {
+                    correctUserData.avatar = "https://ya-praktikum.tech/api/v2/resources/c720b08a-1e26-458f-9001-05e3da7ff293/14bb2f66-9b8f-43d9-b43c-682600621dd9_349-3496330_download-person-icon-orange-clipart-computer-icons-user-icon-orange-png.png"
+                } else {
+                    correctUserData.avatar = "https://ya-praktikum.tech/api/v2/resources/" + user[key]
+                }
+            } else {
+                correctUserData[key] = user[key]
+            }
+
+        })
+        return correctUserData
+    }
+
+
     render() {
-        if(this.props.chatUsers){
-            this.children.ActiveChatUsers=this.props.chatUsers.map((user) => new ChatContact('div', {
-                ...user,
-                events: {click: delUsersFromChat.bind(this,this)}
-            }, 'userchat', ChatContactTpl))
+        if (this.props.chatUsers) {
+            this.children.ActiveChatUsers = this.props.chatUsers.map((user) => {
+
+                let correctUserData = this.CorrectUserData(user)
+                return new ChatContact('div', {
+                    ...correctUserData,
+                    events: {click: delUsersFromChat.bind(this, this)}
+                }, 'userchat', ChatContactTpl)
+            })
         }
 
         this.children.SearchInput = new InPut('div', {
             events: {
-                keydown: ContactsSearch.bind(this,this)
+                keydown: ContactsSearch.bind(this, this)
             }
         }, 'form-example', InputTpl);
-
 
 
         if (this.template !== null) {
@@ -92,7 +105,6 @@ export class ChatContacts extends Component {
 
 
     show() {
-        console.log("SHOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
         if (this.getContent() !== undefined) {
             this.getContent().style.display = '';
         }

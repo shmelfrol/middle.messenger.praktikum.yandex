@@ -8,6 +8,8 @@ import MessageTpl from "src/component/Message/Message.hbs";
 import {ChatScroll} from "src/events/ChatsEvents";
 import {ChatInput} from "src/component/ChatInput/ChatInput";
 import {Message} from "src/component/Message/Message";
+import {AuthCtr} from "src/Controllers/AuthController";
+import {UserCtr} from "src/Controllers/UserController";
 
 
 const SOCKET_WAS_CLOSED_CODE = 1000;
@@ -99,12 +101,47 @@ export class ChatsMessenges extends Component {
         store.set('ActiveChat', null)
     }
 
+  CorrectFormatMess(messeges){
+
+        let correctMesseges=[]
+      for(let i=0; i<messeges.length; i++ ){
+          let formatMes={}
+          Object.keys(messeges[i]).forEach((key)=>{
+              if(key==="time"){
+                  let slicidate=messeges[i][key].slice(0, 16)
+                  const y = new Date(slicidate).toLocaleDateString();
+                  var t = new Date(slicidate).toLocaleTimeString();
+                  let correctTime=y+" "+t
+                  formatMes[key]=correctTime
+                  console.log(formatMes[key])
+              }
+              if(key==="userId"){
+                  ChatsCtr.getUserById(messeges[i][key])
+
+              }
+
+
+
+          })
+
+
+
+
+
+      }
+
+
+
+
+  }
+
+
 
     onSocketMessage(response) {
+        console.log("MESSSSSSSSSSSSSSSSSSSSSSS", response)
+        let newArrMes=[]
         if (Array.isArray(response)) {
-            let newMesages = response.reverse()
-
-            this.setProps({messages: newMesages})
+            newArrMes = response.reverse()
         } else {
             let oneMes =
                 {
@@ -117,9 +154,11 @@ export class ChatsMessenges extends Component {
                     type: "message",
                     isFromMe: true
                 }
-            let newArrMes = {messages: [...this.props.messages, oneMes]}
-            this.setProps(newArrMes)
+            newArrMes = [...this.props.messages, oneMes]
         }
+        this.CorrectFormatMess(newArrMes)
+
+        this.setProps({messages: newArrMes})
     }
 
     onSocketClosed({code}: { code: number }) {

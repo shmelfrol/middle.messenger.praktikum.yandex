@@ -5,6 +5,7 @@ import {UserCtr} from "src/Controllers/UserController";
 
 import {store} from "src/Storage/store";
 import {delUsersFromChat} from "src/events/ContactsEvents";
+import {UserApi} from "src/api/user-api";
 
 
 const PRIVATE_CHAT_NAME = "ftyujty"
@@ -68,6 +69,10 @@ class ChatController {
 
     addUsersToChat(data: { users: number[]; chatId: number }) {
         return ChatsApi.addUsersToChat(data).then(res=>res);
+    }
+
+    getUserById(id){
+        return UserApi.getUserbyId(id)
     }
 
 
