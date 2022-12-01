@@ -22,8 +22,9 @@ export class Store extends EventBus {
     super();
 
     const cachedStore = localStorage.getItem(STORE_ITEM);
-
+    console.log("store", cachedStore)
     this.state = cachedStore ? JSON.parse(cachedStore) : INITIAL_STATE;
+    console.log("this.state", this.state)
   }
 
   public getState() {

@@ -18,7 +18,7 @@ import ChatAddFormTpl from "src/component/ChatAddForm/ChatAddForm.hbs"
 import BtnAddChatUserTpl from "src/component/Button/Button.hbs"
 import ContactTpl from "src/component/Contact/Contact.hbs";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs"
-
+import ChatContactsTpl from "src/pages/ChatsPage/parts/ChatContacts/ChatContactsTpl.hbs"
 import {Button} from "src/component/Button/Button";
 import {InPut} from "src/component/Input/Input";
 import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
@@ -26,6 +26,7 @@ import InputTpl from "src/component/Input/Input.hbs";
 import {Contact} from "src/component/Contact/Contact";
 
 import {ChatContact} from "src/component/ChatContact/ChatContact";
+import {ChatContacts} from "src/pages/ChatsPage/parts/ChatContacts/ChatContacts";
 const SOCKET_WAS_CLOSED_CODE = 1000;
 const SOCKET_CONNECTION_BREAK_CODE = 1006;
 
@@ -162,18 +163,23 @@ export class ChatsPage extends Component {
             }
         }, "", BtnAddChatUserTpl)
 
-        this.children.SearchInput = new InPut('div', {
+        /*this.children.SearchInput = new InPut('div', {
             events: {
                 keydown: ContactsSearch.bind(this, this)
             }
-        }, 'form-example', InputTpl);
+        }, 'form-example', InputTpl);*/
 
-        this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {
+        /*this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {
             ...contact,
             events: {click: addUsersToChat.bind(this, this)}
-        }, 'userchat', ContactTpl));
+        }, 'userchat', ContactTpl));*/
 
-      if(this.props.ActiveChat !== oldProps.ActiveChat){
+
+
+
+
+
+        if(this.props.ActiveChat !== oldProps.ActiveChat){
           ChatsCtr.getChatUsers(this.props.ActiveChat).then(res=>{
               console.log("CHATUSERS", res)
               this.setProps({chatUsers:res.users})
@@ -181,12 +187,20 @@ export class ChatsPage extends Component {
       }
 
 
-      if(this.props.chatUsers){
+      /*if(this.props.chatUsers){
           this.children.ActiveChatUsers=this.props.chatUsers.map((user) => new ChatContact('div', {
               ...user,
               events: {click: delUsersFromChat.bind(this, this)}
           }, 'userchat', ChatContactTpl))
+      }*/
+
+      if(this.props.ActiveChat){
+          this.children.ChatContacts= new ChatContacts('div', {...this.props}, "itemtest", ChatContactsTpl)
+      }else{
+          this.children.ChatContacts=[]
       }
+
+
 
 
         return true

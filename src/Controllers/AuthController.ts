@@ -21,7 +21,7 @@ class AuthController {
         //localStorage.removeItem(STORE_ITEM);
 
         return authapi.logout().then((res) => {
-
+            console.log("logout", res)
             if(res=="OK"){
                 localStorage.removeItem(STORE_ITEM);
             }
