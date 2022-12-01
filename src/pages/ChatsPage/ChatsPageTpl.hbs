@@ -5,50 +5,7 @@
         {{{this}}}
     {{/each}}
 </div>
-<div class="itemtest">
-    <div data-id="6096fa2f-c074-4f20-8147-0ec6c6de6604" class="testformessage">
 
-        <div style="margin: 5px">{{{BtnAddChatUser}}}</div>
-        <div id="chatbox">
+{{{ChatsMessenges}}}
 
-            {{#each messageList}}
-                {{{this}}}
-            {{/each}}
-            <p  class="botText"><span>testing test</span></p>
-            <!-- this div for messages-->
-            <div data-id="74ba7523-75b0-47ee-b327-2b2d0d61fad4" class="chat-bar-bottom">
-            </div>
-        </div>
-    </div>
-
-
-
-    <div data-id="c6205877-0a04-404c-b478-31bb65e11be1" class="testforbtn">
-        <!-- this div for send message block-->
-        <div class="chat-bar-input-block">
-            {{{ChatInput}}}
-            <div class="chat-bar-icons">
-                <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart" onclick="heartButton()"></i>
-                <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send" onclick="sendButton()"></i>
-            </div>
-        </div>
-
-
-    </div>
-
-</div>
-<div class="itemtest" id="show">
-    <p>Пользователи чата</p>
-    {{#each ActiveChatUsers}}
-        {{{this}}}
-    {{/each}}
-    <p>Добавить пользователя</p>
-    <div style="margin: 5px">
-        {{{SearchInput}}}
-    </div>
-    {{#each newContacts}}
-        {{{this}}}
-    {{/each}}
-
-
-</div>
+{{{ChatContacts}}}

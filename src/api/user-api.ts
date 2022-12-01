@@ -1,5 +1,3 @@
-
-
 import {http} from "src/modules/HttpTransport";
 
 class Api {
@@ -24,6 +22,13 @@ class Api {
                     })
                 );
             });
+    }
+
+
+    getUserbyId(id){
+        return http.get(`/user/${id}`).then((res)=>{
+            console.log("GEtUSERS",JSON.parse(res.response))
+        })
     }
 
     changeProfile(data) {

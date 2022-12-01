@@ -1,0 +1,23 @@
+<div class="testformessage">
+
+    <!-- this div for messages-->
+    <div id="chatbox">
+        {{#each messageList}}
+            {{{this}}}
+        {{/each}}
+        <div data-id="74ba7523-75b0-47ee-b327-2b2d0d61fad4" class="chat-bar-bottom">
+        </div>
+    </div>
+</div>
+<div data-id="c6205877-0a04-404c-b478-31bb65e11be1" class="testforbtn">
+    <!-- this div for send message block-->
+    <div class="chat-bar-input-block">
+        {{{ChatInput}}}
+        <div class="chat-bar-icons">
+            <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart" onclick="heartButton()"></i>
+            <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send" onclick="sendButton()"></i>
+        </div>
+    </div>
+
+
+</div>

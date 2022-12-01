@@ -79,7 +79,6 @@ export const navitems: object = {
 
 export function getMenuItens(){
     let currentUser=store.getState().currentUser
-    console.log("currentUser",currentUser)
     if (currentUser?.id) {
         return {
             menuitems: [

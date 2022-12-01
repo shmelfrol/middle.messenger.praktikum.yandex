@@ -40,7 +40,13 @@ export function EventForButton(Component, e) {
             if (path === "/") {
                 AuthCtr.signIn(data).then(res => {
                     if (res == "OK") {
-                        router.go("/messenger")
+                        AuthCtr.getUser().then((res)=>{
+                         if(res?.id){
+                             console.log("res",res)
+                             router.go("/messenger")
+                         }
+                        })
+
                     }
                 }).catch((res) => {
                     if (typeof res === 'object') {

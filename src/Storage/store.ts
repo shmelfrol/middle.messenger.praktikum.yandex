@@ -24,6 +24,7 @@ export class Store extends EventBus {
     const cachedStore = localStorage.getItem(STORE_ITEM);
 
     this.state = cachedStore ? JSON.parse(cachedStore) : INITIAL_STATE;
+
   }
 
   public getState() {
@@ -45,9 +46,18 @@ export class Store extends EventBus {
 
     }
     if(path==="activePath"){
-      //this.emit(EVENTS.UPDATEPATH);
+      this.emit(EVENTS.UPDATEPATH);
+    }else{
+
+      let listeners=Object.keys(this.listeners).includes(EVENTS.UPDATE)
+
+       if(listeners){
+         this.emit(EVENTS.UPDATE);
+       }
+
+
     }
-      this.emit(EVENTS.UPDATE);
+
 
 
 

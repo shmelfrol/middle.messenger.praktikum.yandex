@@ -26,7 +26,7 @@ export class Menu extends Component {
         }, 'menuitem', MenuItemTpl, "1", {href: item.name}));
 
         super(tag, myprops, classofTag, template);
-        store.on(EVENTS.UPDATE, () => {
+        store.on(EVENTS.UPDATEPATH, () => {
             let currentUser = store.getState().currentUser
             let props = getMenuItens()
             // пдписываемся на обновление компонента, передав данные из хранилища

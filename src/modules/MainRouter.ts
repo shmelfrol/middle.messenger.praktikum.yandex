@@ -40,7 +40,6 @@ class Route {
     }
 
     render() {
-
         if (!this._block) {
             this._block = this._blockClass()
             RenderDom(this._props.rootQuery, this._block);
@@ -70,13 +69,13 @@ export class Router {
     }
 
     start() {
+
             window.onpopstate = event => {
              let pathName=window.location.pathname
             this._onRoute(pathName);
              store.set("activePath", pathName);
-
         };
-            console.log("start")
+
         this._onRoute(window.location.pathname);
 
     }
