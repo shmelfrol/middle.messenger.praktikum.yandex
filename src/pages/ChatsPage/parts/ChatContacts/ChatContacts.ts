@@ -10,6 +10,7 @@ import InputTpl from "src/component/Input/Input.hbs";
 import {AddChat, addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
 import {ChatContact} from "src/component/ChatContact/ChatContact";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs";
+import {ChatsCtr} from "src/Controllers/ChatsController";
 
 
 export class ChatContacts extends Component {
@@ -29,9 +30,10 @@ export class ChatContacts extends Component {
         // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
         store.on(EVENTS.UPDATE, () => {
-            console.log(store.getState())
+            console.log("STOREEEEEEEEEEEEEEEEEEE",store.getState())
+            //{contacts:store.getState().contacts, ActiveChat: store.getState().ActiveChat}
             // пдписываемся на обновление компонента, передав данные из хранилища
-            this.setProps({contacts:store.getState().contacts});
+            this.setProps({contacts:store.getState().contacts, ActiveChat: store.getState().ActiveChat});
         });
 
 
@@ -49,6 +51,15 @@ export class ChatContacts extends Component {
     }
 
     componentDidUpdate(oldProps) {
+        console.log("_________________________________________________________________________________", oldProps)
+        if(this.props.ActiveChat !== oldProps.ActiveChat){
+            ChatsCtr.getChatUsers(this.props.ActiveChat).then(res=>{
+                console.log("CHATUSERS", res)
+                this.setProps({chatUsers:res.users})
+            })
+        }
+
+
         this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {
             ...contact,
             events: {click: addUsersToChat.bind(this, this)}
@@ -78,5 +89,20 @@ export class ChatContacts extends Component {
             return this.compile(this.template, this.children);
         }
     }
+
+
+    show() {
+        console.log("SHOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+        if (this.getContent() !== undefined) {
+            this.getContent().style.display = '';
+        }
+    }
+
+    hide() {
+        this.isShow = false
+        this.getContent().style.display = 'none';
+    }
+
+
 }
 

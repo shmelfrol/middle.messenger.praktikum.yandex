@@ -19,6 +19,7 @@ import BtnAddChatUserTpl from "src/component/Button/Button.hbs"
 import ContactTpl from "src/component/Contact/Contact.hbs";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs"
 import ChatContactsTpl from "src/pages/ChatsPage/parts/ChatContacts/ChatContactsTpl.hbs"
+import ChatMessengesTpl from "src/pages/ChatsPage/parts/ChatMessenges/ChatMessengesTpl.hbs"
 import {Button} from "src/component/Button/Button";
 import {InPut} from "src/component/Input/Input";
 import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
@@ -27,6 +28,8 @@ import {Contact} from "src/component/Contact/Contact";
 
 import {ChatContact} from "src/component/ChatContact/ChatContact";
 import {ChatContacts} from "src/pages/ChatsPage/parts/ChatContacts/ChatContacts";
+import {ChatsMessenges} from "src/pages/ChatsPage/parts/ChatMessenges/ChatMessenges";
+
 const SOCKET_WAS_CLOSED_CODE = 1000;
 const SOCKET_CONNECTION_BREAK_CODE = 1006;
 
@@ -64,21 +67,20 @@ export class ChatsPage extends Component {
             }, 'userchat', ChatTpl, chat.id));
         }
 
+        //this is parts of ChatPage
+        myprops.ChatsMessenges = new ChatsMessenges('div', {ActiveChat: myprops.ActiveChat}, "itemtest", ChatMessengesTpl)
+        myprops.ChatContacts = new ChatContacts('div', {
+            chatUsers: myprops.chatUsers,
+            ActiveChat: myprops.ActiveChat
+        }, "itemtest", ChatContactsTpl)
+
         // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
-        this.openSocket = this.openSocket.bind(this);
-        this.onSocketOpened = this.onSocketOpened.bind(this);
-        this.onSocketMessage = this.onSocketMessage.bind(this);
-        this.onSocketClosed = this.onSocketClosed.bind(this);
-        this.onSendBtnClick = this.onSendBtnClick.bind(this);
-        this.onScrollMessage = this.onScrollMessage.bind(this);
-        this.resetDataWhenChatChanged = this.resetDataWhenChatChanged.bind(this);
 
         store.on(EVENTS.UPDATE, () => {
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps(store.getState());
         });
-        AuthCtr.getUser()
     }
 
     VisualEffects() {
@@ -90,118 +92,48 @@ export class ChatsPage extends Component {
 
     componentDidMount() {
         ChatsCtr.getChatiks()
-        // ViewActiveChat(this.getContent(), this.props)
     }
 
 
-    getActiveChat(){
-        if(this.props.ActiveChat){
+    getActiveChat() {
+        if (this.props.ActiveChat) {
             return this.props.ActiveChat
         }
     }
 
-    getChatUsers(){
-        if(this.props.chatUsers){
+    getChatUsers() {
+        if (this.props.chatUsers) {
             return this.props.chatUsers
         }
     }
 
-    getIdsChatUsers(){
-        let idsChatUsers=[]
-        if(this.props.chatUsers){
-
-            for(let i=0; i<this.props.chatUsers.length; i++){
-                idsChatUsers[i]=this.props.chatUsers[i].id
+    getIdsChatUsers() {
+        let idsChatUsers = []
+        if (this.props.chatUsers) {
+            for (let i = 0; i < this.props.chatUsers.length; i++) {
+                idsChatUsers[i] = this.props.chatUsers[i].id
             }
         }
         return idsChatUsers
     }
 
 
-    resetDataWhenChatChanged() {
-        if (this._socket) {
-            this._socket?.close(SOCKET_WAS_CLOSED_CODE, 'Был открыт другой чат');
-            //this.props.ActiveChat=""
-        }
-
-    }
-
     componentDidUpdate(oldProps) {
-        //ViewHidenSearchUserDiv(this, this.props)
 
-
-
-        if (this.props.ActiveChat) {
-            if (this.props.ActiveChat !== oldProps.ActiveChat) {
-
-                this.resetDataWhenChatChanged();
-                this.openSocket();
-            }
-        }
         if (this.props.chats && this.props.chats.length !== 0) {
             this.children.chatList = this.props.chats.map((chat) => new ChatItem('div', {
                 ...chat,
                 events: {click: ChatClick.bind(this)}
             }, 'userchat', ChatTpl, chat.id));
         }
-        if (this.props.messages && this.props.chats.length !== 0) {
-            if (Array.isArray(this.props.messages)) {
-                this.children.messageList = this.props.messages.map((mes) => new Message("p", mes, "userText", MessageTpl))
-            }
 
+        if (this.props.ActiveChat) {
+            this.children.ChatsMessenges.show()
+            this.children.ChatContacts.show()
+        } else {
+            this.children.ChatsMessenges.hide()
+            this.children.ChatContacts.hide()
         }
-
-        this.children.ChatInput = new ChatInput("div", {
-            events: {
-                keydown: this.onSendBtnClick
-            }
-        }, "userInput", ChatInputTpl)
-
-        this.children.BtnAddChatUser = new Button("div", {
-            btn_name: "...", events: {
-                click: BtnViewSearchUsers.bind(this, this)
-            }
-        }, "", BtnAddChatUserTpl)
-
-        /*this.children.SearchInput = new InPut('div', {
-            events: {
-                keydown: ContactsSearch.bind(this, this)
-            }
-        }, 'form-example', InputTpl);*/
-
-        /*this.children.newContacts = this.props.contacts.map((contact) => new Contact('div', {
-            ...contact,
-            events: {click: addUsersToChat.bind(this, this)}
-        }, 'userchat', ContactTpl));*/
-
-
-
-
-
-
-        if(this.props.ActiveChat !== oldProps.ActiveChat){
-          ChatsCtr.getChatUsers(this.props.ActiveChat).then(res=>{
-              console.log("CHATUSERS", res)
-              this.setProps({chatUsers:res.users})
-          })
-      }
-
-
-      /*if(this.props.chatUsers){
-          this.children.ActiveChatUsers=this.props.chatUsers.map((user) => new ChatContact('div', {
-              ...user,
-              events: {click: delUsersFromChat.bind(this, this)}
-          }, 'userchat', ChatContactTpl))
-      }*/
-
-      if(this.props.ActiveChat){
-          this.children.ChatContacts= new ChatContacts('div', {...this.props}, "itemtest", ChatContactsTpl)
-      }else{
-          this.children.ChatContacts=[]
-      }
-
-
-
 
         return true
     }
@@ -215,7 +147,6 @@ export class ChatsPage extends Component {
 
     show() {
         ChatsCtr.getChatiks()
-
         if (this.getContent() !== undefined) {
             this.getContent().style.display = '';
         }
@@ -224,80 +155,7 @@ export class ChatsPage extends Component {
     hide() {
         this.isShow = false
         this.getContent().style.display = 'none';
-        this.resetDataWhenChatChanged()
-        store.set('ActiveChat',null)
-    }
-
-
-    onSocketMessage(response) {
-        if (Array.isArray(response)) {
-            let newMesages = response.reverse()
-
-            this.setProps({messages: newMesages})
-        } else {
-            let oneMes =
-                {
-                    isRead: true,
-                    chatId: 3541,
-                    time: response.time,
-                    content: response.content,
-                    id: response.id,
-                    userId: response.userId,
-                    type: "message",
-                    isFromMe: true
-                }
-            let newArrMes = {messages: [...this.props.messages, oneMes]}
-            this.setProps(newArrMes)
-        }
-    }
-
-    onSocketClosed({code}: { code: number }) {
-        if (code === SOCKET_CONNECTION_BREAK_CODE) {
-            this.openSocket();
-        }
-    }
-
-    onSendBtnClick(el, e) {
-        let target = e.target.tagName;
-        if (target == "INPUT") {
-            if (e.keyCode === 13) {
-                this._socket.send(JSON.stringify({
-                    content: e.target.value,
-                    type: 'message',
-                }));
-            }
-        }
-
-
-    }
-
-    onScrollMessage() {
-    }
-
-
-    onSocketOpened(socket: WebSocket) {
-        this._socket = socket;
-        socket.send(
-            JSON.stringify({
-                content: '0',
-                type: 'get old',
-            })
-        );
-    }
-
-    openSocket() {
-        if (!this.props.ActiveChat) {
-            return;
-        }
-        console.log("open socket", this.props.ActiveChat)
-        ChatsCtr.createSocket(
-            {chatId: this.props.ActiveChat},
-            {
-                onOpen: this.onSocketOpened,
-                onMessage: this.onSocketMessage,
-                onClose: this.onSocketClosed,
-            }
-        );
+        store.set('ActiveChat', null)
     }
 
 

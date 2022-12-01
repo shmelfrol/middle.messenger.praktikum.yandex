@@ -1,0 +1,14 @@
+<p>Пользователи чата</p>
+{{#each ActiveChatUsers}}
+    {{{this}}}
+{{/each}}
+<p>Добавить пользователя</p>
+<div style="margin: 5px">
+    {{{SearchInput}}}
+</div>
+<div id="error-search-chat-contact"></div>
+{{#each newContacts}}
+    {{{this}}}
+{{/each}}
+
+

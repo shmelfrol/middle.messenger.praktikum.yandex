@@ -46,9 +46,18 @@ export class Store extends EventBus {
 
     }
     if(path==="activePath"){
-      //this.emit(EVENTS.UPDATEPATH);
+      this.emit(EVENTS.UPDATEPATH);
+    }else{
+
+      let listeners=Object.keys(this.listeners).includes(EVENTS.UPDATE)
+       console.log("this.listeners",listeners)
+       if(listeners){
+         this.emit(EVENTS.UPDATE);
+       }
+
+
     }
-      this.emit(EVENTS.UPDATE);
+
 
 
 

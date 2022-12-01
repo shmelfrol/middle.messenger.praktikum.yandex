@@ -7,6 +7,7 @@ import FormSettingsTpl from "src/pages/SettingsPage/SettingsPage.hbs";
 import {AuthCtr} from "src/Controllers/AuthController";
 import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
+import {ChatsCtr} from "src/Controllers/ChatsController";
 
 export class Settings extends Component {
     constructor(
@@ -56,6 +57,15 @@ export class Settings extends Component {
             return this.compile(this.template, this.children);
         }
     }
+
+
+
+    componentDidMount() {
+        console.log("settings-didMOUNT")
+
+        // ViewActiveChat(this.getContent(), this.props)
+    }
+
 }
 
 

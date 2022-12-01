@@ -6,13 +6,24 @@ import {router} from "src/modules/MainRouter";
 
 export function ContactsSearch(Component, Contact, e) {
     let el = Contact.getContent()
+    let errdiv=Component.getContent().querySelector("#error-search-chat-contact")
+    errdiv.textContent=""
     let tag = e.target.tagName
     if (tag === "INPUT") {
         if (e.keyCode === 13) {
             let searchInput = el.querySelector("input")
             UserCtr.search(searchInput.value).then(res => {
-                console.log("SEARCHED USERS", res)
-                Component.setProps({contacts: res})
+                if(Array.isArray(res)){
+                    if(res.length!==0){
+                        console.log("SEARCHED USERS", res)
+                        Component.setProps({contacts: res})
+                    }else{
+                        errdiv.textContent+="Users not found"
+                        Component.setProps({contacts: res})
+                    }
+                }
+
+
             })
             ///searchinput.value='';
         }

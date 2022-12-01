@@ -40,7 +40,7 @@ class Route {
     }
 
     render() {
-
+         console.log("MainRouter-render")
         if (!this._block) {
             this._block = this._blockClass()
             RenderDom(this._props.rootQuery, this._block);
@@ -70,11 +70,12 @@ export class Router {
     }
 
     start() {
+
+        console.log("MainRouter-start", window.location.pathname)
             window.onpopstate = event => {
              let pathName=window.location.pathname
             this._onRoute(pathName);
              store.set("activePath", pathName);
-
         };
             console.log("start")
         this._onRoute(window.location.pathname);
@@ -82,13 +83,17 @@ export class Router {
     }
 
     _onRoute(pathname) {
+        console.log("MainRouter-on-route", pathname)
+        console.log("MainRouter-currentRoute", this._currentRoute)
         if(pathname!=="/sign-up" && pathname!=="/"){
+            console.log("MainRouter-on-route!!!!", pathname)
             AuthCtr.getUser()
         }
         store.set("activePath", pathname)
 
 
         let route = this.getRoute(pathname);
+        console.log("route", route)
         if (route === undefined) {
             route = this.getRoute("/404");
         }

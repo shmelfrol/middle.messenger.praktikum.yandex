@@ -26,6 +26,7 @@ class AuthController {
                 localStorage.removeItem(STORE_ITEM);
             }
             window.location.reload();
+            return res
         });
     }
 

@@ -26,7 +26,7 @@ export class Form extends Component {
         myprops = {...myprops, ...children}
         myprops.events={click:EventForButton}
         super(tag, myprops, classofTag, template);
-        //console.log("_____________________",this.props)
+        console.log("_____________________")
     }
 
     /*AddEvents() {
