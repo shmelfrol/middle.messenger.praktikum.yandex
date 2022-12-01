@@ -8,18 +8,17 @@ import MessageTpl from "src/component/Message/Message.hbs";
 import {ChatScroll} from "src/events/ChatsEvents";
 import {ChatInput} from "src/component/ChatInput/ChatInput";
 import {Message} from "src/component/Message/Message";
-import {AuthCtr} from "src/Controllers/AuthController";
-import {UserCtr} from "src/Controllers/UserController";
 
 
 const SOCKET_WAS_CLOSED_CODE = 1000;
 const SOCKET_CONNECTION_BREAK_CODE = 1006;
 
 
-
-
 export class ChatsMessenges extends Component {
     private _socket = undefined
+    private _ChatUsers = undefined
+    private state= {}
+    private messeges:[]
 
     constructor(
         tag: string,
@@ -66,7 +65,11 @@ export class ChatsMessenges extends Component {
 
         if (this.props.messages && this.props.chats.length !== 0) {
             if (Array.isArray(this.props.messages)) {
-                this.children.messageList = this.props.messages.map((mes) => new Message("p", mes, "userText", MessageTpl))
+
+                this.children.messageList = this.props.messages.map((mes) => {
+                    let classOfTag= mes.isFromMe ? "userText" : "botText"
+                    //console.log('mes.isFromMe', mes)
+                    return new Message("p", mes, classOfTag, MessageTpl)})
             }
         }
 
@@ -101,64 +104,67 @@ export class ChatsMessenges extends Component {
         store.set('ActiveChat', null)
     }
 
-  CorrectFormatMess(messeges){
 
-        let correctMesseges=[]
-      for(let i=0; i<messeges.length; i++ ){
-          let formatMes={}
-          Object.keys(messeges[i]).forEach((key)=>{
-              if(key==="time"){
-                  let slicidate=messeges[i][key].slice(0, 16)
-                  const y = new Date(slicidate).toLocaleDateString();
-                  var t = new Date(slicidate).toLocaleTimeString();
-                  let correctTime=y+" "+t
-                  formatMes[key]=correctTime
-                  console.log(formatMes[key])
-              }
-              if(key==="userId"){
-                  ChatsCtr.getUserById(messeges[i][key])
-
-              }
+    getChatUserbyId(userId) {
+        let findUser = {}
+        this._ChatUsers.forEach((user) => {
+            if (user.id === userId) {
+                findUser = user
+            }
+        })
+        return findUser
 
 
-
-          })
-
+    }
 
 
-
-
-      }
-
-
-
-
-  }
-
+    async CorrectFormatMess(messeges) {
+        await ChatsCtr.getChatUsers(this.props.ActiveChat).then((r) => {
+            this._ChatUsers = r.users
+            return r.users
+        })
+        for (let i = 0; i < messeges.length; i++) {
+            Object.keys(messeges[i]).forEach((key) => {
+                if (key === "time") {
+                    let slicidate = messeges[i][key].slice(0, 16)
+                    const y = new Date(slicidate).toLocaleDateString();
+                    let t = new Date(slicidate).toLocaleTimeString();
+                    let correctTime = y + " " + t
+                    messeges[i][key] = correctTime
+                }
+                if (key === "userId") {
+                    let user = this.getChatUserbyId(messeges[i][key])
+                    messeges[i].login = user.login
+                }
+            })
+        }
+        return messeges
+    }
 
 
     onSocketMessage(response) {
-        console.log("MESSSSSSSSSSSSSSSSSSSSSSS", response)
-        let newArrMes=[]
+        let newArrMes = []
         if (Array.isArray(response)) {
             newArrMes = response.reverse()
-        } else {
-            let oneMes =
-                {
-                    isRead: true,
-                    chatId: 3541,
-                    time: response.time,
-                    content: response.content,
-                    id: response.id,
-                    userId: response.userId,
-                    type: "message",
-                    isFromMe: true
-                }
-            newArrMes = [...this.props.messages, oneMes]
-        }
-        this.CorrectFormatMess(newArrMes)
+            this.CorrectFormatMess(newArrMes).then((correctMes)=>{
+                this.setProps({messages: correctMes})
+            })
 
-        this.setProps({messages: newArrMes})
+
+        } else {
+            if(response.type!=="user connected"){
+                newArrMes = [response]
+            }
+
+            this.CorrectFormatMess(newArrMes).then((correctMes)=>{
+                this.setProps({messages: [...this.props.messages, ...correctMes]})
+            })
+        }
+
+
+
+
+
     }
 
     onSocketClosed({code}: { code: number }) {
@@ -199,7 +205,6 @@ export class ChatsMessenges extends Component {
         if (!this.props.ActiveChat) {
             return;
         }
-        console.log("open socket", this.props.ActiveChat)
         ChatsCtr.createSocket(
             {chatId: this.props.ActiveChat},
             {

@@ -38,6 +38,6 @@ export function FormFields(props) {
             components[LoginField]  = button({...props.forChildrens[LoginField]});
         }
     }
-    console.log("FIELDS", components)
+
     return components;
 }

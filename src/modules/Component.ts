@@ -211,7 +211,6 @@ export class Component {
     let oldProps = JSON.parse(oldPropsJSON);
     Object.assign(this.props, nextProps);
     let iseq=isEqual(this.props,oldProps)
-    console.log("isEQUAL", iseq)
        if(!iseq){
          this.eventBus.emit(Component.EVENTS.FLOW_CDU, oldProps);
        }

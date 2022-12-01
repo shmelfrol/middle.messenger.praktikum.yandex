@@ -28,7 +28,6 @@ export class Menu extends Component {
         super(tag, myprops, classofTag, template);
         store.on(EVENTS.UPDATEPATH, () => {
             let currentUser = store.getState().currentUser
-            console.log("MenuCurrentUser!!!!!!!!!!!!!!!!!!!!!!!!!", currentUser)
             let props = getMenuItens()
             // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps({menuitems: props.menuitems, activePath: store.getState().activePath});

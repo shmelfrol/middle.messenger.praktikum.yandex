@@ -4,29 +4,14 @@ import ChatsPageTpl from "./ChatsPageTpl.hbs"
 import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
-import ChatInputTpl from "src/component/ChatInput/ChatInput.hbs";
 import ChatTpl from "src/component/ChatItem/ChatItem.hbs";
-import MessageTpl from "src/component/Message/Message.hbs";
 import {ChatItem} from "src/component/ChatItem/ChatItem";
-import {ChatClick, ChatScroll, ViewActiveChat, ChatikAdd, ViewHidenSearchUserDiv} from "src/events/ChatsEvents";
-import {ChatInput} from "src/component/ChatInput/ChatInput";
-import {Message} from "src/component/Message/Message";
-import {AuthCtr} from "src/Controllers/AuthController";
+import {ChatClick, ChatScroll, ViewActiveChat, ChatikAdd} from "src/events/ChatsEvents";
 import {createChatData} from "src/Storage/propsForms";
 import {ChatAddForm} from "src/component/ChatAddForm/ChatAddForm";
 import ChatAddFormTpl from "src/component/ChatAddForm/ChatAddForm.hbs"
-import BtnAddChatUserTpl from "src/component/Button/Button.hbs"
-import ContactTpl from "src/component/Contact/Contact.hbs";
-import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs"
 import ChatContactsTpl from "src/pages/ChatsPage/parts/ChatContacts/ChatContactsTpl.hbs"
 import ChatMessengesTpl from "src/pages/ChatsPage/parts/ChatMessenges/ChatMessengesTpl.hbs"
-import {Button} from "src/component/Button/Button";
-import {InPut} from "src/component/Input/Input";
-import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
-import InputTpl from "src/component/Input/Input.hbs";
-import {Contact} from "src/component/Contact/Contact";
-
-import {ChatContact} from "src/component/ChatContact/ChatContact";
 import {ChatContacts} from "src/pages/ChatsPage/parts/ChatContacts/ChatContacts";
 import {ChatsMessenges} from "src/pages/ChatsPage/parts/ChatMessenges/ChatMessenges";
 

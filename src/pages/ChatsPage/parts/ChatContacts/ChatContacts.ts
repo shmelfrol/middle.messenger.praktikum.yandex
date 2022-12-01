@@ -1,13 +1,12 @@
-import {Children, Props} from 'src/type_component';
+import {Children} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import ContactTpl from "src/component/Contact/Contact.hbs";
-import ChatPageTPl from "./ContactPageTpl.hbs"
 import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
 import {Contact} from "src/component/Contact/Contact";
 import {InPut} from "src/component/Input/Input";
 import InputTpl from "src/component/Input/Input.hbs";
-import {AddChat, addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
+import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
 import {ChatContact} from "src/component/ChatContact/ChatContact";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs";
 import {ChatsCtr} from "src/Controllers/ChatsController";

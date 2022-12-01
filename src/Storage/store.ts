@@ -22,9 +22,9 @@ export class Store extends EventBus {
     super();
 
     const cachedStore = localStorage.getItem(STORE_ITEM);
-    console.log("store", cachedStore)
+
     this.state = cachedStore ? JSON.parse(cachedStore) : INITIAL_STATE;
-    console.log("this.state", this.state)
+
   }
 
   public getState() {
@@ -50,7 +50,7 @@ export class Store extends EventBus {
     }else{
 
       let listeners=Object.keys(this.listeners).includes(EVENTS.UPDATE)
-       console.log("this.listeners",listeners)
+
        if(listeners){
          this.emit(EVENTS.UPDATE);
        }
