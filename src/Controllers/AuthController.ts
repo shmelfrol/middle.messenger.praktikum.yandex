@@ -10,9 +10,16 @@ class AuthController {
     }
 
     signIn(data) {
-       // debugger
-        return authapi.signIn(data).then((res) => res)
+        return authapi.signIn(data).then((res) => {
+            if (res == "OK") {
+                this.getUser().then((res)=>{
+                    if(res?.id){
+                        router.go("/messenger")
+                    }
+                })
 
+            }
+        })
     }
 
     logout() {

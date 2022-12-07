@@ -1,7 +1,7 @@
 import {Children, Props} from 'src/type_component';
 import InputTpl from './Input.hbs';
 import {Component} from "src/modules/Component";
-import {InputEvents} from "src/events/authEvents";
+
 
 export class InPut extends Component {
   constructor(
@@ -13,9 +13,12 @@ export class InPut extends Component {
     super(tag, myprops, classofTag, template);
   }
 
-  /*AddEvents() {
-    InputEvents(this.getContent(), this.props)
-  }*/
+  AddEvents() {
+    const {events = {}} = this.props;
+    Object.keys(events).forEach(eventName => {
+      this._element.addEventListener(eventName, events[eventName]);
+    });
+  }
 
   render() {
     if (this.template !== null) {

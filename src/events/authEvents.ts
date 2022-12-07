@@ -1,11 +1,12 @@
 import {validEl, validform} from "src/utility/valid";
-import {authapi} from "src/api/auth-api";
-import {authreg} from "src/utility/authrequest";
 import {AuthCtr} from "src/Controllers/AuthController";
 import {UserCtr} from "src/Controllers/UserController";
 import {router} from "src/modules/MainRouter";
 
 export function EventForInput(Component, e) {
+    let target = e.target.tagName
+
+    console.log(target)
     let el = Component.getContent()
     console.log("INPUT", el)
     const errordiv = el.querySelector('#errormessage');

@@ -80,9 +80,13 @@ export class Router {
 
     }
 
-    _onRoute(pathname) {
+    _onRoute(pathname:string) {
         if(pathname!=="/sign-up" && pathname!=="/"){
-            AuthCtr.getUser()
+           // AuthCtr.getUser()
+            let currentuser=store.getState().currentUser
+            if(!currentuser?.id){
+                return this.go("/")
+            }
         }
         store.set("activePath", pathname)
 
