@@ -53,5 +53,6 @@ export const MyvalidateFields = (
     default:
       break;
   }
-  return error;
+  return error
+
 };

@@ -4,6 +4,7 @@ import button from "src/component/Button/Button";
 import {formfields} from "src/Storage/propsForms";
 
 export function FormFields(props) {
+    console.log("props", props)
     const components: Children = {};
     let Fields=[]
     let path = window.location.pathname

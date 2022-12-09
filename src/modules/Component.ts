@@ -116,6 +116,7 @@ export class Component {
     }
 
     init() {
+        // this.addChildren();
         this._createResources();
     }
 
@@ -135,14 +136,15 @@ export class Component {
             })
 
         }
-        this.addChildren()
 
         // console.log('create element', this._element)
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
 
-    addChildren(){
+    addChildren(newchildren){
 
+        this.children = {...this.children, ...newchildren}
+        this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
 
     _createDocumentElement(tagName: string) {
@@ -248,11 +250,16 @@ export class Component {
     // Может переопределять пользователь, необязательно трогать
     AddEvents() {
         const {events = {}} = this.props;
-
         Object.keys(events).forEach(eventName => {
             //this._element.addEventListener(eventName, events[eventName].bind(eventName, this));
             this._element.addEventListener(eventName, events[eventName]);
         });
+    }
+
+
+    SetEvents(events){
+        this.props.events={...this.props.events, ...events}
+        this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
 
     // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь

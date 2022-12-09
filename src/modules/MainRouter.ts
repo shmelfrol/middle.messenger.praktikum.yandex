@@ -70,22 +70,24 @@ export class Router {
 
     start() {
 
-            window.onpopstate = event => {
-             let pathName=window.location.pathname
+        window.onpopstate = event => {
+            let pathName = window.location.pathname
             this._onRoute(pathName);
-             store.set("activePath", pathName);
+            store.set("activePath", pathName);
         };
-
         this._onRoute(window.location.pathname);
 
     }
 
-    _onRoute(pathname:string) {
-        if(pathname!=="/sign-up" && pathname!=="/"){
-           // AuthCtr.getUser()
-            let currentuser=store.getState().currentUser
-            if(!currentuser?.id){
+    _onRoute(pathname: string) {
+        let currentuser = store.getState().currentUser
+        if (!currentuser?.id) {
+            if (pathname !== "/sign-up" && pathname !== "/") {
                 return this.go("/")
+            }
+        } else {
+            if (pathname=== "/sign-up" || pathname=== "/") {
+                return this.go("/messenger")
             }
         }
         store.set("activePath", pathname)

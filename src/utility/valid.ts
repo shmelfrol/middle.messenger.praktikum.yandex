@@ -33,23 +33,20 @@ export function validform(el: HTMLDivElement) {
 
 export function validformData(values) {
     let err = null;
-    for (const key in values) {
-        const error = MyvalidateFields(key, values[key]);
-        if (error !== null) {
-            err = error;
-        }
-        if (key === 'newPassword') {
-            if (values[key] !== values.oldPassword) {
-                err = 'старый и новый пароли не совпадают';
+    if(Object.keys(values).length!==0){
+        for (const key in values) {
+            const error = MyvalidateFields(key, values[key]);
+            if (error !== null) {
+                err = error;
+            }
+            if (key === 'newPassword') {
+                if (values[key] !== values.oldPassword) {
+                    err = 'старый и новый пароли не совпадают';
+                }
             }
         }
     }
-    if (err == null) {
-        console.log(values)
-        return values
-    } else {
-        throw new Error(err)
-    }
+    return err
 }
 
 

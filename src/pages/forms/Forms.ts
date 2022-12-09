@@ -5,11 +5,9 @@ import FormRegTpl from './FormReg.hbs';
 import FormSettingsTpl from './FormSettings.hbs';
 import {FormFields} from "src/pages/forms/FormFields";
 import {Component} from "src/modules/Component";
-import {EventForButton} from "src/events/authEvents";
-import {EventForInput} from "src/events/authEvents";
-import {validEl, validform, validformData} from "src/utility/valid";
+import {validformData} from "src/utility/valid";
 import {AuthCtr} from "src/Controllers/AuthController";
-import {router} from "src/modules/MainRouter";
+import {InPut} from "src/component/Input/Input";
 
 export class Form extends Component {
     constructor(
@@ -18,82 +16,68 @@ export class Form extends Component {
         classofTag: string,
         template: string,
     ) {
-        /*  let children = FormFields({
-              ...myprops, events: {
-                  focusout: EventForInput
-              }
-          })*/
-        /*let children = FormFields({
-            ...myprops, events: {
-                focusout: this.focusout
-            }
-        })*/
+        let children = FormFields({...myprops})
+        myprops = {...myprops, ...children}
 
-        // myprops = {...myprops, ...children}
-        // myprops.events = {click: EventForButton}
         super(tag, myprops, classofTag, template);
 
+        let events = {click: this.ButtonClick}
+        this.SetEvents(events)
 
-        //this.eventBus.emit(Component.EVENTS.INIT);
+
+        // this.addChildren(inputs);
     }
 
-    addChildren() {
-        this.props.events = {click: this.EventForButton}
-        let inputs = FormFields({
-            ...this.props, events: {
-                focusout: this.focusout
-            }
-        })
 
-        this.children = {...this.children, ...inputs}
-        console.log("children", this.children)
-    }
-
-    focusout(e) {
-        let target = e.target.tagName
-        if (target === "INPUT") {
-            const errordiv = this.querySelector('#errormessage');
-            validEl(e.target, errordiv);
-        }
-    }
-
-    EventForButton(e) {
+    ButtonClick = (e:Event) => {
+        e.preventDefault()
         let path = window.location.pathname
-        let target = e.target.getAttribute("type")
-        let formdata:{} = {}
-        let divErr = this.querySelector("#err");
-        divErr.textContent = ""
-        if (target == "submit") {
-            e.preventDefault()
-            this.querySelectorAll('input').forEach((item) => {
-                if (item.type !== 'submit') {
-                    formdata[item.name] = item.value;
-                }
-            });
-            try {
-               validformData(formdata)
-                if (path === "/") {
-                    AuthCtr.signIn(formdata).catch((res) => {
-                        if (typeof res === 'object') {
-                            if (res?.reason) {
-                                divErr.textContent += res.reason
-                            }
-                            if (res?.type) {
-                                divErr.textContent += res.type
-                            }
+        let targetType = e!.target!.getAttribute("type")
+        let formdata = {}
+        let divErr:HTMLDivElement|null|undefined = null
+        if (this?.getContent()) {
+            divErr = this?.getContent()?.querySelector("#err");
+        }
 
-                        } else {
-                            divErr.textContent += res
-                        }
-
-                    })
+        if (targetType === "submit") {
+            Object.keys(this.children).forEach((key) => {
+                if (this.children[key] instanceof InPut) {
+                    let inputData = this.children[key].getInputValue();
+                    formdata = {...formdata, ...inputData};
                 }
-            } catch (e) {
-                console.log("error", e)
-                divErr.textContent =e.toString()
+            })
+            let error = validformData(formdata)
+            if(divErr !== null && divErr !== undefined){
+                if (error === null) {
+                    if (path === "/") {
+                        AuthCtr.signIn(formdata).catch((res) => {
+                            if (typeof res === 'object') {
+                                if (res?.reason) {
+                                    divErr!.textContent += res.reason
+                                }
+                                if (res?.type) {
+                                    divErr!.textContent += res.type
+                                }
+
+                            } else {
+                                divErr!.textContent += res
+                            }
+                        })
+                    }
+                    if (path === "/sign-up") {
+                        AuthCtr.signUp(formdata).catch((res) => {
+                            divErr!.textContent += res.reason
+                        })
+                    }
+                } else {
+                    divErr.textContent = error
+                }
             }
 
+
+
         }
+
     }
 
 

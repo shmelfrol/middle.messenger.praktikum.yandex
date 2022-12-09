@@ -6,30 +6,43 @@ import {STORE_ITEM} from "src/Storage/store";
 // TODO: для всех запросов во всех контроллерах добавить catch c обработкой ошибок
 class AuthController {
     signUp(data) {
-        return authapi.signUp(data).then(res=>res);
+        return authapi.signUp(data).then(res => {
+            if (res?.id) {
+                this.getUser().then((res) => {
+                    if (res?.id) {
+                        router.go("/messenger")
+                    }
+                })
+            }
+        }).catch(res => {
+            throw res
+        });
     }
 
     signIn(data) {
         return authapi.signIn(data).then((res) => {
             if (res == "OK") {
-                this.getUser().then((res)=>{
-                    if(res?.id){
+                this.getUser().then((res) => {
+                    if (res?.id) {
                         router.go("/messenger")
                     }
                 })
 
             }
+        }).catch((res) => {
+            if (res?.reason) {
+                if (res.reason === "User already in system") {
+                    router.go("/messenger")
+                }
+            }
+
+            throw res
         })
     }
 
     logout() {
-        //debugger
-        //удаляем запись о пользователе из localsstorage
-        //localStorage.removeItem(STORE_ITEM);
-
         return authapi.logout().then((res) => {
-            console.log("logout", res)
-            if(res=="OK"){
+            if (res == "OK") {
                 localStorage.removeItem(STORE_ITEM);
             }
             window.location.reload();
@@ -38,11 +51,8 @@ class AuthController {
     }
 
     async getUser() {
-        //помещаем в currentUser из state
-        //debugger
-       // console.log("GetUser store", store)
         const currentUser = store.getState().currentUser;
-        //console.log("get_currentUser", currentUser)
+
         if (currentUser?.id) {
             return currentUser;
         }
