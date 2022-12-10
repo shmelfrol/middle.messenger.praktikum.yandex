@@ -5,7 +5,6 @@ import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
 import ChatInputTpl from "src/component/ChatInput/ChatInput.hbs";
 import MessageTpl from "src/component/Message/Message.hbs";
-import {ChatScroll} from "src/events/ChatsEvents";
 import {ChatInput} from "src/component/ChatInput/ChatInput";
 import {Message} from "src/component/Message/Message";
 
@@ -17,8 +16,7 @@ const SOCKET_CONNECTION_BREAK_CODE = 1006;
 export class ChatsMessenges extends Component {
     private _socket = undefined
     private _ChatUsers = undefined
-    private state= {}
-    private messeges:[]
+
 
     constructor(
         tag: string,
@@ -37,15 +35,22 @@ export class ChatsMessenges extends Component {
 
         store.on(EVENTS.UPDATE, () => {
             // пдписываемся на обновление компонента, передав данные из хранилища
-            this.setProps(store.getState());
+            this.setProps({ActiveChat:store.getState().ActiveChat});
         });
 
     }
 
     VisualEffects() {
-        ChatScroll(this.getContent(), this.props)
+        this.ChatScroll()
     }
 
+
+  ChatScroll() {
+        if (this.props.ActiveChat) {
+            let Scroll = this.getContent().querySelector(".chat-bar-bottom")
+            Scroll.scrollIntoView(true)
+        }
+    }
 
     resetDataWhenChatChanged() {
         if (this._socket) {
@@ -55,20 +60,16 @@ export class ChatsMessenges extends Component {
     }
 
     componentDidUpdate(oldProps) {
-
         if (this.props.ActiveChat) {
             if (this.props.ActiveChat !== oldProps.ActiveChat) {
                 this.resetDataWhenChatChanged();
                 this.openSocket();
             }
         }
-
-        if (this.props.messages && this.props.chats.length !== 0) {
+        if (this.props.messages) {
             if (Array.isArray(this.props.messages)) {
-
                 this.children.messageList = this.props.messages.map((mes) => {
                     let classOfTag= mes.isFromMe ? "userText" : "botText"
-                    //console.log('mes.isFromMe', mes)
                     return new Message("p", mes, classOfTag, MessageTpl)})
             }
         }
@@ -77,7 +78,6 @@ export class ChatsMessenges extends Component {
     }
 
     render() {
-
         this.children.ChatInput = new ChatInput("div", {
             events: {
                 keydown: this.onSendBtnClick
@@ -173,7 +173,8 @@ export class ChatsMessenges extends Component {
         }
     }
 
-    onSendBtnClick(el, e) {
+    onSendBtnClick=(e)=> {
+        console.log("tape")
         let target = e.target.tagName;
         if (target == "INPUT") {
             if (e.keyCode === 13) {

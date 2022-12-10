@@ -1,16 +1,16 @@
 import RenderDom from "src/modules/RenderDom";
 import {store} from "src/Storage/store";
-import {AuthCtr} from "src/Controllers/AuthController";
+
 
 function isEqual(lhs, rhs) {
     return lhs === rhs;
 }
 
-function render(query, block) {
+/*function render(query, block) {
     const root = document.querySelector(query);
     root.textContent = block.getContent();
     return root;
-}
+}*/
 
 
 class Route {

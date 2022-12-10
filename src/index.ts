@@ -6,11 +6,11 @@ import '../public/cssout/form.css';
 import RenderDom from './modules/RenderDom';
 import {router} from "src/modules/MainRouter";
 import {FormPage} from "src/pages/forms/Forms";
-import {SettingsPage} from "src/pages/SettingsPage/SettingsPage";
 import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
 import {MainMenu} from "src/component/Menu/Menu";
+import {store} from "src/Storage/store";
 
-
+console.log("store", store.getState())
 RenderDom('#navbar', MainMenu());
 
 
@@ -18,7 +18,7 @@ RenderDom('#navbar', MainMenu());
 router
     .use("/", FormPage)
     .use("/sign-up", FormPage)
-    .use("/settings", SettingsPage)
+    .use("/settings", FormPage)
     .use("/404", NotFoundPage)
     .use("/messenger",getChatsPage);
 router.start();

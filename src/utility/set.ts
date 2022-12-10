@@ -11,4 +11,4 @@ export const set = (object, path: string, value) => {
 
   return merge(object, result);
 };
-//set({ foo: 5 }, 'bar.baz', 10)
+

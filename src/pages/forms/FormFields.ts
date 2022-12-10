@@ -4,7 +4,6 @@ import button from "src/component/Button/Button";
 import {formfields} from "src/Storage/propsForms";
 
 export function FormFields(props) {
-    console.log("props", props)
     const components: Children = {};
     let Fields=[]
     let path = window.location.pathname
@@ -34,7 +33,15 @@ export function FormFields(props) {
     for (const LoginField of Fields) {
         const regex = /^btn/gm;
         if(LoginField.match(regex)===null){
-            components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null, events:props.events});
+
+
+            if(LoginField==="avatar"){
+                console.log(LoginField, props.eventsForInput)
+                components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null});
+            }else{
+                components[LoginField] = input({...props.forChildrens[LoginField], value:(props.currentUser)?props.currentUser[LoginField]:null, events:props.eventsForInput});
+            }
+
         }else {
             components[LoginField]  = button({...props.forChildrens[LoginField]});
         }

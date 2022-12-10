@@ -56,3 +56,24 @@ export const MyvalidateFields = (
   return error
 
 };
+
+
+export function validformData(values) {
+  let err = null;
+  if(Object.keys(values).length!==0){
+    for (const key in values) {
+      const error = MyvalidateFields(key, values[key]);
+      if (error !== null) {
+        err = error;
+      }
+      if (key === 'newPassword') {
+        if (values[key] !== values.oldPassword) {
+          err = 'старый и новый пароли не совпадают';
+        }
+      }
+    }
+  }
+  return err
+}
+
+

@@ -20,7 +20,6 @@ export class Store extends EventBus {
 
   constructor() {
     super();
-
     const cachedStore = localStorage.getItem(STORE_ITEM);
 
     this.state = cachedStore ? JSON.parse(cachedStore) : INITIAL_STATE;
@@ -31,9 +30,7 @@ export class Store extends EventBus {
     return this.state;
   }
 
-  /*static EVENTS = {
-    UPDATE: 'store-updated',
-  };*/
+
 
   public set(path, value) {
     //обновляем state по пути и присваиваем value

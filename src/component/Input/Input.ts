@@ -3,15 +3,15 @@ import InputTpl from './Input.hbs';
 import {Component} from "src/modules/Component";
 import {MyvalidateFields} from "src/utility/myvalidate";
 
-function focusout(e) {
+export function focusout(e) {
     let target = e.target.tagName
     let errordiv = this.querySelector('#errormessage');
-    errordiv.textContent=""
+    errordiv.textContent = ""
     if (target === "INPUT") {
-        let error=MyvalidateFields(e.target.name, e.target.value)
-       if(error!==null){
-           errordiv.textContent=error
-       }
+        let error = MyvalidateFields(e.target.name, e.target.value)
+        if (error !== null) {
+            errordiv.textContent = error
+        }
     }
 }
 
@@ -28,7 +28,6 @@ export class InPut extends Component {
 
 
     render() {
-        this.props.events = {focusout: focusout}
         if (this.template !== null) {
             return this.compile(this.template, this.props);
         }
@@ -40,18 +39,16 @@ export class InPut extends Component {
             if (input?.getAttribute("type") !== "submit") {
                 let data = {}
 
-                if(input?.type==="file"){
-                    let file =input.files[0];
-                    data[input.name]=input.files[0];
-                }else{
+                if (input?.type === "file") {
+                    let file = input.files[0];
+                    data[input.name] = input.files[0];
+                } else {
                     if (input?.name) {
-                        if(input?.value){
+                        if (input?.value) {
                             data[input.name] = input.value
                         }
                     }
                 }
-
-
                 return data
             }
         }

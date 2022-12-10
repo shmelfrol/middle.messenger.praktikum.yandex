@@ -42,11 +42,14 @@ class AuthController {
 
     logout() {
         return authapi.logout().then((res) => {
+            localStorage.removeItem(STORE_ITEM);
             if (res == "OK") {
                 localStorage.removeItem(STORE_ITEM);
+                window.location.reload();
             }
-            window.location.reload();
             return res
+        }).catch(res => {
+            localStorage.removeItem(STORE_ITEM);
         });
     }
 

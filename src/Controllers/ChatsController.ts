@@ -1,10 +1,6 @@
 import {ChatsApi} from "src/api/chats-api";
-
 import {AuthCtr} from "src/Controllers/AuthController";
-import {UserCtr} from "src/Controllers/UserController";
-
 import {store} from "src/Storage/store";
-import {delUsersFromChat} from "src/events/ContactsEvents";
 import {UserApi} from "src/api/user-api";
 
 
@@ -12,7 +8,7 @@ const PRIVATE_CHAT_NAME = "ftyujty"
 const WS_URL = "ws"
 
 class ChatController {
-    async getChats(): Promise {
+   /* async getChats(): Promise {
         const authorizedUser = await AuthCtr.getUser();
 
         return ChatsApi.getChats({limit: Number.MAX_SAFE_INTEGER}).then(async (chats) => {
@@ -60,7 +56,7 @@ class ChatController {
                 };
             });
         });
-    }
+    }*/
 
     getChatUsers(id: number) {
         return ChatsApi.getChatUsers({id}).then((users) => {
@@ -77,7 +73,6 @@ class ChatController {
 
 
     getChatiks() {
-
         return ChatsApi.getChats({limit: Number.MAX_SAFE_INTEGER})
             .then(async (chats) => {
                 if (chats.length !== 0) {
@@ -85,10 +80,9 @@ class ChatController {
                 }
 
             })
-
     }
 
-    createChat(login: string) {
+    /*createChat(login: string) {
         return new Promise((resolve, reject) => {
             AuthCtr.getUser().then((user) => {
                 UserCtr.search(login).then((users) => {
@@ -106,12 +100,10 @@ class ChatController {
                 });
             });
         });
-    }
+    }*/
 
     ActiveChat(ActiveChat) {
         store.set('ActiveChat', ActiveChat);
-
-
     }
 
 

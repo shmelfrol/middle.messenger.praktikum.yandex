@@ -1,6 +1,7 @@
-import { AppComponent } from 'src/modules/AppComponent';
+import {Component} from "src/modules/Component";
 
-export default function RenderDom(query:string, block:AppComponent) {
+
+export default function RenderDom(query:string, block:Component) {
   // выбираем селектор
   const root = document.querySelector(query);
 

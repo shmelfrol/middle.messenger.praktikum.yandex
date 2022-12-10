@@ -1,7 +1,6 @@
 import {v4 as makeUUID} from 'uuid';
 import {Props, Children} from 'src/type_component';
 import {EventBus} from './EventBus';
-import {AuthCtr} from "src/Controllers/AuthController";
 import {isEqual} from "src/utility/isEqual";
 
 export class Component {
@@ -104,19 +103,13 @@ export class Component {
     }
 
     _registerEvents(eventBus: EventBus) {
-        // регистрируем событие
-        // событие инициализации - создание элемента без пропсов
         eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
-
         eventBus.on(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
-
         eventBus.on(Component.EVENTS.FLOW_RENDER, this._render.bind(this));
-
         eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
     }
 
     init() {
-        // this.addChildren();
         this._createResources();
     }
 
@@ -141,8 +134,7 @@ export class Component {
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
 
-    addChildren(newchildren){
-
+    addChildren(newchildren) {
         this.children = {...this.children, ...newchildren}
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
@@ -224,23 +216,21 @@ export class Component {
         // передаем fragment в block
         const block = this.render();
 
-        // this.RemoveEvents()
+        this.RemoveEvents()
         // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
 
         this._element.innerHTML = ''; // удаляем предыдущее содержимое
         // console.log('elem',typeof this._element)
         this._element.appendChild(block);
         this.VisualEffects()
-        if (!this.isMounted) {
-            this.AddEvents();
-        }
+        this.AddEvents();
+
 
         // this._element.innerHTML = block;
     }
 
 // Может переопределять пользователь, необязательно трогать
     VisualEffects() {
-
     }
 
     // Может переопределять пользователь, необязательно трогать
@@ -251,19 +241,23 @@ export class Component {
     AddEvents() {
         const {events = {}} = this.props;
         Object.keys(events).forEach(eventName => {
-            //this._element.addEventListener(eventName, events[eventName].bind(eventName, this));
             this._element.addEventListener(eventName, events[eventName]);
         });
     }
 
-
-    SetEvents(events){
-        this.props.events={...this.props.events, ...events}
+// если необходимо навесить события после рендеринга
+    SetEvents(events) {
+        this.props.events = {...this.props.events, ...events}
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
 
     // чтобы удалить события нужно конкретно знать какие события и какой евент - переопределяет пользователь
     RemoveEvents() {
+        const {events = {}} = this.props;
+        Object.keys(events).forEach(eventName => {
+            this._element.removeEventListener(eventName, events[eventName]);
+        });
+
     }
 
     getContent() {
@@ -272,8 +266,6 @@ export class Component {
 
     compile(template: string, props: Props) {
 
-        //  console.log("CHILDREN!!!!!!!!!!!!!!!!!!!!!!", this.children)
-        //console.log("tisprops", props)
         // копируем пропсы
         const propsAndStubs = {...props};
         // добавляем в пропсы чилдов со значениями заглушки
@@ -287,8 +279,7 @@ export class Component {
                 propsAndStubs[key] = `<div data-id="${child._id}">заглушка</div>`;
             }
         });
-        //console.log("PROPSSTUB", propsAndStubs)
-        // создаем элемент с тегом template
+
         const fragment = this._createDocumentElement('template');
         // вставляем в созданный элемент шаблон с заглушками
         fragment.innerHTML = template(propsAndStubs);
@@ -322,7 +313,6 @@ export class Component {
         //AuthCtr.getUser()
         if (this.getContent() !== undefined) {
             this.getContent().style.display = '';
-            //this.getContent().hidden=false
         }
     }
 

@@ -10,6 +10,7 @@ import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/Conta
 import {ChatContact} from "src/component/ChatContact/ChatContact";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs";
 import {ChatsCtr} from "src/Controllers/ChatsController";
+import {UserCtr} from "src/Controllers/UserController";
 
 
 export class ChatContacts extends Component {
@@ -19,21 +20,92 @@ export class ChatContacts extends Component {
         classofTag: string,
         template: string,
     ) {
-                // передаю в родительский класс пропсы и тег
+        // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
         store.on(EVENTS.UPDATE, () => {
             //{contacts:store.getState().contacts, ActiveChat: store.getState().ActiveChat}
             // пдписываемся на обновление компонента, передав данные из хранилища
-            this.setProps({contacts: store.getState().contacts, ActiveChat: store.getState().ActiveChat});
+            if(store.getState().ActiveChat){
+                this.setProps({contacts: store.getState().contacts, ActiveChat: store.getState().ActiveChat})
+            }
+
         });
 
+        this.addChildren({
+            SearchInput: new InPut('div', {
+                events: {keydown: this.ContactsSearch}
+            }, 'form-example', InputTpl)
+        })
+    }
 
+
+
+    ContactsSearch=(e) =>{
+        let el = this.getContent()
+        let errdiv=this.getContent().querySelector("#error-search-chat-contact")
+        errdiv.textContent=""
+        let tag = e.target.tagName
+        if (tag === "INPUT") {
+            if (e.keyCode === 13) {
+                let searchInput = el.querySelector("input")
+                UserCtr.search(searchInput.value).then(res => {
+                    if(Array.isArray(res)){
+                        if(res.length!==0){
+                            this.setProps({contacts: res})
+                        }else{
+                            errdiv.textContent+="Users not found"
+                            this.setProps({contacts: res})
+                        }
+                    }
+                })
+                searchInput.value='';
+            }
+        }
+
+    }
+
+
+    addUsersToChat=(e)=> {
+        e.preventDefault()
+        let ActiveChat = this.props.ActiveChat
+        let el = this.getContent()
+        let tag = e.target.tagName
+        if (tag === "BUTTON") {
+            let userId = e.target.getAttribute("id")
+            let userarr = this.getIdsChatUsers()
+            if (userarr.indexOf(Number(userId)) === -1) {
+                ChatsCtr.addUsersToChat({users: [userId], chatId: ActiveChat}).then(res => {
+                    ChatsCtr.getChatUsers(ActiveChat).then(res => {
+                        this.setProps({chatUsers: res.users})
+                    })
+                })
+            }
+
+        }
+    }
+
+
+    delUsersFromChat=(e)=> {
+        e.preventDefault()
+        let ActiveChat = this.props.ActiveChat
+        let el = this.getContent()
+        let tag = e.target.tagName
+        if (tag === "BUTTON") {
+            let userId = e.target.getAttribute("id")
+            ChatsCtr.delUsersFromChat({users: [userId], chatId: ActiveChat}).then((res) => {
+                if (res === "OK") {
+                    ChatsCtr.getChatUsers(ActiveChat).then(res => {
+                        this.setProps({chatUsers: res.users})
+                    })
+                }
+            })
+
+        }
     }
 
     getIdsChatUsers() {
         let idsChatUsers = []
         if (this.props.chatUsers) {
-
             for (let i = 0; i < this.props.chatUsers.length; i++) {
                 idsChatUsers[i] = this.props.chatUsers[i].id
             }
@@ -48,19 +120,31 @@ export class ChatContacts extends Component {
             })
         }
 
+        if (this.props.chatUsers) {
+            this.children.ActiveChatUsers = this.props.chatUsers.map((user) => {
+
+                let correctUserData = this.CorrectUserData(user)
+                return new ChatContact('div', {
+                    ...correctUserData,
+                    events: {click: this.delUsersFromChat}
+                }, 'userchat', ChatContactTpl)
+            })
+        }
+
 
         this.children.newContacts = this.props.contacts.map((contact) => {
             let correctUserData = this.CorrectUserData(contact)
             return new Contact('div', {
-            ...correctUserData,
-            events: {click: addUsersToChat.bind(this, this)}
-        }, 'userchat', ContactTpl)});
+                ...correctUserData,
+                events: {click: this.addUsersToChat}
+            }, 'userchat', ContactTpl)
+        });
 
         return true
     }
 
 
-    CorrectUserData(user){
+    CorrectUserData(user) {
         let correctUserData = {}
         Object.keys(user).forEach((key) => {
             if (key === "avatar") {
@@ -79,22 +163,13 @@ export class ChatContacts extends Component {
 
 
     render() {
-        if (this.props.chatUsers) {
-            this.children.ActiveChatUsers = this.props.chatUsers.map((user) => {
 
-                let correctUserData = this.CorrectUserData(user)
-                return new ChatContact('div', {
-                    ...correctUserData,
-                    events: {click: delUsersFromChat.bind(this, this)}
-                }, 'userchat', ChatContactTpl)
-            })
-        }
 
-        this.children.SearchInput = new InPut('div', {
-            events: {
-                keydown: ContactsSearch.bind(this, this)
-            }
-        }, 'form-example', InputTpl);
+        /* this.children.SearchInput = new InPut('div', {
+             events: {
+                 keydown: ContactsSearch
+             }
+         }, 'form-example', InputTpl);*/
 
 
         if (this.template !== null) {

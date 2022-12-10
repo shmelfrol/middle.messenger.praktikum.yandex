@@ -1,15 +1,11 @@
-import {getMenuItens, menuitems, navitems} from "src/Storage/propsNavbar";
+import {getMenuItens} from "src/Storage/propsNavbar";
 import {Component} from "src/modules/Component";
 import {Children} from "src/type_component";
-import {Menuevents, ActiveItemMenu} from "src/events/NavbarEvents";
 import MenuTPL from "./Menu.hbs"
 import MenuItemTpl from "src/component/MenuItem/MenuItem.hbs"
 import {store} from "src/Storage/store";
 import {EVENTS} from "src/const/constsStore";
-
 import {MenuItem} from "src/component/MenuItem/MenuItem";
-
-import {ClickMenuItem} from "src/events/NavbarEvents";
 import {router} from "src/modules/MainRouter";
 import {AuthCtr} from "src/Controllers/AuthController";
 
@@ -22,58 +18,39 @@ export class Menu extends Component {
         template: string,
     ) {
 
-       /* myprops.MenuItems = myprops.menuitems.map((item) => new MenuItem('li', {
-            ...item,
-            events: {click: ClickMenuItem}
-        }, 'menuitem', MenuItemTpl, "1", {href: item.name}));*/
 
         super(tag, myprops, classofTag, template);
         store.on(EVENTS.UPDATEPATH, () => {
-            let currentUser = store.getState().currentUser
             let props = getMenuItens()
-            // пдписываемся на обновление компонента, передав данные из хранилища
             this.setProps({menuitems: props.menuitems, activePath: store.getState().activePath});
         });
 
+        this.addChildren({
+            MenuItems: this.props.menuitems.map((item) => new MenuItem('li', {
+                ...item,
+                events: {click: this.ClickMenuItem},
+                activePath: this.props.activePath
+            }, 'menuitem', MenuItemTpl, "1", {href: item.name}))
+        })
+
     }
 
 
-    addChildren() {
-        this.children.MenuItems = this.props.menuitems.map((item) => new MenuItem('li', {
-            ...item,
-            events: {click: this.ClickMenuItem}
-        }, 'menuitem', MenuItemTpl, "1", {href: item.name}));
-
-    }
-
-    ClickMenuItem(e){
-        let path=window.location.pathname
+    ClickMenuItem() {
+        let path = window.location.pathname
         let href = this.getAttribute("href")
         if (href !== "/logout") {
-            if (path!==href){
+            if (path !== href) {
                 router.go(href)
             }
-
         } else {
             AuthCtr.logout()
         }
     }
 
 
-
-
-
-    componentDidMount() {
-        ActiveItemMenu(this.getContent(), this.props)
-    }
-
-    VisualEffects() {
-        ActiveItemMenu(this.getContent(), this.props)
-    }
-
     render() {
         if (this.template !== null) {
-            //ActiveItemMenu(this.getContent(), this.props)
             return this.compile(this.template, this.children);
         }
     }
@@ -81,10 +58,9 @@ export class Menu extends Component {
     componentDidUpdate(oldProps) {
         this.children.MenuItems = this.props.menuitems.map((item) => new MenuItem('li', {
             ...item,
-            events: {click: this.ClickMenuItem}
+            events: {click: this.ClickMenuItem},
+            activePath: this.props.activePath
         }, 'menuitem', MenuItemTpl, "1", {href: item.name}));
-
-
         return true
     }
 
@@ -93,8 +69,8 @@ export class Menu extends Component {
 
 export function MainMenu() {
     let myprops = getMenuItens()
-
-    return new Menu('ul', {menuitems: myprops.menuitems}, 'mainmenu', MenuTPL)
+    let activePath = store.getState().activePath
+    return new Menu('ul', {menuitems: myprops.menuitems, activePath: activePath}, 'mainmenu', MenuTPL)
 }
 
 

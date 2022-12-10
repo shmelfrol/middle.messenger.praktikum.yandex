@@ -3,10 +3,6 @@ import {Component} from "src/modules/Component";
 
 
 
-
-
-
-
 export class Contact extends Component {
     constructor(
         tag: string,
@@ -14,9 +10,7 @@ export class Contact extends Component {
         classofTag: string,
         template: string,
     ) {
-
         super(tag, myprops, classofTag, template);
-
     }
 
 
