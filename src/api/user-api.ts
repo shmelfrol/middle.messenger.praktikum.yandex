@@ -10,7 +10,7 @@ class Api {
                 const responseData = JSON.parse(res.response);
 
                 return responseData.map(
-                    (item) => ({
+                    (item:{}) => ({
                         email: item.email,
                         login: item.login,
                         displayName: item.display_name,

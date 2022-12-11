@@ -25,4 +25,14 @@ router.start();
 
 
 
+interface Animal {
+    name: string
+}
 
+interface Bear extends Animal {
+    honey: boolean
+}
+const getBear=(a:Bear):Bear=>{return a}
+const bear = getBear({name:"2", honey:false})
+bear.name
+bear.honey

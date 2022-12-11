@@ -1,7 +1,18 @@
 import {v4 as makeUUID} from 'uuid';
-import {Props, Children} from 'src/type_component';
+import {Children} from 'src/type_component';
 import {EventBus} from './EventBus';
 import {isEqual} from "src/utility/isEqual";
+
+
+interface Meta {
+    tagName: string,
+    props: Props,
+    classofTag: string,
+    id: string,
+    attribute: {}
+}
+
+type Props = Record<string, any>
 
 export class Component {
     eventBus: EventBus;
@@ -13,17 +24,16 @@ export class Component {
         FLOW_RENDER: 'flow:render',
     };
 
-    readonly props: Props;
 
     private _element: HTMLElement | null = null;
-
-    readonly _meta: { tagName: string; props: Props; classofTag: string } | null =
+    readonly props: Props;
+    readonly _meta: Meta | null =
         null;
 
     readonly _id: string | null = null;
     isMounted: boolean = false;
     isShow: boolean = false;
-    template: string | null;
+    template: Function | null;
     children: Children;
 
     /** JSDoc
@@ -31,15 +41,17 @@ export class Component {
      * @param {Object} myprops
      *@param {string} classofTag
      * @param {string} template
+     * @param {string} id
+     * @param {Object} attribute
      * @returns {void}
      */
     constructor(
         tagName = 'div',
         myprops: Children = {},
         classofTag = '',
-        template: string | null = null,
+        template: Function | null = null,
         id = "",
-        attribute = {}
+        attribute: { string: string } | {} = {}
     ) {
         const {children, props} = this._getChildren(myprops);
         this.children = children;
@@ -85,7 +97,7 @@ export class Component {
     }
 
     _makePropsProxy(props: Props) {
-        const self = this;
+        //onst self = this;
         return new Proxy(props, {
             get(target, prop: string) {
                 const value = target[prop];
@@ -115,26 +127,35 @@ export class Component {
 
     _createResources() {
         // тоже самое что  tagName=this._meta.tagName
-        const {tagName, classofTag, id, attribute} = this._meta;
-        // присваиваем _element созданный элемент
-        this._element = this._createDocumentElement(tagName);
-        this._element.className = classofTag;
-        if (id) {
-            this._element.setAttribute('id', id);
-        }
-        if (Object.keys(attribute).length !== 0) {
-            //console.log("attribute", attribute)
-            Object.entries(attribute).forEach(([key, value]) => {
-                this._element.setAttribute(key, value);
-            })
+        if (this._meta !== null) {
+            const {tagName, classofTag, id, attribute} = this._meta;
+            // присваиваем _element созданный элемент
+            this._element = this._createDocumentElement(tagName);
+            this._element.className = classofTag;
+            if (id) {
+                this._element.setAttribute('id', id);
+            }
+            if (Object.keys(attribute).length !== 0) {
+                //console.log("attribute", attribute)
+                Object.entries(attribute).forEach(([key, value]) => {
+                    if (this._element !== null) {
+                        if (typeof value === "string") {
+                            this._element.setAttribute(key, value);
+                        }
+                    }
 
+                })
+
+            }
+
+            // console.log('create element', this._element)
+            this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
         }
 
-        // console.log('create element', this._element)
-        this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
+
     }
 
-    addChildren(newchildren) {
+    addChildren(newchildren: Children) {
         this.children = {...this.children, ...newchildren}
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
@@ -174,7 +195,7 @@ export class Component {
         this.eventBus.emit(Component.EVENTS.FLOW_CDM);
     }
 
-    _componentDidUpdate(oldProps) {
+    _componentDidUpdate(oldProps: Props) {
         const response = this.componentDidUpdate(oldProps);
         if (response) {
             this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
@@ -182,7 +203,9 @@ export class Component {
     }
 
     // Может переопределять пользователь, необязательно трогать
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps: Props) {
+        if (oldProps) {
+        }
         return true;
     }
 
@@ -208,45 +231,33 @@ export class Component {
     }
 
     // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    clone() {
-        this._element = this._element.cloneNode(true);
-    }
+    /* clone() {
+         this._element = this._element.cloneNode(true);
+     }*/
 
-    _render(): void {
-        // передаем fragment в block
-        const block = this.render();
-
-        this.RemoveEvents()
-        // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-
-        this._element.innerHTML = ''; // удаляем предыдущее содержимое
-        // console.log('elem',typeof this._element)
-        this._element.appendChild(block);
-        this.VisualEffects()
-        this.AddEvents();
-
-
-        // this._element.innerHTML = block;
-    }
 
 // Может переопределять пользователь, необязательно трогать
     VisualEffects() {
     }
 
     // Может переопределять пользователь, необязательно трогать
-    render() {
-    }
+
+    // @ts-ignore
+
 
     // Может переопределять пользователь, необязательно трогать
     AddEvents() {
         const {events = {}} = this.props;
         Object.keys(events).forEach(eventName => {
-            this._element.addEventListener(eventName, events[eventName]);
+            if (this._element) {
+                this._element.addEventListener(eventName, events[eventName]);
+            }
+
         });
     }
 
 // если необходимо навесить события после рендеринга
-    SetEvents(events) {
+    SetEvents(events: { string: Function }) {
         this.props.events = {...this.props.events, ...events}
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
@@ -255,16 +266,37 @@ export class Component {
     RemoveEvents() {
         const {events = {}} = this.props;
         Object.keys(events).forEach(eventName => {
-            this._element.removeEventListener(eventName, events[eventName]);
+            if (this._element) {
+                this._element.removeEventListener(eventName, events[eventName]);
+            }
+
         });
 
     }
 
-    getContent() {
-        return this.element;
+    getContent(): HTMLElement {
+        return this.element as HTMLElement;
     }
 
-    compile(template: string, props: Props) {
+
+    _render(): void {
+        if (this._element) {
+            const block = this.render() ;
+            this.RemoveEvents()
+            // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
+            this._element.innerHTML = ''; // удаляем предыдущее содержимое
+
+                this._element.appendChild(block);
+
+            this.VisualEffects()
+            this.AddEvents();
+        }
+    }
+
+    render(){
+    }
+
+    compile(template: Function, props: Props) {
 
         // копируем пропсы
         const propsAndStubs = {...props};
@@ -280,29 +312,34 @@ export class Component {
             }
         });
 
-        const fragment = this._createDocumentElement('template');
+        const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
         // вставляем в созданный элемент шаблон с заглушками
         fragment.innerHTML = template(propsAndStubs);
-        // console.log("fragment", fragment)
         Object.values(this.children).forEach((child) => {
             //console.log('child', child)
             if (Array.isArray(child)) {
                 // console.log("thisArray",child)
                 for (let a = 0; a < child.length; a++) {
-                    // console.log("child[a]",child[a]._id)
+
                     let zaglushka = fragment.content.querySelector(`[data-id="${child[a]._id}"]`);
                     // console.log("zaglushka", zaglushka)
-                    zaglushka.replaceWith(child[a].getContent());
+                    if (zaglushka) {
+                        zaglushka.replaceWith(child[a].getContent());
+                    }
+
                 }
             } else {
                 const stub = fragment.content.querySelector(`[data-id="${child._id}"]`); // [property="value"]
-                stub.replaceWith(child.getContent());
+                if (stub) {
+                    stub.replaceWith(child.getContent());
+                }
+
             }
 
 
         });
-
-        return fragment.content;
+         const block=fragment.content
+        return block;
 
     }
 

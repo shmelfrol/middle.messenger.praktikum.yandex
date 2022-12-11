@@ -3,14 +3,16 @@ import InputTpl from './Input.hbs';
 import {Component} from "src/modules/Component";
 import {MyvalidateFields} from "src/utility/myvalidate";
 
-export function focusout(e) {
-    let target = e.target.tagName
-    let errordiv = this.querySelector('#errormessage');
-    errordiv.textContent = ""
-    if (target === "INPUT") {
-        let error = MyvalidateFields(e.target.name, e.target.value)
-        if (error !== null) {
-            errordiv.textContent = error
+export function focusout(this: { focusout: (e: Event) => void; }, e:Event) {
+    if(e.target!==null){
+        let target = e.target.tagName as HTMLInputElement
+        let errordiv = this.querySelector('#errormessage');
+        errordiv.textContent = ""
+        if (target === "INPUT") {
+            let error = MyvalidateFields(e.target.name, e.target.value)
+            if (error !== null) {
+                errordiv.textContent = error
+            }
         }
     }
 }
@@ -21,7 +23,7 @@ export class InPut extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
         super(tag, myprops, classofTag, template);
     }
@@ -37,11 +39,12 @@ export class InPut extends Component {
         let input = this.getContent().querySelector("input")
         if (input) {
             if (input?.getAttribute("type") !== "submit") {
-                let data = {}
+                let data:{ [key: string]: any }= {}
 
-                if (input?.type === "file") {
-                    let file = input.files[0];
-                    data[input.name] = input.files[0];
+                if (input?.type === "file" && input.name) {
+                    if(input.files!==null){
+                        data[input.name] = input.files[0];
+                    }
                 } else {
                     if (input?.name) {
                         if (input?.value) {
