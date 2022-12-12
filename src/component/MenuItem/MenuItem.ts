@@ -6,7 +6,7 @@ export class MenuItem extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
         id: string,
         attribute:{}
     ) {

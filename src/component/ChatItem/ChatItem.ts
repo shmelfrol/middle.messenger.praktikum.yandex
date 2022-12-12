@@ -15,7 +15,7 @@ export class ChatItem extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
         id:string
     ) {
 
@@ -29,24 +29,29 @@ export class ChatItem extends Component {
         this.ViewActiveChat()
     }
 
-   delChat(ChatId){
+   delChat(ChatId:string){
+
        ChatsCtr.delete(ChatId)
    }
 
-   SetActiveChat(ChatId){
+   SetActiveChat(ChatId:string){
        store.set("ActiveChat", ChatId)
    }
 
 
-    Click=(e)=>{
-        let target = e.target.tagName
+    Click=(e:Event)=>{
+        let target = e.target as HTMLElement
+        let tagName = target.tagName
         let ChatId = this.getContent().getAttribute("id")
         e.preventDefault()
-        if (target === "BUTTON") {
-            this.delChat(ChatId)
-        } else {
-            this.SetActiveChat(ChatId)
+        if(ChatId){
+            if (tagName === "BUTTON") {
+                this.delChat(ChatId)
+            } else {
+                this.SetActiveChat(ChatId)
+            }
         }
+
     }
 
 

@@ -1,4 +1,4 @@
-import {Children} from 'src/type_component';
+import {Children, Props} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
@@ -12,17 +12,27 @@ import {Message} from "src/component/Message/Message";
 const SOCKET_WAS_CLOSED_CODE = 1000;
 const SOCKET_CONNECTION_BREAK_CODE = 1006;
 
+export type TNewMessageResponse = {
+    content: string;
+    type: string;
+    time: string;
+    userId: number;
+    id: number;
+    isFromMe: boolean;
+};
+
 
 export class ChatsMessenges extends Component {
-    private _socket = undefined
-    private _ChatUsers = undefined
+    //private _socket = undefined
+    _socket?: WebSocket;
+    private _ChatUsers: []|null =null
 
 
     constructor(
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
         super(tag, myprops, classofTag, template);
         this.openSocket = this.openSocket.bind(this);
@@ -48,7 +58,10 @@ export class ChatsMessenges extends Component {
   ChatScroll() {
         if (this.props.ActiveChat) {
             let Scroll = this.getContent().querySelector(".chat-bar-bottom")
-            Scroll.scrollIntoView(true)
+            if(Scroll){
+                Scroll.scrollIntoView(true)
+            }
+
         }
     }
 
@@ -59,7 +72,7 @@ export class ChatsMessenges extends Component {
 
     }
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps:Props) {
         if (this.props.ActiveChat) {
             if (this.props.ActiveChat !== oldProps.ActiveChat) {
                 this.resetDataWhenChatChanged();
@@ -105,20 +118,23 @@ export class ChatsMessenges extends Component {
     }
 
 
-    getChatUserbyId(userId) {
-        let findUser = {}
-        this._ChatUsers.forEach((user) => {
-            if (user.id === userId) {
-                findUser = user
-            }
-        })
+    getChatUserbyId(userId:number) {
+        let findUser:Props = {}
+        if(this._ChatUsers){
+            this._ChatUsers.forEach((user:Props) => {
+                if (user.id === userId) {
+                    findUser = user
+                }
+            })
+        }
+
         return findUser
 
 
     }
 
 
-    async CorrectFormatMess(messeges) {
+    async CorrectFormatMess(messeges:Props) {
         await ChatsCtr.getChatUsers(this.props.ActiveChat).then((r) => {
             this._ChatUsers = r.users
             return r.users
@@ -142,8 +158,8 @@ export class ChatsMessenges extends Component {
     }
 
 
-    onSocketMessage(response) {
-        let newArrMes = []
+    onSocketMessage(response:TNewMessageResponse) {
+        let newArrMes:Props = []
         if (Array.isArray(response)) {
             newArrMes = response.reverse()
             this.CorrectFormatMess(newArrMes).then((correctMes)=>{
@@ -157,6 +173,7 @@ export class ChatsMessenges extends Component {
             }
 
             this.CorrectFormatMess(newArrMes).then((correctMes)=>{
+                // @ts-ignore
                 this.setProps({messages: [...this.props.messages, ...correctMes]})
             })
         }
@@ -173,13 +190,15 @@ export class ChatsMessenges extends Component {
         }
     }
 
-    onSendBtnClick=(e)=> {
+    onSendBtnClick=(e:KeyboardEvent)=> {
         console.log("tape")
-        let target = e.target.tagName;
-        if (target == "INPUT") {
+        let target = e.target as HTMLInputElement;
+        let tag=target.tagName
+        if (tag == "INPUT") {
             if (e.keyCode === 13) {
+                // @ts-ignore
                 this._socket.send(JSON.stringify({
-                    content: e.target.value,
+                    content: target.value,
                     type: 'message',
                 }));
             }

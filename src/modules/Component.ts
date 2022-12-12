@@ -257,7 +257,7 @@ export class Component {
     }
 
 // если необходимо навесить события после рендеринга
-    SetEvents(events: { string: Function }) {
+    SetEvents(events: { click: (e: any) => void; }) {
         this.props.events = {...this.props.events, ...events}
         this.eventBus.emit(Component.EVENTS.FLOW_RENDER);
     }
@@ -285,8 +285,8 @@ export class Component {
             this.RemoveEvents()
             // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
             this._element.innerHTML = ''; // удаляем предыдущее содержимое
-
-                this._element.appendChild(block);
+                // @ts-ignore
+            this._element.appendChild(block);
 
             this.VisualEffects()
             this.AddEvents();

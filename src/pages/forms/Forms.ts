@@ -1,4 +1,4 @@
-import {Children} from '../../type_component';
+import {Children, Props} from '../../type_component';
 import {formsdata} from '../../Storage/propsForms';
 import FormLoginTpl from './FormLogin.hbs';
 import FormRegTpl from './FormReg.hbs';
@@ -20,7 +20,7 @@ export class Form extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
         console.log("props", myprops)
         super(tag, myprops, classofTag, template);
@@ -58,7 +58,7 @@ export class Form extends Component {
     }
 
 
-    SignIn = (formdata, divErr) => {
+    SignIn = (formdata:Props, divErr:HTMLDivElement) => {
         AuthCtr.signIn(formdata).catch((res) => {
             console.log("login", res)
             if (typeof res === 'object') {
@@ -74,21 +74,21 @@ export class Form extends Component {
         })
     }
 
-    SignUp = (formdata, divErr) => {
+    SignUp = (formdata:Props, divErr:HTMLDivElement) => {
         AuthCtr.signUp(formdata).catch((res) => {
             divErr!.textContent += res.reason
         })
     }
 
 
-    SettingsSave = (formdata, divErr) => {
+    SettingsSave = (formdata:Props) => {
         if (formdata?.avatar) {
             UserCtr.changeAvatar(formdata.avatar)
         }
         UserCtr.changeProfile(formdata)
     }
 
-    AddChat = (formdata) => {
+    AddChat = (formdata:Props) => {
         if (formdata.chatName) {
             console.log(formdata.chatName)
             ChatsCtr.createChatik(formdata.chatName).then(res => {
@@ -101,13 +101,11 @@ export class Form extends Component {
     }
 
     ButtonClick = (e: Event) => {
-
         let path = window.location.pathname
-        let targetType = e!.target!.getAttribute("type")
-        let divErr: HTMLDivElement | null | undefined = null
-        if (this?.getContent()) {
-            divErr = this?.getContent()?.querySelector("#err");
-        }
+        let target=e.target as HTMLElement
+        let targetType = target.getAttribute("type")
+        let divErr=this.getContent()?.querySelector("#err") as HTMLDivElement;
+
         if (targetType === "submit") {
             e.preventDefault()
             let formdata = this.getFormData()
@@ -121,7 +119,7 @@ export class Form extends Component {
                         this.SignUp(formdata, divErr)
                     }
                     if (path === "/settings") {
-                        this.SettingsSave(formdata, divErr)
+                        this.SettingsSave(formdata)
                     }
                     if (path === "/messenger") {
                         this.AddChat(formdata)
@@ -142,7 +140,7 @@ export class Form extends Component {
     componentDidUpdate() {
         if (this.props.path === "/settings") {
             Object.entries(this.children).forEach(([key, child]) => {
-                this.children[key].setProps({...this.props.forChildrens[key], value: this.props.currentUser[key]})
+                child.setProps({...this.props.forChildrens[key], value: this.props.currentUser[key]})
             });
         }
         return true
@@ -160,7 +158,7 @@ export class Form extends Component {
 }
 
 export function FormPage() {
-    let tpl = '';
+    let tpl = null;
     let path = window.location.pathname;
     let div = 'div'
     let classOfTag = 'testmain'
@@ -178,6 +176,7 @@ export function FormPage() {
             tpl = FormSettingsTpl;
             let currentUser = store.getState().currentUser
             if (currentUser?.id) {
+                // @ts-ignore
                 props = {...props, currentUser: currentUser, img: currentUser.avatar}
             }
             break;
@@ -190,6 +189,6 @@ export function FormPage() {
         }
     }
 
-
+    // @ts-ignore
     return new Form(div, props, classOfTag, tpl)
 }

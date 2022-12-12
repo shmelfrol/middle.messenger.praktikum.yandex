@@ -1,4 +1,5 @@
 import {http} from "src/modules/HttpTransport";
+import {TChangeProfileRequest, TUserResponse, TUserResponseBackend} from "src/type_component";
 
 class Api {
     search(data: { login: string }) {
@@ -6,11 +7,11 @@ class Api {
             .post('/user/search', {
                 data,
             })
-            .then((res) => {
-                const responseData = JSON.parse(res.response);
+            .then((res) :TUserResponse[]=> {
+                const responseData:TUserResponseBackend[] = JSON.parse(res.response);
 
                 return responseData.map(
-                    (item:{}) => ({
+                    (item): TUserResponse => ({
                         email: item.email,
                         login: item.login,
                         displayName: item.display_name,
@@ -25,13 +26,13 @@ class Api {
     }
 
 
-    getUserbyId(id){
+    getUserbyId(id:number){
         return http.get(`/user/${id}`).then((res)=>{
             console.log("GEtUSERS",JSON.parse(res.response))
         })
     }
 
-    changeProfile(data) {
+    changeProfile(data:TChangeProfileRequest) {
 
         const dataRequest = {
             first_name: data.first_name,

@@ -1,9 +1,10 @@
 import {http} from "src/modules/HttpTransport";
+import {TSignUpRequest} from "src/type_component";
 
 
 // TODO: пройтись по проекту и проверить, что название файлов соответствует названию класса
 class AuthApi {
-    signUp(data) {
+    signUp(data:TSignUpRequest) {
         const requestData = {
             first_name: data.first_name,
             second_name: data.second_name,
@@ -20,7 +21,7 @@ class AuthApi {
             .then((res): { id: number } => JSON.parse(res.response));
     }
 
-    signIn(data) {
+    signIn(data:TSignUpRequest) {
         return http.post('/auth/signin', {data}).then((res): 'OK' => {
             return res.response
         }).catch(res => {

@@ -1,6 +1,6 @@
-import { TJsonObject } from 'src/types';
+import {Props} from "src/type_component";
 
-export const queryStringify = (data: TJsonObject) => {
+export const queryStringify = (data: Props) => {
   const keys = Object.keys(data);
 
   return keys.reduce((result, key, index) => {

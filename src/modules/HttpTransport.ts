@@ -2,6 +2,7 @@ import { queryStringify} from "src/utility/query-stringify";
 
 import { router} from "src/modules/MainRouter";
 import {STORE_ITEM} from "src/Storage/store";
+import {TRequestOptions} from "src/type_component";
 
 export class HTTPTransport {
   private readonly baseUrl: string;
@@ -56,6 +57,7 @@ export class HTTPTransport {
         if (xhr.status === 401 && window.location.pathname !== '/') {
           console.log("401!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
           localStorage.removeItem(STORE_ITEM);
+          //window.location.reload();
           //if response 401 (Unauthorized) go to auth page
           router.go('/');
         } else if (xhr.status >= 400) {

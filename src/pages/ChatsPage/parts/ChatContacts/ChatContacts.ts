@@ -1,4 +1,4 @@
-import {Children} from 'src/type_component';
+import {Children, Props} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import ContactTpl from "src/component/Contact/Contact.hbs";
 import {store} from "src/Storage/store";
@@ -6,7 +6,6 @@ import {EVENTS} from "src/const/constsStore";
 import {Contact} from "src/component/Contact/Contact";
 import {InPut} from "src/component/Input/Input";
 import InputTpl from "src/component/Input/Input.hbs";
-import {addUsersToChat, ContactsSearch, delUsersFromChat} from "src/events/ContactsEvents";
 import {ChatContact} from "src/component/ChatContact/ChatContact";
 import ChatContactTpl from "src/component/ChatContact/ChatContact.hbs";
 import {ChatsCtr} from "src/Controllers/ChatsController";
@@ -18,7 +17,7 @@ export class ChatContacts extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
         // передаю в родительский класс пропсы и тег
         super(tag, myprops, classofTag, template);
@@ -33,6 +32,8 @@ export class ChatContacts extends Component {
 
         this.addChildren({
             SearchInput: new InPut('div', {
+                //@ts-ignore
+                inputname: "search",
                 events: {keydown: this.ContactsSearch}
             }, 'form-example', InputTpl)
         })
@@ -40,41 +41,50 @@ export class ChatContacts extends Component {
 
 
 
-    ContactsSearch=(e) =>{
-        let el = this.getContent()
+
+
+    ContactsSearch=(e:KeyboardEvent) =>{
+        let target =e.target as HTMLElement
+        let tag = target.tagName
         let errdiv=this.getContent().querySelector("#error-search-chat-contact")
-        errdiv.textContent=""
-        let tag = e.target.tagName
-        if (tag === "INPUT") {
-            if (e.keyCode === 13) {
-                let searchInput = el.querySelector("input")
-                UserCtr.search(searchInput.value).then(res => {
-                    if(Array.isArray(res)){
-                        if(res.length!==0){
-                            this.setProps({contacts: res})
-                        }else{
-                            errdiv.textContent+="Users not found"
-                            this.setProps({contacts: res})
-                        }
+        if(errdiv!==null){
+            errdiv.textContent=""
+            if (tag === "INPUT") {
+                if (e.keyCode === 13) {
+                    console.log("Search value",this.children.SearchInput.getInputValue())
+                    let searchUser=this.children.SearchInput.getInputValue()
+                    if(searchUser.search){
+                        UserCtr.search(searchUser.search).then(res => {
+                            if(Array.isArray(res)){
+                                if(res.length!==0){
+                                    this.setProps({contacts: res})
+                                }else{
+                                    // @ts-ignore
+                                    errdiv.textContent+="Users not found"
+                                    this.setProps({contacts: res})
+                                }
+                            }
+                        })
                     }
-                })
-                searchInput.value='';
+                    this.children.SearchInput.setInputVale("")
+                }
             }
         }
+
 
     }
 
 
-    addUsersToChat=(e)=> {
+    addUsersToChat=(e:Event)=> {
         e.preventDefault()
         let ActiveChat = this.props.ActiveChat
-        let el = this.getContent()
-        let tag = e.target.tagName
+        let target=e.target as HTMLElement
+        let tag = target.tagName
         if (tag === "BUTTON") {
-            let userId = e.target.getAttribute("id")
+            let userId = Number(target.getAttribute("id"))
             let userarr = this.getIdsChatUsers()
-            if (userarr.indexOf(Number(userId)) === -1) {
-                ChatsCtr.addUsersToChat({users: [userId], chatId: ActiveChat}).then(res => {
+            if (userarr.indexOf(userId) === -1) {
+                ChatsCtr.addUsersToChat({users: [userId], chatId: ActiveChat}).then(() => {
                     ChatsCtr.getChatUsers(ActiveChat).then(res => {
                         this.setProps({chatUsers: res.users})
                     })
@@ -85,13 +95,13 @@ export class ChatContacts extends Component {
     }
 
 
-    delUsersFromChat=(e)=> {
+    delUsersFromChat=(e:Event)=> {
         e.preventDefault()
         let ActiveChat = this.props.ActiveChat
-        let el = this.getContent()
-        let tag = e.target.tagName
+        let target=e.target as HTMLElement
+        let tag = target.tagName
         if (tag === "BUTTON") {
-            let userId = e.target.getAttribute("id")
+            let userId = Number(target.getAttribute("id"))
             ChatsCtr.delUsersFromChat({users: [userId], chatId: ActiveChat}).then((res) => {
                 if (res === "OK") {
                     ChatsCtr.getChatUsers(ActiveChat).then(res => {
@@ -99,7 +109,6 @@ export class ChatContacts extends Component {
                     })
                 }
             })
-
         }
     }
 
@@ -113,7 +122,7 @@ export class ChatContacts extends Component {
         return idsChatUsers
     }
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps:Props) {
         if (this.props.ActiveChat !== oldProps.ActiveChat) {
             ChatsCtr.getChatUsers(this.props.ActiveChat).then(res => {
                 this.setProps({chatUsers: res.users})
@@ -121,7 +130,7 @@ export class ChatContacts extends Component {
         }
 
         if (this.props.chatUsers) {
-            this.children.ActiveChatUsers = this.props.chatUsers.map((user) => {
+            this.children.ActiveChatUsers = this.props.chatUsers.map((user:Props) => {
 
                 let correctUserData = this.CorrectUserData(user)
                 return new ChatContact('div', {
@@ -132,7 +141,7 @@ export class ChatContacts extends Component {
         }
 
 
-        this.children.newContacts = this.props.contacts.map((contact) => {
+        this.children.newContacts = this.props.contacts.map((contact:Props) => {
             let correctUserData = this.CorrectUserData(contact)
             return new Contact('div', {
                 ...correctUserData,
@@ -144,8 +153,8 @@ export class ChatContacts extends Component {
     }
 
 
-    CorrectUserData(user) {
-        let correctUserData = {}
+    CorrectUserData(user:Props) {
+        let correctUserData:Props = {}
         Object.keys(user).forEach((key) => {
             if (key === "avatar") {
                 if (user.avatar === null) {
@@ -163,15 +172,6 @@ export class ChatContacts extends Component {
 
 
     render() {
-
-
-        /* this.children.SearchInput = new InPut('div', {
-             events: {
-                 keydown: ContactsSearch
-             }
-         }, 'form-example', InputTpl);*/
-
-
         if (this.template !== null) {
             return this.compile(this.template, this.children);
         }

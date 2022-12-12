@@ -1,7 +1,9 @@
 
 
 /* Объединяет 2 объекта путем мутации 1-ого */
-export const merge = (lhs, rhs) => {
+import {Props} from "src/type_component";
+
+export const merge = (lhs: Props, rhs: Props): Props => {
   const merged = lhs;
 
   Object.entries(rhs).forEach(([key, value]) => {

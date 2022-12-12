@@ -1,11 +1,11 @@
-import {Children} from "src/type_component";
+import {Children, Props} from "src/type_component";
 import input from "src/component/Input/Input";
 import button from "src/component/Button/Button";
 import {formfields} from "src/Storage/propsForms";
 
-export function FormFields(props) {
+export function FormFields(props:Props) {
     const components: Children = {};
-    let Fields=[]
+    let Fields:string[]=[]
     let path = window.location.pathname
     // eslint-disable-next-line default-case
     switch (path) {

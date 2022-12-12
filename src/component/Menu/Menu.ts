@@ -1,6 +1,6 @@
 import {getMenuItens} from "src/Storage/propsNavbar";
 import {Component} from "src/modules/Component";
-import {Children} from "src/type_component";
+import {Children, Props} from "src/type_component";
 import MenuTPL from "./Menu.hbs"
 import MenuItemTpl from "src/component/MenuItem/MenuItem.hbs"
 import {store} from "src/Storage/store";
@@ -15,7 +15,7 @@ export class Menu extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
 
 
@@ -26,7 +26,7 @@ export class Menu extends Component {
         });
 
         this.addChildren({
-            MenuItems: this.props.menuitems.map((item) => new MenuItem('li', {
+            MenuItems: this.props.menuitems.map((item:Props) => new MenuItem('li', {
                 ...item,
                 events: {click: this.ClickMenuItem},
                 activePath: this.props.activePath
@@ -36,7 +36,7 @@ export class Menu extends Component {
     }
 
 
-    ClickMenuItem() {
+    ClickMenuItem(this:HTMLElement) {
         let path = window.location.pathname
         let href = this.getAttribute("href")
         if (href !== "/logout") {
@@ -55,8 +55,8 @@ export class Menu extends Component {
         }
     }
 
-    componentDidUpdate(oldProps) {
-        this.children.MenuItems = this.props.menuitems.map((item) => new MenuItem('li', {
+    componentDidUpdate() {
+        this.children.MenuItems = this.props.menuitems.map((item:Props) => new MenuItem('li', {
             ...item,
             events: {click: this.ClickMenuItem},
             activePath: this.props.activePath

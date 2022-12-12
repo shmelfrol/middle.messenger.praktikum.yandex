@@ -1,5 +1,6 @@
 import {UserApi} from "src/api/user-api";
 import {store} from "src/Storage/store";
+import {TChangeProfileRequest} from "src/type_component";
 
 class UserController {
   search(login: string) {
@@ -8,7 +9,7 @@ class UserController {
         }).catch((res)=>res);
   }
 
-  changeProfile(data) {
+  changeProfile(data:TChangeProfileRequest) {
     return UserApi.changeProfile(data).then((user) => {
       store.set('currentUser', user);
     });

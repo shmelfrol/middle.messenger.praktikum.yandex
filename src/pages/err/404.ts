@@ -1,13 +1,13 @@
 import tpl from './404.hbs';
 import {Component} from "src/modules/Component";
-import {Children} from "src/type_component";
+import {Props} from "src/type_component";
 
 export class Err extends Component {
   constructor(
       tag: string,
-      myprops: Children,
+      myprops: Props,
       classofTag: string,
-      template: string,
+      template: Function,
   ) {
     super(tag, myprops, classofTag, template);
   }

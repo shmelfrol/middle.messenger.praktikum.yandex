@@ -3,15 +3,19 @@ import InputTpl from './Input.hbs';
 import {Component} from "src/modules/Component";
 import {MyvalidateFields} from "src/utility/myvalidate";
 
-export function focusout(this: { focusout: (e: Event) => void; }, e:Event) {
-    if(e.target!==null){
-        let target = e.target.tagName as HTMLInputElement
+export function focusout(this: HTMLDivElement, e:Event) {
+    let target = e.target as HTMLInputElement
+    console.log(this)
+    if(target!==null ){
+        let tagName = target.tagName
         let errordiv = this.querySelector('#errormessage');
-        errordiv.textContent = ""
-        if (target === "INPUT") {
-            let error = MyvalidateFields(e.target.name, e.target.value)
-            if (error !== null) {
-                errordiv.textContent = error
+        if(errordiv!==null){
+            errordiv.textContent = ""
+            if (tagName === "INPUT") {
+                let error = MyvalidateFields(target.name, target.value)
+                if (error !== null) {
+                    errordiv.textContent = error
+                }
             }
         }
     }
@@ -33,6 +37,14 @@ export class InPut extends Component {
         if (this.template !== null) {
             return this.compile(this.template, this.props);
         }
+    }
+
+    setInputVale(value:string){
+        let input = this.getContent().querySelector("input")
+        if(input){
+            input.value=value
+        }
+
     }
 
     getInputValue() {

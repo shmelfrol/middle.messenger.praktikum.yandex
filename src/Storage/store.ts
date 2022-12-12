@@ -1,6 +1,7 @@
 import { EventBus} from "src/modules/EventBus";
 import { set} from "src/utility/set";
 import {EVENTS} from "src/const/constsStore";
+import {Props} from "src/type_component";
 
 export const STORE_ITEM = 'store';
 
@@ -32,8 +33,9 @@ export class Store extends EventBus {
 
 
 
-  public set(path, value) {
+  public set(path:string, value:Props | string) {
     //обновляем state по пути и присваиваем value
+
     set(this.state, path, value);
     //обновляем запись в localStorage по пути store
     localStorage.setItem(STORE_ITEM, JSON.stringify(this.getState()));

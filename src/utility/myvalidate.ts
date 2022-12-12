@@ -58,11 +58,15 @@ export const MyvalidateFields = (
 };
 
 
-export function validformData(values) {
+
+
+export function validformData(values:{[index: string]:string}) {
   let err = null;
   if(Object.keys(values).length!==0){
-    for (const key in values) {
+    for (let key in values) {
+      console.log(key, values[key])
       const error = MyvalidateFields(key, values[key]);
+
       if (error !== null) {
         err = error;
       }

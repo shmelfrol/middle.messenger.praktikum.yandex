@@ -1,4 +1,4 @@
-import {Children} from 'src/type_component';
+import {Children, Props} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import ChatsPageTpl from "./ChatsPageTpl.hbs"
 import {ChatsCtr} from "src/Controllers/ChatsController";
@@ -20,7 +20,7 @@ export class ChatsPage extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
 
 
@@ -56,10 +56,10 @@ export class ChatsPage extends Component {
     }
 
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate() {
 
         if (this.props.chats && this.props.chats.length !== 0) {
-            this.children.chatList = this.props.chats.map((chat) => new ChatItem('div', {
+            this.children.chatList = this.props.chats.map((chat:Props) => new ChatItem('div', {
                 ...chat,
                 ActiveChat: this.props.ActiveChat
             }, 'userchat', ChatTpl, chat.id));
@@ -93,6 +93,7 @@ export class ChatsPage extends Component {
     hide() {
         this.isShow = false
         this.getContent().style.display = 'none';
+        //@ts-ignore
         store.set('ActiveChat', null)
     }
 

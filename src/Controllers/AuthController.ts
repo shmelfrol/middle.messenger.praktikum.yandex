@@ -2,10 +2,11 @@ import {router} from "src/modules/MainRouter";
 import {authapi} from "src/api/auth-api";
 import {store} from "src/Storage/store";
 import {STORE_ITEM} from "src/Storage/store";
+import {TSignUpRequest} from "src/type_component";
 
 // TODO: для всех запросов во всех контроллерах добавить catch c обработкой ошибок
 class AuthController {
-    signUp(data) {
+    signUp(data:TSignUpRequest) {
         return authapi.signUp(data).then(res => {
             if (res?.id) {
                 this.getUser().then((res) => {
@@ -19,7 +20,7 @@ class AuthController {
         });
     }
 
-    signIn(data) {
+    signIn(data:TSignUpRequest) {
         return authapi.signIn(data).then((res) => {
             if (res == "OK") {
                 this.getUser().then((res) => {
@@ -48,7 +49,7 @@ class AuthController {
                 window.location.reload();
             }
             return res
-        }).catch(res => {
+        }).catch(() => {
             localStorage.removeItem(STORE_ITEM);
         });
     }

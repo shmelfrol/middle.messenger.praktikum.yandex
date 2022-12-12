@@ -2,72 +2,25 @@ import {ChatsApi} from "src/api/chats-api";
 import {AuthCtr} from "src/Controllers/AuthController";
 import {store} from "src/Storage/store";
 import {UserApi} from "src/api/user-api";
+import {Props, TMessageResponse} from "src/type_component";
+import {TNewMessageResponse} from "src/pages/ChatsPage/parts/ChatMessenges/ChatMessenges";
 
 
-const PRIVATE_CHAT_NAME = "ftyujty"
-const WS_URL = "ws"
+
 
 class ChatController {
-   /* async getChats(): Promise {
-        const authorizedUser = await AuthCtr.getUser();
-
-        return ChatsApi.getChats({limit: Number.MAX_SAFE_INTEGER}).then(async (chats) => {
-            const getUsersFromChatsPromises = [];
-            chats.forEach((chat) => {
-                const cachedChatData = store.getState().chats?.[chat.id];
-                if (!cachedChatData) {
-                    getUsersFromChatsPromises.push(this.getChatUsers(chat.id));
-                }
-            });
-
-            await Promise.all(getUsersFromChatsPromises).then((usersInChats) => {
-                const chatsData = {};
-                usersInChats.forEach(({chatId, users}) => {
-                    chatsData[chatId] = {
-                        users,
-                    };
-                });
-
-                store.set('chatsData', chatsData);
-            });
-
-            return chats.map((chat) => {
-                const cachedChatData = store.getState().chatsData?.[chat.id];
-
-                const companion = cachedChatData?.users.find((user) => user.id !== authorizedUser.id);
-
-                if (!companion) {
-                    return {
-                        ...chat,
-                        isFromMe: false,
-                        individualChatName: '',
-                        individualChatAvatar: '',
-                    };
-                }
-                const isFromMe = chat.lastMessage?.user.login === authorizedUser.login;
-                const individualChatName = [companion.firstName, companion.secondName].join(' ');
-                const individualChatAvatar = companion.avatar;
-
-                return {
-                    ...chat,
-                    isFromMe,
-                    individualChatName,
-                    individualChatAvatar,
-                };
-            });
-        });
-    }*/
 
     getChatUsers(id: number) {
         return ChatsApi.getChatUsers({id}).then((users) => {
-            return {chatId: id, users}});
+            return {chatId: id, users}
+        });
     }
 
     addUsersToChat(data: { users: number[]; chatId: number }) {
-        return ChatsApi.addUsersToChat(data).then(res=>res);
+        return ChatsApi.addUsersToChat(data).then(res => res);
     }
 
-    getUserById(id){
+    getUserById(id: number) {
         return UserApi.getUserbyId(id)
     }
 
@@ -78,37 +31,16 @@ class ChatController {
                 if (chats.length !== 0) {
                     store.set('chats', chats);
                 }
-
             })
     }
 
-    /*createChat(login: string) {
-        return new Promise((resolve, reject) => {
-            AuthCtr.getUser().then((user) => {
-                UserCtr.search(login).then((users) => {
-                    const existingUser = users.find((u) => u.login === login);
 
-                    if (existingUser) {
-                        ChatsApi.createChat({title: PRIVATE_CHAT_NAME}).then(({id: chatId}) => {
-                            this.addUsersToChat({chatId, users: [existingUser.id, user.id]}).then(() => {
-                                resolve('Chat is created');
-                            });
-                        });
-                    } else {
-                        reject(new Error(`Пользователь ${login} не найден`));
-                    }
-                });
-            });
-        });
-    }*/
-
-    ActiveChat(ActiveChat) {
+    ActiveChat(ActiveChat: Props) {
         store.set('ActiveChat', ActiveChat);
     }
 
 
-
-    createChatik(title) {
+    createChatik(title: string) {
         return AuthCtr.getUser().then((user) => {
             return ChatsApi.createChat({title: title}).then(({id: chatId}) => {
                 this.addUsersToChat({users: [user.id], chatId: chatId})
@@ -118,7 +50,7 @@ class ChatController {
     }
 
 
-    delete(chatId) {
+    delete(chatId: number) {
         AuthCtr.getUser().then((user) => {
             ChatsApi.delete({users: [user.id], chatId: chatId}).then((res) => {
                 if (res === "OK") {
@@ -126,12 +58,11 @@ class ChatController {
                 }
             })
         })
-
     }
 
-    delUsersFromChat(data: {users: [], chatId: number}){
+    delUsersFromChat(data: { users: number[], chatId: number }) {
         return ChatsApi.delete(data).then((res) => {
-           return res
+            return res
         })
     }
 
@@ -141,7 +72,11 @@ class ChatController {
         });
     }
 
-    createSocket(data, callbacks) {
+    createSocket(data:{ chatId: number }, callbacks: {
+        onOpen?: (_socket: WebSocket) => void;
+        onClose?: (_data: { message: string; code: number; reason: string }) => void;
+        onMessage?: (_data: TNewMessageResponse | TMessageResponse[]) => void;
+    }) {
         //получаем из data chatId
         const {chatId} = data;
         //получаем пользователя

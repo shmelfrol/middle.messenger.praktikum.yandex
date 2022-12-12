@@ -7,7 +7,7 @@ export class ChatInput extends Component {
         tag: string,
         myprops: Children,
         classofTag: string,
-        template: string,
+        template: Function,
     ) {
         super(tag, myprops, classofTag, template);
     }
