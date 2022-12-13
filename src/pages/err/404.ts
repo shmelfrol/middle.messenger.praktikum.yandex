@@ -1,10 +1,31 @@
 import tpl from './404.hbs';
+import {Component} from "src/modules/Component";
+import {Props} from "src/type_component";
 
-export default function ():void {
-  const context: object = { title: 'Внимание ошибка: ' };
-  const root = document.getElementById('main');
-  if (root !== null) {
-    root.innerHTML = tpl(context);
+export class Err extends Component {
+  constructor(
+      tag: string,
+      myprops: Props,
+      classofTag: string,
+      template: Function,
+  ) {
+    super(tag, myprops, classofTag, template);
   }
-  // document.getElementById('main').innerHTML = tpl(context)
+
+
+  render() {
+    if (this.template !== null) {
+      return this.compile(this.template, this.props);
+    }
+  }
+}
+
+
+
+
+
+
+export default function () {
+  const context = { title: 'Внимание ошибка: ' };
+  return new Err("div", context, "testmain", tpl)
 }

@@ -2,7 +2,7 @@ export const MyvalidateFields = (
   fieldName: string,
   value: string
 ): null | string => {
-  console.log('FIELD PROPERTY ', fieldName, value);
+  //console.log('FIELD PROPERTY ', fieldName, value);
   let error: null | string = null;
   switch (fieldName) {
     case 'login':
@@ -14,7 +14,7 @@ export const MyvalidateFields = (
       break;
     case 'oldPassword':
     case 'newPassword':
-    case 'Password': {
+    case 'password': {
       if (
         !/^(.){8,40}$/.test(value) ||
         !/[A-ZА-Я]/.test(value) ||
@@ -53,5 +53,31 @@ export const MyvalidateFields = (
     default:
       break;
   }
-  return error;
+  return error
+
 };
+
+
+
+
+export function validformData(values:{[index: string]:string}) {
+  let err = null;
+  if(Object.keys(values).length!==0){
+    for (let key in values) {
+      console.log(key, values[key])
+      const error = MyvalidateFields(key, values[key]);
+
+      if (error !== null) {
+        err = error;
+      }
+      if (key === 'newPassword') {
+        if (values[key] !== values.oldPassword) {
+          err = 'старый и новый пароли не совпадают';
+        }
+      }
+    }
+  }
+  return err
+}
+
+

@@ -3,34 +3,36 @@ import '../public/cssout/mainin.css';
 import '../public/cssout/chat.css';
 import '../public/cssout/btn.css';
 import '../public/cssout/form.css';
-
-import Chat from './pages/chat/ChatPage';
-import ContactPage from './pages/contacts/ContactPage';
 import RenderDom from './modules/RenderDom';
-import formPage from './pages/forms/Forms';
-import NavbarItems from './component/Navbar/Navbar';
+import {router} from "src/modules/MainRouter";
+import {FormPage} from "src/pages/forms/Forms";
+import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
+import {MainMenu} from "src/component/Menu/Menu";
+import {store} from "src/Storage/store";
 
-const path = window.location.pathname;
+console.log("store", store.getState())
+RenderDom('#navbar', MainMenu());
 
-RenderDom('#navbar', NavbarItems());
 
-switch (path) {
-  case '/contacts':
-    RenderDom('#main', ContactPage());
-    break;
-  case '/chat':
-    RenderDom('#main', Chat());
-    break;
-  case '/login':
-    RenderDom('#main', formPage(path));
-    break;
-  case '/reg':
-    RenderDom('#main', formPage(path));
-    break;
-  case '/settings':
-    RenderDom('#main', formPage(path));
-    break;
-  default:
-    NotFoundPage();
-    break;
+
+router
+    .use("/", FormPage)
+    .use("/sign-up", FormPage)
+    .use("/settings", FormPage)
+    .use("/404", NotFoundPage)
+    .use("/messenger",getChatsPage);
+router.start();
+
+
+
+interface Animal {
+    name: string
 }
+
+interface Bear extends Animal {
+    honey: boolean
+}
+const getBear=(a:Bear):Bear=>{return a}
+const bear = getBear({name:"2", honey:false})
+bear.name
+bear.honey

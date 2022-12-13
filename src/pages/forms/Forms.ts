@@ -1,138 +1,194 @@
-import { Children } from '../../type_component';
-import { inputs } from './propsForms';
-import { AppComponent } from '../../modules/AppComponent';
+import {Children, Props} from '../../type_component';
+import {formsdata} from '../../Storage/propsForms';
 import FormLoginTpl from './FormLogin.hbs';
 import FormRegTpl from './FormReg.hbs';
 import FormSettingsTpl from './FormSettings.hbs';
-import PageFormTpl from './PageForm.hbs';
-import { validform, validEl } from '../../utility/valid';
-import button from '../../component/Button/Button';
-import input from '../../component/Input/Input';
+import FormChatAddTpl from "./FormChatAdd.hbs"
+import {FormFields} from "src/pages/forms/FormFields";
+import {Component} from "src/modules/Component";
+import {validformData} from "src/utility/myvalidate";
+import {AuthCtr} from "src/Controllers/AuthController";
+import {InPut} from "src/component/Input/Input";
+import {focusout} from "src/component/Input/Input";
+import {store} from "src/Storage/store";
+import {EVENTS} from "src/const/constsStore";
+import {UserCtr} from "src/Controllers/UserController";
+import {ChatsCtr} from "src/Controllers/ChatsController";
 
-function FormLoginEvents(el: HTMLDivElement) {
-  const values = {};
-  el.querySelectorAll('input[type="submit"]').forEach((item) => {
-    item.addEventListener('click', (event) => {
-      validform(el, values, event);
-    });
-  });
+export class Form extends Component {
+    constructor(
+        tag: string,
+        myprops: Children,
+        classofTag: string,
+        template: Function,
+    ) {
+        console.log("props", myprops)
+        super(tag, myprops, classofTag, template);
+
+        if (this.props.path === "/settings") {
+            console.log("Store oooooon")
+            store.on(EVENTS.UPDATE, () => {
+                this.setProps({currentUser: store.getState().currentUser, img: store.getState().currentUser.avatar});
+            });
+        }
+
+
+        this.addChildren(FormFields({
+            ...myprops, eventsForInput: {
+                focusout: focusout
+            }
+        }))
+
+
+        let events = {click: this.ButtonClick}
+        this.SetEvents(events)
+
+    }
+
+
+    getFormData() {
+        let formdata = {}
+        Object.keys(this.children).forEach((key) => {
+            if (this.children[key] instanceof InPut) {
+                let inputData = this.children[key].getInputValue();
+                formdata = {...formdata, ...inputData};
+            }
+        })
+        return formdata
+    }
+
+
+    SignIn = (formdata:Props, divErr:HTMLDivElement) => {
+        AuthCtr.signIn(formdata).catch((res) => {
+            console.log("login", res)
+            if (typeof res === 'object') {
+                if (res?.reason) {
+                    divErr!.textContent += res.reason
+                }
+                if (res?.type) {
+                    divErr!.textContent += res.type
+                }
+            } else {
+                divErr!.textContent += res
+            }
+        })
+    }
+
+    SignUp = (formdata:Props, divErr:HTMLDivElement) => {
+        AuthCtr.signUp(formdata).catch((res) => {
+            divErr!.textContent += res.reason
+        })
+    }
+
+
+    SettingsSave = (formdata:Props) => {
+        if (formdata?.avatar) {
+            UserCtr.changeAvatar(formdata.avatar)
+        }
+        UserCtr.changeProfile(formdata)
+    }
+
+    AddChat = (formdata:Props) => {
+        if (formdata.chatName) {
+            console.log(formdata.chatName)
+            ChatsCtr.createChatik(formdata.chatName).then(res => {
+                console.log("adddchatRES", res)
+                ChatsCtr.getChatiks()
+            })
+        }
+
+
+    }
+
+    ButtonClick = (e: Event) => {
+        let path = window.location.pathname
+        let target=e.target as HTMLElement
+        let targetType = target.getAttribute("type")
+        let divErr=this.getContent()?.querySelector("#err") as HTMLDivElement;
+
+        if (targetType === "submit") {
+            e.preventDefault()
+            let formdata = this.getFormData()
+            let error = validformData(formdata)
+            if (divErr !== null && divErr !== undefined) {
+                if (error === null) {
+                    if (path === "/") {
+                        this.SignIn(formdata, divErr)
+                    }
+                    if (path === "/sign-up") {
+                        this.SignUp(formdata, divErr)
+                    }
+                    if (path === "/settings") {
+                        this.SettingsSave(formdata)
+                    }
+                    if (path === "/messenger") {
+                        this.AddChat(formdata)
+                    }
+
+
+                } else {
+                    divErr.textContent = error
+                }
+            }
+
+
+        }
+
+    }
+
+
+    componentDidUpdate() {
+        if (this.props.path === "/settings") {
+            Object.entries(this.children).forEach(([key, child]) => {
+                child.setProps({...this.props.forChildrens[key], value: this.props.currentUser[key]})
+            });
+        }
+        return true
+    }
+
+
+    render() {
+        let props = {...this.props, ...this.children}
+        if (this.template !== null) {
+            return this.compile(this.template, props);
+        }
+
+
+    }
 }
 
-// создаем кнопку
-const ButtonLoginProps = { btn_name: 'Войти' };
+export function FormPage() {
+    let tpl = null;
+    let path = window.location.pathname;
+    let div = 'div'
+    let classOfTag = 'testmain'
+    let props = {...formsdata, path: path}
+    switch (path) {
+        case '/': {
+            tpl = FormLoginTpl;
+            break;
+        }
+        case '/sign-up': {
+            tpl = FormRegTpl;
+            break;
+        }
+        case '/settings': {
+            tpl = FormSettingsTpl;
+            let currentUser = store.getState().currentUser
+            if (currentUser?.id) {
+                // @ts-ignore
+                props = {...props, currentUser: currentUser, img: currentUser.avatar}
+            }
+            break;
+        }
+        case '/messenger': {
+            div = 'form'
+            classOfTag = 'form-example'
+            tpl = FormChatAddTpl;
+            break;
+        }
+    }
 
-function FormProps(LoginFields: string[]) {
-  const props: Children = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const LoginField of LoginFields) {
-    // eslint-disable-next-line default-case
-    switch (LoginField) {
-      case 'login': {
-        const login: AppComponent = input(inputs.login);
-        props[LoginField] = login;
-        break;
-      }
-      case 'Password': {
-        const Password: AppComponent = input(inputs.Password);
-        props[LoginField] = Password;
-        break;
-      }
-      case 'first_name': {
-        const FirstName: AppComponent = input(inputs.first_name);
-        props[LoginField] = FirstName;
-        break;
-      }
-      case 'second_name': {
-        const SecondName: AppComponent = input(inputs.second_name);
-        props[LoginField] = SecondName;
-        break;
-      }
-      case 'display_name': {
-        const DisplayName: AppComponent = input(inputs.display_name);
-        props[LoginField] = DisplayName;
-        break;
-      }
-      case 'email': {
-        const email: AppComponent = input(inputs.email);
-        props[LoginField] = email;
-        break;
-      }
-      case 'phone': {
-        const phone: AppComponent = input(inputs.phone);
-        props[LoginField] = phone;
-        break;
-      }
-      case 'oldPassword': {
-        const oldPassword: AppComponent = input(inputs.oldPassword);
-        props[LoginField] = oldPassword;
-        break;
-      }
-      case 'newPassword': {
-        const newPassword: AppComponent = input(inputs.newPassword);
-        props[LoginField] = newPassword;
-        break;
-      }
-      case 'avatar': {
-        const avatar: AppComponent = input(inputs.avatar);
-        props[LoginField] = avatar;
-        break;
-      }
-      case 'button_login': {
-        const ButtonLogin: AppComponent = button(ButtonLoginProps);
-        props[LoginField] = ButtonLogin;
-        break;
-      }
-    }
-  }
-  return props;
-}
-const LoginFields = ['login', 'Password', 'button_login'];
-const RegFields = [
-  'first_name',
-  'second_name',
-  'display_name',
-  'email',
-  'phone',
-  'login',
-  'Password',
-  'button_login',
-];
-const SettingsFields = [
-  'first_name',
-  'second_name',
-  'display_name',
-  'email',
-  'phone',
-  'login',
-  'oldPassword',
-  'newPassword',
-  'avatar',
-  'button_login',
-];
-
-export default function formPage(path: string) {
-  let props: Children = {};
-  let tpl: any;
-  // eslint-disable-next-line default-case
-  switch (path) {
-    case '/login': {
-      props = FormProps(LoginFields);
-      tpl = FormLoginTpl;
-      break;
-    }
-    case '/reg': {
-      props = FormProps(RegFields);
-      tpl = FormRegTpl;
-      break;
-    }
-    case '/settings': {
-      props = FormProps(SettingsFields);
-      tpl = FormSettingsTpl;
-      break;
-    }
-  }
-  props = { ...props, events: FormLoginEvents };
-  const form = new AppComponent('form', props, 'form-example', tpl);
-  const page = new AppComponent('div', { form }, 'testmain', PageFormTpl);
-  return page;
+    // @ts-ignore
+    return new Form(div, props, classOfTag, tpl)
 }

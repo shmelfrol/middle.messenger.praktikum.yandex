@@ -1,87 +1,94 @@
-// todo: Пока нигде не используется, покрою типами, когда начну пользоваться
+import { queryStringify} from "src/utility/query-stringify";
 
-const METHODS = {
-  GET: "GET",
-  POST: "POST",
-  PUT: "PUT",
-  DELETE: "DELETE"
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-function queryStringify(data) {
-  if (typeof data !== "object") {
-    throw new Error("Data must be object");
-  }
-  const keys = Object.keys(data);
-  return keys.reduce((result, key, index) => {
-    return `${result}${key}=${data[key]}${index < keys.length - 1 ? "&" : ""}`;
-  }, "?");
-}
+import { router} from "src/modules/MainRouter";
+import {STORE_ITEM} from "src/Storage/store";
+import {TRequestOptions} from "src/type_component";
 
 export class HTTPTransport {
-  get = (url: string, options = {}) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return this.request(url, { ...options, method: METHODS.GET }, options.timeout);
+  private readonly baseUrl: string;
+
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  getFullUrl(path: string) {
+    return this.baseUrl + path;
+  }
+
+  get = (url: string, options: TRequestOptions = {}): Promise<XMLHttpRequest> => {
+    return this.request(this.getFullUrl(url), { ...options, method: 'GET' });
   };
 
-  post = (url: string, options = {}) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return this.request(url, { ...options, method: METHODS.POST }, options.timeout);
+  post = (url: string, options: TRequestOptions = {}) => {
+    return this.request(this.getFullUrl(url), { ...options, method: 'POST' });
   };
 
-  put = (url: string, options = {}) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
+  put = (url: string, options: TRequestOptions = {}) => {
+    return this.request(this.getFullUrl(url), { ...options, method: 'PUT' });
   };
 
-  delete = (url: string, options = {}) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
+  delete = (url: string, options: TRequestOptions = {}) => {
+    return this.request(this.getFullUrl(url), { ...options, method: 'DELETE' });
   };
 
-  request = (url: string, options = {}, timeout = 5000) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { headers = {}, method, data } = options;
-
-    return new Promise(function(resolve, reject) {
-      if (!method) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // eslint-disable-next-line prefer-promise-reject-errors
-        reject("No method");
-        return;
-      }
-
+  request = (
+      url: string,
+      options: TRequestOptions & { method: 'GET' | 'POST' | 'PUT' | 'DELETE' }
+  ): Promise<XMLHttpRequest> => {
+    const { headers = {}, method, data, timeout = 500 } = options;
+    const dataIsFile = data instanceof File;
+    return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      const isGet = method === METHODS.GET;
 
-      xhr.open(method, isGet && !!data ? `${url}${queryStringify(data)}` : url);
-
+      const urlValue = method === 'GET' && !!data && !dataIsFile ? `${url}${queryStringify(data)}` : url;
+      xhr.open(method, urlValue);
+      //set headers
+      if (!dataIsFile) {
+        xhr.setRequestHeader('content-type', 'application/json');
+      }
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);
       });
+      //set credentials
+      xhr.withCredentials = true;
+     // emit function if onload
+      xhr.onload = () => {
+        if (xhr.status === 401 && window.location.pathname !== '/') {
+          console.log("401!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+          localStorage.removeItem(STORE_ITEM);
+          //window.location.reload();
+          //if response 401 (Unauthorized) go to auth page
+          router.go('/');
+        } else if (xhr.status >= 400) {
+          try {
+            reject(JSON.parse(xhr.response));
+          } catch {
+            reject(xhr.response);
+          }
+        }
 
-      xhr.onload = function() {
         resolve(xhr);
       };
 
+      xhr.timeout = timeout;
+
+      xhr.ontimeout = reject;
       xhr.onabort = reject;
       xhr.onerror = reject;
 
-      xhr.timeout = timeout;
-      xhr.ontimeout = reject;
-
-      if (isGet || !data) {
+      if (method === 'GET' || !data) {
         xhr.send();
+      } else if (dataIsFile) {
+        const form = new FormData();
+        form.append('avatar', data);
+        xhr.send(form);
       } else {
-        xhr.send(data);
+        xhr.send(JSON.stringify(data));
       }
     });
   };
 }
+
+
+export const http= new HTTPTransport("https://ya-praktikum.tech/api/v2")
