@@ -39,13 +39,16 @@ export class Menu extends Component {
     ClickMenuItem(this:HTMLElement) {
         let path = window.location.pathname
         let href = this.getAttribute("href")
-        if (href !== "/logout") {
-            if (path !== href) {
-                router.go(href)
+        if(href){
+            if (href !== "/logout") {
+                if (path !== href) {
+                    router.go(href)
+                }
+            } else {
+                AuthCtr.logout()
             }
-        } else {
-            AuthCtr.logout()
         }
+
     }
 
 

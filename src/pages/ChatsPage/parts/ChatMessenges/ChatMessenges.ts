@@ -1,4 +1,4 @@
-import {Children, Props} from 'src/type_component';
+import {Children, Props, TUserResponse} from 'src/type_component';
 import {Component} from "src/modules/Component";
 import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
@@ -25,7 +25,7 @@ export type TNewMessageResponse = {
 export class ChatsMessenges extends Component {
     //private _socket = undefined
     _socket?: WebSocket;
-    private _ChatUsers: []|null =null
+    private _ChatUsers: TUserResponse[]|null =null
 
 
     constructor(
@@ -114,6 +114,7 @@ export class ChatsMessenges extends Component {
         this.isShow = false
         this.getContent().style.display = 'none';
         this.resetDataWhenChatChanged()
+        //@ts-ignore
         store.set('ActiveChat', null)
     }
 
@@ -158,7 +159,7 @@ export class ChatsMessenges extends Component {
     }
 
 
-    onSocketMessage(response:TNewMessageResponse) {
+    onSocketMessage(response:TNewMessageResponse|TNewMessageResponse[]) {
         let newArrMes:Props = []
         if (Array.isArray(response)) {
             newArrMes = response.reverse()

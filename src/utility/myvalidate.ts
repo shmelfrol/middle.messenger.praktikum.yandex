@@ -1,3 +1,4 @@
+
 export const MyvalidateFields = (
   fieldName: string,
   value: string
@@ -60,11 +61,10 @@ export const MyvalidateFields = (
 
 
 
-export function validformData(values:{[index: string]:string}) {
+export function validformData(values:{[key: string]: any} ) {
   let err = null;
   if(Object.keys(values).length!==0){
-    for (let key in values) {
-      console.log(key, values[key])
+      for (let key in values) {
       const error = MyvalidateFields(key, values[key]);
 
       if (error !== null) {

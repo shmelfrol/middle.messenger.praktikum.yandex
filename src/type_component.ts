@@ -30,6 +30,20 @@ export type TSignUpRequest = {
     phone: string;
 };
 
+export type TSettingsRequest = {
+    first_name: string;
+    second_name: string;
+    login: string;
+    email: string;
+    password: string;
+    phone: string;
+    avatar?: File;
+    oldPassword: string;
+    newPassword: string;
+    display_name:string
+};
+
+
 export type TMessageResponse = {
     chatId: number;
     content: string;

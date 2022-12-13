@@ -56,7 +56,6 @@ class AuthController {
 
     async getUser() {
         const currentUser = store.getState().currentUser;
-
         if (currentUser?.id) {
             return currentUser;
         }

@@ -4,12 +4,6 @@ import {ChatsCtr} from "src/Controllers/ChatsController";
 import {store} from "src/Storage/store";
 
 
-
-
-
-
-
-
 export class ChatItem extends Component {
     constructor(
         tag: string,
@@ -29,12 +23,13 @@ export class ChatItem extends Component {
         this.ViewActiveChat()
     }
 
-   delChat(ChatId:string){
+   delChat(ChatId:number){
 
        ChatsCtr.delete(ChatId)
    }
 
-   SetActiveChat(ChatId:string){
+   SetActiveChat(ChatId:number){
+        //@ts-ignore
        store.set("ActiveChat", ChatId)
    }
 
@@ -42,7 +37,7 @@ export class ChatItem extends Component {
     Click=(e:Event)=>{
         let target = e.target as HTMLElement
         let tagName = target.tagName
-        let ChatId = this.getContent().getAttribute("id")
+        let ChatId = Number(this.getContent().getAttribute("id"))
         e.preventDefault()
         if(ChatId){
             if (tagName === "BUTTON") {

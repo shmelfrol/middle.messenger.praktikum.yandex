@@ -1,4 +1,4 @@
-import {Children, Props} from '../../type_component';
+import {Children, Props, TSettingsRequest, TSignUpRequest} from '../../type_component';
 import {formsdata} from '../../Storage/propsForms';
 import FormLoginTpl from './FormLogin.hbs';
 import FormRegTpl from './FormReg.hbs';
@@ -47,7 +47,7 @@ export class Form extends Component {
 
 
     getFormData() {
-        let formdata = {}
+        let formdata:{} |TSignUpRequest = {}
         Object.keys(this.children).forEach((key) => {
             if (this.children[key] instanceof InPut) {
                 let inputData = this.children[key].getInputValue();
@@ -58,7 +58,7 @@ export class Form extends Component {
     }
 
 
-    SignIn = (formdata:Props, divErr:HTMLDivElement) => {
+    SignIn = (formdata:TSignUpRequest, divErr:HTMLDivElement) => {
         AuthCtr.signIn(formdata).catch((res) => {
             console.log("login", res)
             if (typeof res === 'object') {
@@ -74,14 +74,14 @@ export class Form extends Component {
         })
     }
 
-    SignUp = (formdata:Props, divErr:HTMLDivElement) => {
+    SignUp = (formdata:TSignUpRequest, divErr:HTMLDivElement) => {
         AuthCtr.signUp(formdata).catch((res) => {
             divErr!.textContent += res.reason
         })
     }
 
 
-    SettingsSave = (formdata:Props) => {
+    SettingsSave = (formdata:TSettingsRequest) => {
         if (formdata?.avatar) {
             UserCtr.changeAvatar(formdata.avatar)
         }
@@ -108,7 +108,7 @@ export class Form extends Component {
 
         if (targetType === "submit") {
             e.preventDefault()
-            let formdata = this.getFormData()
+            let formdata = this.getFormData() as TSignUpRequest & TSettingsRequest
             let error = validformData(formdata)
             if (divErr !== null && divErr !== undefined) {
                 if (error === null) {
