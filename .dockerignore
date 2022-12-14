@@ -5,3 +5,4 @@ coverage
 .parcel-cache
 .nyc_output
 app
+build

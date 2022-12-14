@@ -1,19 +1,20 @@
-FROM node:16
+FROM node
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /myapp
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+
+
+COPY . .
 COPY package*.json ./
-
 RUN npm install
+RUN  npm run webpack-prod
+
 # If you are building your code for production
 # RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
 
-EXPOSE 1237
-CMD npm run start:webpackserve
+
+EXPOSE 3000
+CMD ["node", "server.js"]

@@ -20,7 +20,7 @@ module.exports = {
     },
     entry: ['./src/index.ts'],
     output: {
-        path: path.resolve(__dirname, 'app'),
+        path: path.resolve(__dirname, 'dist'),
         filename: `./js/${filename('js')}`,
         publicPath: '/',
     },
