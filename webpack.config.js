@@ -12,10 +12,16 @@ const filename = (ext) => isDev ? `[name].${ext}`: `[name].[contenthash].${ext}`
 module.exports = {
     //context: path.resolve(__dirname, "src"),
     mode: "development",
+    devServer: {
+        historyApiFallback: true,
+        open: true,
+        compress: true,
+        port: 1237,
+    },
     entry: ['./src/index.ts'],
     output: {
         path: path.resolve(__dirname, 'app'),
-        filename: 'main.bundle.js',
+        filename: `./js/${filename('js')}`,
         publicPath: '/',
     },
     resolve: {
@@ -42,8 +48,10 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader"],
                 exclude: /(node_modules)/,
+                use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+
+
             },
             //typescript
             {
@@ -56,7 +64,7 @@ module.exports = {
                         },
                     },
                 ],
-                exclude: /(node_modules)/,
+
             },
             // handlebars
             {
@@ -66,7 +74,7 @@ module.exports = {
                         loader: 'handlebars-loader',
                     },
                 ],
-                exclude: /(node_modules)/,
+
             },
         ]
     }

@@ -10,7 +10,7 @@ import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
 import {MainMenu} from "src/component/Menu/Menu";
 import {store} from "src/Storage/store";
 
-console.log("store", store.getState())
+console.log("store!!!", store.getState())
 RenderDom('#navbar', MainMenu());
 
 

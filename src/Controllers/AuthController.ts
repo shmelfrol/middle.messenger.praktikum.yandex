@@ -33,7 +33,14 @@ class AuthController {
         }).catch((res) => {
             if (res?.reason) {
                 if (res.reason === "User already in system") {
-                    router.go("/messenger")
+
+                    this.getUser().then((res)=>{
+                        console.log("RES!!!!!", res)
+                        router.go("/messenger")
+                        }
+
+                    )
+                    //router.go("/messenger")
                 }
             }
 

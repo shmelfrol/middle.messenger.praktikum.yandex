@@ -84,7 +84,7 @@ export class Router {
         window.onpopstate = () => {
             let pathName = window.location.pathname
             this._onRoute(pathName);
-            store.set("activePath", pathName);
+            //store.set("activePath", pathName);
         };
         this._onRoute(window.location.pathname);
 
@@ -102,8 +102,6 @@ export class Router {
             }
         }
         store.set("activePath", pathname)
-
-
         let route = this.getRoute(pathname);
         if (route === undefined) {
             route = this.getRoute("/404");
