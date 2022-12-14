@@ -10,7 +10,8 @@
     "webpack-prod": "cross-env NODE_ENV=production webpack --mode production",
     "webpack-dev": "cross-env NODE_ENV=development webpack --mode development",
     "webpackserve": "cross-env NODE_ENV=development webpack serve --mode development",
-    "test1": "ts-mocha --paths -p ./tsconfig.json src/**/*.spec.ts --require src/mocha.js"
+    "test1": "ts-mocha --paths -p ./tsconfig.json src/**/*.spec.ts --require src/mocha.js",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -41,6 +42,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.2.1",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.2",
     "jsdom": "20.0.3",
     "jsdom-global": "3.0.2",
     "mini-css-extract-plugin": "^2.7.2",
