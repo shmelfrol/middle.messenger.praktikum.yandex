@@ -4,6 +4,8 @@ import { router } from 'src/modules/MainRouter';
 import { store, STORE_ITEM } from 'src/Storage/store';
 import { TRequestOptions } from 'src/type_component';
 
+type HTTPMethod = (url: string, options?: TRequestOptions) => Promise<XMLHttpRequest>;
+
 export class HTTPTransport {
   private readonly baseUrl: string;
 
@@ -15,17 +17,13 @@ export class HTTPTransport {
     return this.baseUrl + path;
   }
 
-  get = (url: string, options: TRequestOptions = {}): Promise<XMLHttpRequest> =>
-    this.request(this.getFullUrl(url), { ...options, method: 'GET' });
+  get: HTTPMethod = (url, options = {}) => this.request(this.getFullUrl(url), { ...options, method: 'GET' });
 
-  post = (url: string, options: TRequestOptions = {}) =>
-    this.request(this.getFullUrl(url), { ...options, method: 'POST' });
+  post: HTTPMethod = (url, options = {}) => this.request(this.getFullUrl(url), { ...options, method: 'POST' });
 
-  put = (url: string, options: TRequestOptions = {}) =>
-    this.request(this.getFullUrl(url), { ...options, method: 'PUT' });
+  put: HTTPMethod = (url, options = {}) => this.request(this.getFullUrl(url), { ...options, method: 'PUT' });
 
-  delete = (url: string, options: TRequestOptions = {}) =>
-    this.request(this.getFullUrl(url), { ...options, method: 'DELETE' });
+  delete: HTTPMethod = (url, options = {}) => this.request(this.getFullUrl(url), { ...options, method: 'DELETE' });
 
   request = (
     url: string,
@@ -51,11 +49,7 @@ export class HTTPTransport {
       // emit function if onload
       xhr.onload = () => {
         if (xhr.status === 401 && window.location.pathname !== '/') {
-          console.log('401!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
           localStorage.removeItem(STORE_ITEM);
-          console.log(localStorage);
-          // window.location.reload();
-          // store.setNull()
           // @ts-ignore
           store.set('currentUser', null);
           // if response 401 (Unauthorized) go to auth page
