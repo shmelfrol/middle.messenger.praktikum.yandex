@@ -42,7 +42,6 @@ class Api {
             email: data.email,
             phone: data.phone,
         };
-         console.log("dataRequest", dataRequest)
         return http
             .put('/user/profile', {
                 data: dataRequest,

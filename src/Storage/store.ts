@@ -31,7 +31,17 @@ export class Store extends EventBus {
     return this.state;
   }
 
-
+  public setNull(){
+    this.state={
+      currentUser: null,
+      chatsData: {},
+      chatFilter: '',
+      contacts: [],
+      chats:[],
+      ActiveChat: null,
+      activePath: null
+    };
+  }
 
   public set(path:string, value:Props | string) {
     //обновляем state по пути и присваиваем value
