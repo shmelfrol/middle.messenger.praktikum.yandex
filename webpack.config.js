@@ -18,16 +18,16 @@ module.exports = {
         compress: true,
         port: 1237,
     },
-    entry: ['./src/index.ts'],
+    entry: [path.resolve(__dirname, 'src', 'index.ts')],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: `./js/${filename('js')}`,
-        publicPath: '/',
+        publicPath: "/",
     },
     resolve: {
         extensions: ['.ts', '.js', '.json'],
         alias: {
-            src: path.resolve(__dirname, './src')
+            src: path.resolve(__dirname, 'src')
         },
 
     },

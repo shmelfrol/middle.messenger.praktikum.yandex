@@ -79,6 +79,7 @@ export class Form extends Component {
   };
 
   SettingsSave = (formdata: TSettingsRequest) => {
+    console.log('Save');
     if (formdata?.avatar) {
       UserCtr.changeAvatar(formdata.avatar);
     }
