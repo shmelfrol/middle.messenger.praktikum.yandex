@@ -11,7 +11,12 @@
     "webpack-dev": "cross-env NODE_ENV=development webpack --mode development",
     "webpackserve": "cross-env NODE_ENV=development webpack serve --mode development",
     "test1": "ts-mocha --paths -p ./tsconfig.json src/**/*.spec.ts --require src/mocha.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "check-and-test-code": "npm run tsc",
+    "tsc": "tsc",
+    "lint": "eslint src",
+    "lint:fix": "npm run lint -- --fix",
+    "lint:ts": "eslint --ext .ts ./"
   },
   "author": "",
   "license": "ISC",
@@ -42,9 +47,10 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.2.1",
     "html-webpack-plugin": "5.5.0",
-    "husky": "8.0.2",
+    "husky": "^8.0.0",
     "jsdom": "20.0.3",
     "jsdom-global": "3.0.2",
+    "lint-staged": "^13.1.0",
     "mini-css-extract-plugin": "2.7.2",
     "mocha": "10.2.0",
     "mock-xmlhttprequest": "8.1.0",
@@ -65,6 +71,11 @@
     "webpack": "5.75.0",
     "webpack-cli": "5.0.1",
     "webpack-dev-server": "4.11.1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint:fix"
+    ]
   },
   "alias": {
     "src": "./src"

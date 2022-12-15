@@ -25,7 +25,7 @@ export type TNewMessageResponse = {
 export class ChatsMessenges extends Component {
     //private _socket = undefined
     _socket?: WebSocket;
-    private _ChatUsers: TUserResponse[]|null =null
+    private _ChatUsers: TUserResponse[] | null = null
 
 
     constructor(
@@ -45,7 +45,7 @@ export class ChatsMessenges extends Component {
 
         store.on(EVENTS.UPDATE, () => {
             // пдписываемся на обновление компонента, передав данные из хранилища
-            this.setProps({ActiveChat:store.getState().ActiveChat});
+            this.setProps({ActiveChat: store.getState().ActiveChat});
         });
 
     }
@@ -55,10 +55,10 @@ export class ChatsMessenges extends Component {
     }
 
 
-  ChatScroll() {
+    ChatScroll() {
         if (this.props.ActiveChat) {
             let Scroll = this.getContent().querySelector(".chat-bar-bottom")
-            if(Scroll){
+            if (Scroll) {
                 Scroll.scrollIntoView(true)
             }
 
@@ -72,7 +72,7 @@ export class ChatsMessenges extends Component {
 
     }
 
-    componentDidUpdate(oldProps:Props) {
+    componentDidUpdate(oldProps: Props) {
         if (this.props.ActiveChat) {
             if (this.props.ActiveChat !== oldProps.ActiveChat) {
                 this.resetDataWhenChatChanged();
@@ -82,8 +82,9 @@ export class ChatsMessenges extends Component {
         if (this.props.messages) {
             if (Array.isArray(this.props.messages)) {
                 this.children.messageList = this.props.messages.map((mes) => {
-                    let classOfTag= mes.isFromMe ? "userText" : "botText"
-                    return new Message("p", mes, classOfTag, MessageTpl)})
+                    let classOfTag = mes.isFromMe ? "userText" : "botText"
+                    return new Message("p", mes, classOfTag, MessageTpl)
+                })
             }
         }
 
@@ -119,10 +120,10 @@ export class ChatsMessenges extends Component {
     }
 
 
-    getChatUserbyId(userId:number) {
-        let findUser:Props = {}
-        if(this._ChatUsers){
-            this._ChatUsers.forEach((user:Props) => {
+    getChatUserbyId(userId: number) {
+        let findUser: Props = {}
+        if (this._ChatUsers) {
+            this._ChatUsers.forEach((user: Props) => {
                 if (user.id === userId) {
                     findUser = user
                 }
@@ -135,7 +136,7 @@ export class ChatsMessenges extends Component {
     }
 
 
-    async CorrectFormatMess(messeges:Props) {
+    async CorrectFormatMess(messeges: Props) {
         await ChatsCtr.getChatUsers(this.props.ActiveChat).then((r) => {
             this._ChatUsers = r.users
             return r.users
@@ -146,8 +147,7 @@ export class ChatsMessenges extends Component {
                     let slicidate = messeges[i][key].slice(0, 16)
                     const y = new Date(slicidate).toLocaleDateString();
                     let t = new Date(slicidate).toLocaleTimeString();
-                    let correctTime = y + " " + t
-                    messeges[i][key] = correctTime
+                    messeges[i][key] = y + " " + t
                 }
                 if (key === "userId") {
                     let user = this.getChatUserbyId(messeges[i][key])
@@ -159,28 +159,25 @@ export class ChatsMessenges extends Component {
     }
 
 
-    onSocketMessage(response:TNewMessageResponse|TNewMessageResponse[]) {
-        let newArrMes:Props = []
+    onSocketMessage(response: TNewMessageResponse | TNewMessageResponse[]) {
+        let newArrMes: Props = []
         if (Array.isArray(response)) {
             newArrMes = response.reverse()
-            this.CorrectFormatMess(newArrMes).then((correctMes)=>{
+            this.CorrectFormatMess(newArrMes).then((correctMes) => {
                 this.setProps({messages: correctMes})
             })
 
 
         } else {
-            if(response.type!=="user connected"){
+            if (response.type !== "user connected" && response.content !== '') {
                 newArrMes = [response]
             }
 
-            this.CorrectFormatMess(newArrMes).then((correctMes)=>{
+            this.CorrectFormatMess(newArrMes).then((correctMes) => {
                 // @ts-ignore
                 this.setProps({messages: [...this.props.messages, ...correctMes]})
             })
         }
-
-
-
 
 
     }
@@ -191,9 +188,9 @@ export class ChatsMessenges extends Component {
         }
     }
 
-    onSendBtnClick=(e:KeyboardEvent)=> {
+    onSendBtnClick = (e: KeyboardEvent) => {
         let target = e.target as HTMLInputElement;
-        let tag=target.tagName
+        let tag = target.tagName
         if (tag == "INPUT") {
             if (e.keyCode === 13) {
                 // @ts-ignore

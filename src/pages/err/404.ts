@@ -2,7 +2,7 @@ import tpl from './404.hbs';
 import {Component} from "src/modules/Component";
 import {Props} from "src/type_component";
 
-export class Err extends Component {
+class Err extends Component {
   constructor(
       tag: string,
       myprops: Props,
