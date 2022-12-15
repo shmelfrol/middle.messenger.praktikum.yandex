@@ -192,7 +192,6 @@ export class ChatsMessenges extends Component {
     }
 
     onSendBtnClick=(e:KeyboardEvent)=> {
-        console.log("tape")
         let target = e.target as HTMLInputElement;
         let tag=target.tagName
         if (tag == "INPUT") {

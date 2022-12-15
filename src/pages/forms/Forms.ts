@@ -22,11 +22,9 @@ export class Form extends Component {
         classofTag: string,
         template: Function,
     ) {
-        console.log("props", myprops)
         super(tag, myprops, classofTag, template);
 
         if (this.props.path === "/settings") {
-            console.log("Store oooooon")
             store.on(EVENTS.UPDATE, () => {
                 this.setProps({currentUser: store.getState().currentUser, img: store.getState().currentUser.avatar});
             });
@@ -60,7 +58,6 @@ export class Form extends Component {
 
     SignIn = (formdata:TSignUpRequest, divErr:HTMLDivElement) => {
         AuthCtr.signIn(formdata).catch((res) => {
-            console.log("login", res)
             if (typeof res === 'object') {
                 if (res?.reason) {
                     divErr!.textContent += res.reason
@@ -90,7 +87,6 @@ export class Form extends Component {
 
     AddChat = (formdata:Props) => {
         if (formdata.chatName) {
-            console.log(formdata.chatName)
             ChatsCtr.createChatik(formdata.chatName).then(res => {
                 console.log("adddchatRES", res)
                 ChatsCtr.getChatiks()
@@ -105,7 +101,7 @@ export class Form extends Component {
         let target=e.target as HTMLElement
         let targetType = target.getAttribute("type")
         let divErr=this.getContent()?.querySelector("#err") as HTMLDivElement;
-
+        divErr!.textContent =""
         if (targetType === "submit") {
             e.preventDefault()
             let formdata = this.getFormData() as TSignUpRequest & TSettingsRequest

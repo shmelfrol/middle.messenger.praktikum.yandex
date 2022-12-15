@@ -8,9 +8,9 @@ import {router} from "src/modules/MainRouter";
 import {FormPage} from "src/pages/forms/Forms";
 import {getChatsPage} from "src/pages/ChatsPage/ChatsPage";
 import {MainMenu} from "src/component/Menu/Menu";
-import {store} from "src/Storage/store";
 
-console.log("store!!!", store.getState())
+
+
 RenderDom('#navbar', MainMenu());
 
 

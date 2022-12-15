@@ -5,7 +5,6 @@ import {MyvalidateFields} from "src/utility/myvalidate";
 
 export function focusout(this: HTMLDivElement, e:Event) {
     let target = e.target as HTMLInputElement
-    console.log(this)
     if(target!==null ){
         let tagName = target.tagName
         let errordiv = this.querySelector('#errormessage');

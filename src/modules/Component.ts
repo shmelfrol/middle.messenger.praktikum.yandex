@@ -230,10 +230,7 @@ export class Component {
         }
     }
 
-    // удалить все обработчики событий (любого типа), вы можете клонировать элемент и заменить его на клон:
-    /* clone() {
-         this._element = this._element.cloneNode(true);
-     }*/
+
 
 
 // Может переопределять пользователь, необязательно трогать
@@ -344,10 +341,7 @@ export class Component {
     }
 
     show() {
-
-        console.log("show from component")
         this.isShow = true
-        //AuthCtr.getUser()
         if (this.getContent() !== undefined) {
             this.getContent().style.display = '';
         }
