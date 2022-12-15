@@ -1,7 +1,5 @@
-
-
 /* Объединяет 2 объекта путем мутации 1-ого */
-import {Props} from "src/type_component";
+import { Props } from 'src/type_component';
 
 export const merge = (lhs: Props, rhs: Props): Props => {
   const merged = lhs;

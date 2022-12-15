@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+dist
+coverage
+.parcel-cache
+.nyc_output
+app
+build
