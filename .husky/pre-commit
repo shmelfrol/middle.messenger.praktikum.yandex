@@ -3,3 +3,5 @@
 
 #npx lint-staged
 npm run check-and-test-code
+npm run lint
+npm run stylelint

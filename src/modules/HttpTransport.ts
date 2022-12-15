@@ -1,8 +1,8 @@
-import { queryStringify} from "src/utility/query-stringify";
+import { queryStringify } from 'src/utility/query-stringify';
 
-import { router} from "src/modules/MainRouter";
-import {store, STORE_ITEM} from "src/Storage/store";
-import {TRequestOptions} from "src/type_component";
+import { router } from 'src/modules/MainRouter';
+import { store, STORE_ITEM } from 'src/Storage/store';
+import { TRequestOptions } from 'src/type_component';
 
 export class HTTPTransport {
   private readonly baseUrl: string;
@@ -15,25 +15,21 @@ export class HTTPTransport {
     return this.baseUrl + path;
   }
 
-  get = (url: string, options: TRequestOptions = {}): Promise<XMLHttpRequest> => {
-    return this.request(this.getFullUrl(url), { ...options, method: 'GET' });
-  };
+  get = (url: string, options: TRequestOptions = {}): Promise<XMLHttpRequest> =>
+    this.request(this.getFullUrl(url), { ...options, method: 'GET' });
 
-  post = (url: string, options: TRequestOptions = {}) => {
-    return this.request(this.getFullUrl(url), { ...options, method: 'POST' });
-  };
+  post = (url: string, options: TRequestOptions = {}) =>
+    this.request(this.getFullUrl(url), { ...options, method: 'POST' });
 
-  put = (url: string, options: TRequestOptions = {}) => {
-    return this.request(this.getFullUrl(url), { ...options, method: 'PUT' });
-  };
+  put = (url: string, options: TRequestOptions = {}) =>
+    this.request(this.getFullUrl(url), { ...options, method: 'PUT' });
 
-  delete = (url: string, options: TRequestOptions = {}) => {
-    return this.request(this.getFullUrl(url), { ...options, method: 'DELETE' });
-  };
+  delete = (url: string, options: TRequestOptions = {}) =>
+    this.request(this.getFullUrl(url), { ...options, method: 'DELETE' });
 
   request = (
-      url: string,
-      options: TRequestOptions & { method: 'GET' | 'POST' | 'PUT' | 'DELETE' }
+    url: string,
+    options: TRequestOptions & { method: 'GET' | 'POST' | 'PUT' | 'DELETE' }
   ): Promise<XMLHttpRequest> => {
     const { headers = {}, method, data, timeout = 500 } = options;
     const dataIsFile = data instanceof File;
@@ -42,7 +38,7 @@ export class HTTPTransport {
 
       const urlValue = method === 'GET' && !!data && !dataIsFile ? `${url}${queryStringify(data)}` : url;
       xhr.open(method, urlValue);
-      //set headers
+      // set headers
       if (!dataIsFile) {
         xhr.setRequestHeader('content-type', 'application/json');
       }
@@ -50,19 +46,19 @@ export class HTTPTransport {
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);
       });
-      //set credentials
+      // set credentials
       xhr.withCredentials = true;
-     // emit function if onload
+      // emit function if onload
       xhr.onload = () => {
         if (xhr.status === 401 && window.location.pathname !== '/') {
-          console.log("401!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+          console.log('401!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
           localStorage.removeItem(STORE_ITEM);
-          console.log(localStorage)
-          //window.location.reload();
-          //store.setNull()
-          //@ts-ignore
-          store.set("currentUser", null)
-          //if response 401 (Unauthorized) go to auth page
+          console.log(localStorage);
+          // window.location.reload();
+          // store.setNull()
+          // @ts-ignore
+          store.set('currentUser', null);
+          // if response 401 (Unauthorized) go to auth page
           router.go('/');
         } else if (xhr.status >= 400) {
           try {
@@ -94,5 +90,4 @@ export class HTTPTransport {
   };
 }
 
-
-export const http= new HTTPTransport("https://ya-praktikum.tech/api/v2")
+export const http = new HTTPTransport('https://ya-praktikum.tech/api/v2');

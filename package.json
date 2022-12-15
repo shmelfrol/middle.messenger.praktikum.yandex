@@ -15,8 +15,7 @@
     "check-and-test-code": "npm run tsc",
     "tsc": "tsc",
     "lint": "eslint src",
-    "lint:fix": "npm run lint -- --fix",
-    "lint:ts": "eslint --ext .ts ./"
+    "stylelint": "npx stylelint ./public/**/*.css"
   },
   "author": "",
   "license": "ISC",

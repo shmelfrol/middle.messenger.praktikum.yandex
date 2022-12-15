@@ -12,10 +12,12 @@ label, input {
     display: table-cell;
     margin-bottom: 2px;
 }
+
 .errormessage{
     margin-bottom: 5px;
     color: red;
 }
+
 .errorinput {
     border-color: red!important;
     height: 15px;

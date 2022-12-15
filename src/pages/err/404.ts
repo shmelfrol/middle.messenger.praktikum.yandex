@@ -1,17 +1,11 @@
+import { Component } from 'src/modules/Component';
+import { Props } from 'src/type_component';
 import tpl from './404.hbs';
-import {Component} from "src/modules/Component";
-import {Props} from "src/type_component";
 
 class Err extends Component {
-  constructor(
-      tag: string,
-      myprops: Props,
-      classofTag: string,
-      template: Function,
-  ) {
+  constructor(tag: string, myprops: Props, classofTag: string, template: Function) {
     super(tag, myprops, classofTag, template);
   }
-
 
   render() {
     if (this.template !== null) {
@@ -20,12 +14,7 @@ class Err extends Component {
   }
 }
 
-
-
-
-
-
-export default function () {
+export function NotFoundPage() {
   const context = { title: 'Внимание ошибка: ' };
-  return new Err("div", context, "testmain", tpl)
+  return new Err('div', context, 'testmain', tpl);
 }
