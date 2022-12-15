@@ -38,7 +38,7 @@ export class ChatItem extends Component {
   };
 
   ViewActiveChat() {
-    const ChatId = this.getContent().getAttribute('id');
+    const ChatId = Number(this.getContent().getAttribute('id'));
     if (ChatId === this.props.ActiveChat) {
       this.getContent().classList.add('userchatactive');
     } else {
